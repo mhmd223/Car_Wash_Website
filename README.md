@@ -1,4 +1,4 @@
 # Car_Wash_Website
-A websiite to comfortable book car washes
+A website to comfortable book car washes
 
 # Project Notes:
