@@ -1,0 +1,25 @@
+import { createClient } from "redis";
+
+const client = createClient();
+
+client.on("error", (err) => {
+  console.error("ERROR connected to redis client");
+});
+
+async function connectRedis() {
+  try {
+    await client.connect();
+
+    console.log("connected to redis");
+  } catch (err) {}
+}
+
+await connectRedis();
+
+export async function storeValue(key, value) {
+  await client.set(key, value);
+}
+
+export async function storeMap(key, map) {
+  await client.hSet(key, map);
+}
