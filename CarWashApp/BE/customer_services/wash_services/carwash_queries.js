@@ -1,5 +1,7 @@
 import { dbConnection } from "../../sql_utils/DBconnection.js";
 
+
+
 export async function get_user_washes(customerID) {
   const res = await dbConnection.query(
     "SELECT * FROM car_wash where Cust_ID=?",
