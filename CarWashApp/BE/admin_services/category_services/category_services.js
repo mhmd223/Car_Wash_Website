@@ -1,15 +1,21 @@
 import express from "express";
 import * as category_queries from "./category_queries.js";
+import { roles } from "../../data/roles.js";
 export const router = express.Router();
 
 router.post("/add_category", async (req, res) => {
   try {
+    const user = req.session.user;
+    if (!user || user.role !== roles.ADMIN) {
+      res.status(403).json({ status: "Unauthorized" });
+      return;
+    }
     const { id, name, price } = req.body;
 
     await category_queries.add_category_query(id, name, price);
-    res.send("added succesfully");
+    res.status(200).json({ message: "Category added successfully" });
   } catch (err) {
-    return false;
+    res.status(500).json({ status: "Something went wrong" });
   }
 });
 

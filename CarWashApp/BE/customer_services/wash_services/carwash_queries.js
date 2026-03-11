@@ -1,7 +1,5 @@
 import { dbConnection } from "../../sql_utils/DBconnection.js";
 
-
-
 export async function get_user_washes(customerID) {
   const res = await dbConnection.query(
     "SELECT * FROM car_wash where Cust_ID=?",
@@ -33,12 +31,9 @@ export async function book_wash(
         "INSERT INTO car_wash (Car_Plate, Cust_ID, Cust_Phone, Wash_Date, Wash_Status, Wash_Price,Category_id) VALUES(?,?,?,?,?,?,?)",
         [Car_Plate, Cust_ID, phone, Wash_Date, 0, Wash_Price, Category_ID],
       );
-
-  } 
-  catch (err) {
+  } catch (err) {
     throw err;
-  } 
-  finally {
+  } finally {
     return alreadyBooked;
   }
 }
