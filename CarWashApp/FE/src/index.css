@@ -65,7 +65,7 @@ Global Styles
 ===============
 */
 
-*,
+/* *,
 ::after,
 ::before {
   box-sizing: border-box;
@@ -144,7 +144,7 @@ img {
   p {
     font-size: 1.8rem;
   }
-}
+} */
 
 
 

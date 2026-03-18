@@ -1,12 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
 .Container {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  background: linear-gradient(to left top, #003c5ec2, 10%, #ffff);
 }
 
 main {
   flex-grow: 1;
 }
 main p {
+  text-align: center;
+}
+
+h1 {
+  color: black;
+  font-family: "Roboto", sans-serif;
+  font-size: 70px;
   text-align: center;
 }
