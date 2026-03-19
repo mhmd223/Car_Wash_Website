@@ -6,7 +6,7 @@ export async function get_user_washes(customerID) {
     [customerID],
   );
 
-  return res;
+  return res[0];
 }
 
 export async function book_wash(

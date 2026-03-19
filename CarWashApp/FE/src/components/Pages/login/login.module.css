@@ -1,11 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
 .Container {
   display: flex;
   flex-direction: column;
   background-color: #F5E7C6;
   height: fit-content;
   width: fit-content;
-  align-items: center;
-  justify-content: space-between;
-  padding: 50px;
+  width: 400px;
+  height: fit-content;
+  padding: 10px;
   border-radius: 10px;
+  font-size: 2rem;
   }
+  .Container h2 {
+    font-family: "Roboto", sans-serif;
+    color: black;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+
+

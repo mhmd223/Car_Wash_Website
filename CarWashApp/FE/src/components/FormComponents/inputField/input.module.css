@@ -3,9 +3,8 @@
 .inputField {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-
   font-size: 1.2rem;
+  width: 100%;
 }
 
 .inputField input {
@@ -13,6 +12,8 @@
   border-top: none;
   border-left: none;
   border-right: none;
+  display: absolute;
+
 }
 
 .inputField input:focus {
@@ -22,10 +23,12 @@
   margin-bottom: 5px;
   font-weight: bold;
   font-family: "Roboto", sans-serif;
+  display: relative;
 }
 
 .error {
   color: red;
   font-weight: bold;
   margin-top: 5px;
+  font-family: "Roboto", sans-serif;
 }

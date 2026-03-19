@@ -38,7 +38,10 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const result = await validate_login(email, password);
 
-  if (!result) res.status(401).json({ status: "Invalid email or password" });
+  if (!result)
+    res
+      .status(401)
+      .json({ status: "Invalid email or password", loggedIn: false });
   else {
     client.set(`user:${result.id}`, JSON.stringify(result));
 
@@ -49,7 +52,13 @@ router.post("/login", async (req, res) => {
       phone: result.phone,
       role: result.role,
     };
-    res.status(200).json({ message: `Welcome, ${result.username}!` });
+    res
+      .status(200)
+      .json({
+        message: `Welcome, ${result.username}!`,
+        loggedIn: true,
+        user: req.session.user,
+      });
   }
 });
 
