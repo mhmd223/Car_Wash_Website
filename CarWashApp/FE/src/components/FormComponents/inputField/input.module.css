@@ -4,26 +4,22 @@
   display: flex;
   flex-direction: column;
   font-size: 1.2rem;
-  width: 100%;
+  width: 50%;
 }
 
 .inputField input {
-  padding: 8px;
   border-top: none;
   border-left: none;
   border-right: none;
-  display: absolute;
 
 }
 
-.inputField input:focus {
-  outline: none;
-}
+
 .inputField label {
   margin-bottom: 5px;
   font-weight: bold;
   font-family: "Roboto", sans-serif;
-  display: relative;
+ 
 }
 
 .error {

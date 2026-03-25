@@ -3,14 +3,41 @@
 .Container {
   display: flex;
   flex-direction: column;
-  background-color: #F5E7C6;
+  background-color: #f5e7c689;
   height: fit-content;
   width: fit-content;
   width: 400px;
   height: fit-content;
+  align-items: center;
+  justify-content: center;
   padding: 10px;
-  border-radius: 10px;
   font-size: 2rem;
+  }
+  .Container > form {
+    width: 80%;
+  }
+  .Container > span {
+    font-family: "Roboto", sans-serif;
+    color: black;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .Container  > span {
+    font-family: "Roboto", sans-serif;
+    color: black;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .Button {
+      background-color: #fa8112;
+  color: #222222;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.3rem;
+  font-family: "Roboto", sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
   }
   .Container h2 {
     font-family: "Roboto", sans-serif;

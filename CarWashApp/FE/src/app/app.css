@@ -1,15 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 .Container {
-  height: 100vh;
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #FAF3E1;
 }
 
+
 main {
-  flex-grow: 1;
+  height: 100vh;
+  width: 100vw;
 }
 main p {
   text-align: center;

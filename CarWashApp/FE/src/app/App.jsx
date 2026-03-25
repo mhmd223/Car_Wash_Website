@@ -5,7 +5,12 @@
 
 import "./app.css";
 import Login from "../components/Pages/login/Login";
-import { useState, createContext } from "react";
+import GeneralLayout from "../components/Layouts/General/GeneralLayout";
+
+import { useState } from "react";
+
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import axios from "axios";
 
 export default function App() {
@@ -30,14 +35,26 @@ export default function App() {
 
   return (
     <div className="Container">
-      <h1>Car Wash App</h1>
-
-      <Login
-        setIsLoggedIn={setIsLoggedIn}
-        setUser={setUser}
-        fetchUserData={fetchUserData}
-        axios={axios}
-      />
+      <main>
+        <Router>
+          <Routes>
+            <Route
+              element={
+                <GeneralLayout
+                  isLoggedIn={isLoggedIn}
+                  setIsLoggedIn={setIsLoggedIn}
+                  fetchUserData={fetchUserData}
+                  user={user}
+                  setUser={setUser}
+                  axios={axios}
+                />
+              }
+            >
+              <Route index element={<Login />} />
+            </Route>
+          </Routes>
+        </Router>
+      </main>
     </div>
   );
 }

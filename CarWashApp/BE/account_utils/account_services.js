@@ -23,8 +23,15 @@ router.post("/register", async (req, res) => {
     password,
     confirmPassword,
   );
-  if (!result) res.status(500).json({ status: "Something went wrong" });
-  else res.status(200).json({ message: "Successfully registered!" });
+
+  if (!result)
+    res
+      .status(500)
+      .json({ status: "Something went wrong", registered: result });
+  else
+    res
+      .status(200)
+      .json({ message: "Successfully registered!", registered: result });
 });
 /**
  * @route POST /login
@@ -52,13 +59,11 @@ router.post("/login", async (req, res) => {
       phone: result.phone,
       role: result.role,
     };
-    res
-      .status(200)
-      .json({
-        message: `Welcome, ${result.username}!`,
-        loggedIn: true,
-        user: req.session.user,
-      });
+    res.status(200).json({
+      message: `Welcome, ${result.username}!`,
+      loggedIn: true,
+      user: req.session.user,
+    });
   }
 });
 

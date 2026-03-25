@@ -69,6 +69,7 @@ export async function registerAcc(
       email &&
       !(await checkEmailExists(email))
     ) {
+      console.log("Registering user:", { email, username, phone });
       let res = await dbConnection.query(
         "INSERT INTO users (username,email,password,phone,role) VALUES(?,?,?,?,?)",
         [username, email, hashed_password, phone, "Customer"],
