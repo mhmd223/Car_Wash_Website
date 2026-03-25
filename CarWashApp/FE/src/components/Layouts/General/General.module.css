@@ -1,0 +1,19 @@
+.video {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+}
+.outlet {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+}
+.outlet > div {
+  width: 100vw;
+  height: 100vh;
+
+}
