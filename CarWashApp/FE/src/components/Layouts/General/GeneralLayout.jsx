@@ -17,7 +17,10 @@ export default function GeneralLayout({
     <UserContext.Provider
       value={{ setIsLoggedIn, isLoggedIn, user, setUser, axios, fetchUserData }}
     >
-      <video className={classes.video} src={""} autoPlay loop muted />
+      
+      {!isLoggedIn && (
+        <video className={classes.video} src={""} autoPlay loop muted />
+      )}
       <div className={classes.outlet}>
         <Outlet />
       </div>
