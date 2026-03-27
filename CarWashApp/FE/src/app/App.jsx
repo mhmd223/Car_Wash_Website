@@ -6,12 +6,14 @@
 import "./app.css";
 import Login from "../components/Pages/login/Login";
 import GeneralLayout from "../components/Layouts/General/GeneralLayout";
-
+import Header from "../components/Header/Header";
+import Footer from "../components/Footer/Footer";
 import { useState } from "react";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import axios from "axios";
+import Home from "../components/Pages/home/Home";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,27 +36,25 @@ export default function App() {
   }
 
   return (
-    <div className="Container">
-      <main>
-        <Router>
-          <Routes>
-            <Route
-              element={
-                <GeneralLayout
-                  isLoggedIn={isLoggedIn}
-                  setIsLoggedIn={setIsLoggedIn}
-                  fetchUserData={fetchUserData}
-                  user={user}
-                  setUser={setUser}
-                  axios={axios}
-                />
-              }
-            >
-              <Route index element={<Login />} />
-            </Route>
-          </Routes>
-        </Router>
-      </main>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          element={
+            <GeneralLayout
+              isLoggedIn={isLoggedIn}
+              setIsLoggedIn={setIsLoggedIn}
+              fetchUserData={fetchUserData}
+              user={user}
+              setUser={setUser}
+              axios={axios}
+            />
+          }
+        >
+          <Route index element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
