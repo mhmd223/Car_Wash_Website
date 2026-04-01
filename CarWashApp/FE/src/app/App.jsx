@@ -6,8 +6,7 @@
 import "./app.css";
 import Login from "../components/Pages/login/Login";
 import GeneralLayout from "../components/Layouts/General/GeneralLayout";
-import Header from "../components/Header/Header";
-import Footer from "../components/Footer/Footer";
+
 import { useState } from "react";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
