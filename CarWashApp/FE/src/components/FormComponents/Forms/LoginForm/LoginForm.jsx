@@ -8,6 +8,7 @@ import {
 } from "react";
 import Button from "../../Button/Button.jsx";
 import axios from "axios";
+import * as accountOperations from "../../../../services/account_services.js";
 import { ToastContainer, toast } from "react-toastify";
 
 export default function LoginForm({
@@ -33,13 +34,12 @@ export default function LoginForm({
   const [phoneError, setPhoneError] = useState(false);
 
   useEffect(() => {
-    if (isError) {
+    if (isRegistering && isError) {
       toast.error("Please fix the errors in the form before submitting.");
       toggleAllErrorsOff();
-
     }
   }, [isError]);
-  
+
   const checkIfPasswordsMatch = () => {
     setConfirmPasswordError(
       isRegistering &&
@@ -116,17 +116,14 @@ export default function LoginForm({
           toggleAllErrorsOff();
           return;
         }
-        const response = await axios.post(
-          "http://localhost:5173/account/register",
-          {
-            username,
-            email: emailOrPhone,
-            phone,
-            password,
-            confirmPassword,
-          },
+        const response = await accountOperations.register(
+          username,
+          emailOrPhone,
+          phone,
+          password,
+          confirmPassword,
         );
-        if (response.data.registered) {
+        if (response) {
           setSuccessFullyRegistered(true);
           setIsRegistering(false);
         } else {
@@ -137,21 +134,12 @@ export default function LoginForm({
         event.preventDefault();
 
         checkFormErrors();
-        const response = await axios.post(
-          "http://localhost:5173/account/login",
-          {
-            email: emailOrPhone,
-            password,
-          },
-          {
-            withCredentials: true,
-          },
-        );
+        const response = await accountOperations.login(emailOrPhone, password);
 
-        if (response.data.loggedIn) {
+        if (response.loggedIn) {
           setIsLoggedIn(true);
-          setUser(response.data.user);
-          await fetchUserData(response.data.user.id);
+          setUser(response.user);
+          await fetchUserData(response.user.id);
         }
       };
 

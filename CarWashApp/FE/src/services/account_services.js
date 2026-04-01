@@ -1,0 +1,35 @@
+import axios from "axios";
+const API_URL = "http://localhost:5173/account/";
+
+export const register = async (
+  username,
+  email,
+  phone,
+  password,
+  confirmPassword,
+) => {
+  const response = await axios.post(`${API_URL}register`, {
+    username,
+    email: email,
+    phone,
+    password,
+    confirmPassword,
+  });
+
+  return response.data.registered;
+};
+
+export const login = async (emailOrPhone, password) => {
+  const response = await axios.post(
+    `${API_URL}login`,
+    {
+      email: emailOrPhone,
+      password: password,
+    },
+    {
+      withCredentials: true,
+    },
+  );
+
+  return response.data;
+};

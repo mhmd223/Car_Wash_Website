@@ -1,6 +1,6 @@
 import * as regexPatterns from "../../../data/regex/regex";
 import { useContext, useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext";
 import InputField from "../../FormComponents/inputField/InputField";
 import classes from "./login.module.css";
@@ -30,7 +30,6 @@ export default function Login() {
   };
 
   useEffect(() => {
-    console.log(successFullyRegistered);
     if (successFullyRegistered) {
       toast.success("success");
       setSuccessFullyRegistered(false);
