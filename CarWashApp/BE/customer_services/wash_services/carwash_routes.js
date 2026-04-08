@@ -1,11 +1,13 @@
 import express from "express";
 import * as wash_operations from "./carwash_queries.js";
 import { client } from "../../redis.js";
+
 export const router = express.Router();
 
 // middleware that checks for an authenticated session on every route
 router.use("/", (req, res, next) => {
-  if (!req.session.user) {
+  console.log("Unauthorized access attempt");
+  if (req.session.user === undefined) {
     res.status(401).json({ status: "Unauthorized" });
     return;
   }
@@ -14,12 +16,15 @@ router.use("/", (req, res, next) => {
 
 router.get("/user_washes/:id", async (req, res) => {
   const { id } = req.params;
+
   await client.del(`user:${id}:washes`);
   const userData = await client.get(`user:${id}:washes`);
+
 
   if (!userData) {
     const userWashes = await wash_operations.get_user_washes(id);
     client.set(`user:${id}:washes`, JSON.stringify(userWashes));
+
     res.json(userWashes);
     return;
   }

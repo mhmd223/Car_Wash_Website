@@ -20,11 +20,10 @@ import classes from "./navbar.module.css";
 // Import navigation pages data
 import { pages } from "../../data/pages/pages";
 
-import { BiSolidCarWash,  } from "react-icons/bi";
+import { BiSolidCarWash } from "react-icons/bi";
 import { CgProfile } from "react-icons/cg";
 import { IoMdHome } from "react-icons/io";
 import { FaExclamationCircle } from "react-icons/fa";
-
 
 /**
  * Navigation bar component - Provides main site navigation

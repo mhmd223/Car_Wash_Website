@@ -11,7 +11,6 @@ export default function GeneralLayout({
   setUser,
   isLoggedIn,
   setIsLoggedIn,
-  fetchUserData,
   axios,
 }) {
   return (
@@ -26,10 +25,9 @@ export default function GeneralLayout({
             user,
             setUser,
             axios,
-            fetchUserData,
           }}
         >
-          {!isLoggedIn ? <Navigate to={"/login"} /> : <Navigate to={"/"} />}
+          {!isLoggedIn && <Navigate to={"/login"} />}
 
           {!isLoggedIn && (
             <video className={classes.video} src={""} autoPlay loop muted />

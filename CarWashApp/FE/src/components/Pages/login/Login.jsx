@@ -2,6 +2,7 @@ import * as regexPatterns from "../../../data/regex/regex";
 import { useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext";
+import { Navigate } from "react-router-dom";
 import InputField from "../../FormComponents/inputField/InputField";
 import classes from "./login.module.css";
 import LoginForm from "../../FormComponents/Forms/LoginForm/LoginForm.jsx";
@@ -11,6 +12,7 @@ export default function Login() {
   const setIsLoggedIn = useContext(UserContext).setIsLoggedIn;
   const setUser = useContext(UserContext).setUser;
   const fetchUserData = useContext(UserContext).fetchUserData;
+  const isLoggedIn = useContext(UserContext).isLoggedIn;
   const buttonClass = classes.Button;
 
   const [isRegistering, setIsRegistering] = useState(false);
@@ -40,6 +42,9 @@ export default function Login() {
 
   return (
     <div className={classes.Container}>
+
+      {isLoggedIn && <Navigate to={"/home"} />}
+      
       <h2>{isRegistering ? "Register" : "Login"}</h2>
       <span>OR</span>
       <button

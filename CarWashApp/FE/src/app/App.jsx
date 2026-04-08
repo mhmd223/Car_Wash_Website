@@ -13,26 +13,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import axios from "axios";
 import Home from "../components/Pages/home/Home";
+import CarWashes from "../components/Pages/userWashes/CarWashes";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const [userWashes, setUserWashes] = useState(null);
-
-  async function fetchUserData(userId) {
-    try {
-      const response = await axios.get(
-        `http://localhost:5173/wash/user_washes/${userId}`,
-        {
-          withCredentials: true,
-        },
-      );
-
-      setUserWashes(response.data);
-    } catch (err) {
-      console.error("Error fetching user data:", err);
-    }
-  }
 
   return (
     <Router>
@@ -42,17 +27,17 @@ export default function App() {
             <GeneralLayout
               isLoggedIn={isLoggedIn}
               setIsLoggedIn={setIsLoggedIn}
-              fetchUserData={fetchUserData}
               user={user}
               setUser={setUser}
               axios={axios}
             />
           }
         >
-          <Route index element={<Home />} />
+          
+          <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/MyWashes" />
+          <Route path="/washes" element={<CarWashes />} />
         </Route>
       </Routes>
     </Router>

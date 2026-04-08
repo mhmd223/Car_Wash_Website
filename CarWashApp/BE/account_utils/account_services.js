@@ -60,10 +60,12 @@ router.post("/login", async (req, res) => {
       role: result.role,
     };
 
-    res.status(200).json({
-      message: `Welcome, ${result.username}!`,
-      loggedIn: true,
-      user: req.session.user,
+    req.session.save(() => {
+      res.status(200).json({
+        message: `Welcome, ${result.username}!`,
+        loggedIn: true,
+        user: req.session.user,
+      });
     });
   }
 });

@@ -7,7 +7,6 @@ import {
   useEffect,
 } from "react";
 import Button from "../../Button/Button.jsx";
-import axios from "axios";
 import * as accountOperations from "../../../../services/account_services.js";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -22,7 +21,6 @@ export default function LoginForm({
   confirmPassword,
   setIsLoggedIn,
   setUser,
-  fetchUserData,
   buttonClass,
   children,
 }) {
@@ -139,20 +137,22 @@ export default function LoginForm({
         if (response.loggedIn) {
           setIsLoggedIn(true);
           setUser(response.user);
-          await fetchUserData(response.user.id);
+          console.log(response.user);
         }
       };
 
   return (
-    <form action="GET" className={classes.form} onSubmit={handleSubmit}>
-      {childrenWithProps}
+    <>
+      <form action="GET" className={classes.form} onSubmit={handleSubmit}>
+        {childrenWithProps}
 
-      <Button
-        classN={buttonClass}
-        text={isRegistering ? "Register" : "Login"}
-        type="submit"
-      />
-      <ToastContainer />
-    </form>
+        <Button
+          classN={buttonClass}
+          text={isRegistering ? "Register" : "Login"}
+          type="submit"
+        />
+        <ToastContainer />
+      </form>
+    </>
   );
 }
