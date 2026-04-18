@@ -2,7 +2,7 @@ import { dbConnection } from "../../sql_utils/DBconnection.js";
 
 export async function get_user_washes(customerID) {
   const res = await dbConnection.query(
-    "SELECT * FROM car_wash where Cust_ID=?",
+    "SELECT car_wash.ID, Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, wash_category.Price, Category_ID, Name FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID WHERE Cust_ID=?",
     [customerID],
   );
 

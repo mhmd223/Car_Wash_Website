@@ -1,0 +1,114 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+.item {
+  text-align: right;
+  font-size: 1.8rem;
+  width: max-content;
+  width: 200px;
+  font-family: "Roboto", sans-serif;
+  background-color: var(--clr-org-);
+  padding: 5px;
+  border-radius: 30px;
+
+  display: flex;
+
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 0.4;
+  transition: all 0.3s ease;
+}
+.item > * {
+  padding: 10px;
+}
+.itemPending {
+  border-bottom: 5px solid var(--clr-org-290);
+}
+.item:hover {
+  background-color: var(--clr-darkPaige-290);
+  box-shadow:
+    3px 3px 20px 1px var(--clr-darkPaige-290),
+    -3px -3px 20px 1px var(--clr-darkPaige-290);
+  transform: translateY(-5px);
+}
+.item h2 {
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 3px solid;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.item * {
+  flex: 1;
+  font-family: "Roboto", sans-serif;
+}
+.namePrice {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  width: 100%;
+}
+.namePrice * {
+  text-align: center;
+}
+
+.price {
+  display: flex;
+  justify-content: center;
+}
+.label {
+  font-weight: bold;
+}
+.date {
+  text-align: center;
+  font-size: 2rem;
+
+  font-weight: bold;
+  padding-bottom: 10px;
+  border-bottom: solid 3px;
+}
+
+.status {
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  align-items: center;
+  font-size: 1.5rem;
+  vertical-align: bottom;
+}
+.phone {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3px;
+}
+.Icon {
+  color: var(--clr-darkpaige-);
+  width: fit-content;
+  font-size: 2rem;
+}
+
+.phone .label {
+  text-align: center;
+}
+.phone * {
+  width: fit-content;
+  flex: 0.5;
+}
+
+.carPlate {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3px;
+}
+.carPlate * {
+  width: fit-content;
+  flex: 0.5;
+}
+
+.status {
+  font-size: 3rem;
+}

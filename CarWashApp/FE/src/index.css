@@ -13,6 +13,10 @@ Variables
   /* primary/main color */
   --clr-paige-: #faf3e1;
   --clr-darkpaige-: #fa8112;
+
+  --clr-org-290: #fa82128f;
+  --clr-org-: #f5e7c6;
+  --clr-darkPaige-290: #f5e7c6ba;
   --clr-white: #fff;
   --clr-black: #222;
 
@@ -50,7 +54,7 @@ body {
 
   overflow: hidden;
 }
-body > div{
+body > div {
   height: 100%;
   display: flex;
   flex-direction: column;
