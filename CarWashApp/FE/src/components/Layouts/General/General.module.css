@@ -10,6 +10,7 @@ main {
 
 .outlet {
   background-color: var(--clr-paige-);
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
