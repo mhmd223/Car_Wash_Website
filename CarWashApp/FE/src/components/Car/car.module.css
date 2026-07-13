@@ -1,0 +1,90 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+.carContainer {
+  display: grid;
+  grid-template-rows: auto auto;
+  width: 280px;
+  height: fit-content;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.6rem;
+  border: 2px solid black;
+  background-color: var(--clr-paige-);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.carContainer:hover {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.carTitle {
+  font-weight: bold;
+  font-size: 2rem;
+  text-align: center;
+  color: var(--clr-black-);
+  background-color: var(--clr-darkpaige-);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-bottom: 2px solid black;
+}
+
+.carImage {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.carInfo {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: stretch;
+  justify-items: center;
+}
+
+.carCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 12px;
+  border-right: 2px solid black;
+  width: 100%;
+  height: 100%;
+}
+
+.carCell:last-child {
+  border-right: none;
+}
+.carInfo p {
+  text-align: left;
+  width: 100%;
+  margin: 0;
+  font-size: 1.6rem;
+  color: var(--clr-black-);
+}
+
+.removeIcon {
+  font-size: 2.4rem;
+  color: black;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.removeIcon:hover {
+  color: red;
+}
+
+.bookWashButton {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--clr-darkpaige-);
+  color: var(--clr-white-);
+  font-size: 1.6rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+.bookWashButton:hover {
+  background-color: var(--clr-paige-);
+  color: var(--clr-black-);
+}

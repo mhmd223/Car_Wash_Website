@@ -7,6 +7,7 @@ export default function InputField({
   type,
   label,
   name,
+  key,
   placeHolder,
   textFormat,
   errorMessage,
@@ -19,10 +20,11 @@ export default function InputField({
       <label htmlFor={id}>{label}</label>
 
       <input
-        onBlur={handleTextChange}
+        onBlur={setText ? handleTextChange : undefined}
         id={id}
         name={name}
         type={type}
+        key={key}
         placeholder={placeHolder}
       />
 

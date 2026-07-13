@@ -12,12 +12,21 @@ import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import axios from "axios";
+import { getUserCars } from "../services/car_services";
 import Home from "../components/Pages/home/Home";
 import CarWashes from "../components/Pages/userWashes/CarWashes";
+import UserCars from "../components/Pages/userCars/UserCars";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
+  const [userCars, setUserCars] = useState([]);
+
+  const fetchUserCars = async (user_id) => {
+    const data = await getUserCars(user_id);
+    setUserCars(data);
+    return data;
+  };
 
   return (
     <Router>
@@ -30,14 +39,15 @@ export default function App() {
               user={user}
               setUser={setUser}
               axios={axios}
+              fetchUserCars={fetchUserCars}
             />
           }
         >
-          
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/washes" element={<CarWashes />} />
+          <Route path="/cars" element={<UserCars />} />
         </Route>
       </Routes>
     </Router>

@@ -1,0 +1,141 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+.Modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.54);
+  font-family: "Roboto", sans-serif;
+  z-index: 100;
+}
+
+.FormContainer {
+  background-color: var(--clr-org-);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2.4rem;
+  width: 45%;
+  padding: 4rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  animation: openForm 0.4s ease-in-out;
+}
+
+.FormTitle {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--clr-black);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 3px solid var(--clr-darkpaige-);
+  padding-bottom: 0.8rem;
+  width: 100%;
+  text-align: center;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+.form label {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--clr-black);
+}
+
+.form input {
+  outline: none;
+  padding: 10px;
+  font-size: 1.6rem;
+  background: transparent;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 2px solid var(--clr-darkpaige-);
+  width: 100%;
+  transition: border-color 0.3s ease;
+  font-family: "Roboto", sans-serif;
+}
+
+.form input:focus {
+  border-bottom-color: var(--clr-darkpaige-);
+  padding-bottom: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 1.6rem;
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.submitButton {
+  padding: 1rem 2.4rem;
+  font-size: 1.6rem;
+  background-color: var(--clr-darkpaige-);
+  color: var(--clr-white);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  transition:
+    background-color 0.25s ease,
+    transform 0.15s ease;
+  min-width: 12rem;
+}
+
+.submitButton:hover {
+  background-color: var(--clr-black);
+  transform: translateY(-2px);
+}
+
+.cancelButton {
+  padding: 1rem 2.4rem;
+  font-size: 1.6rem;
+  background-color: transparent;
+  color: var(--clr-darkpaige-);
+  border: 2px solid var(--clr-darkpaige-);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.15s ease;
+  min-width: 12rem;
+}
+
+.cancelButton:hover {
+  background-color: var(--clr-darkpaige-);
+  color: var(--clr-white);
+  transform: translateY(-2px);
+}
+
+@keyframes openForm {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scaleX(1.04);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}

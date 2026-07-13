@@ -137,6 +137,7 @@ export default function LoginForm({
         if (response.loggedIn) {
           setIsLoggedIn(true);
           setUser(response.user);
+          fetchUserCars(response.user.id);
           console.log(response.user);
         }
       };

@@ -1,17 +1,19 @@
 import { useContext } from "react";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { getUserCars } from "../../../services/car_services";
+import { useCategories } from "../../../hooks/useCategories";
+import { useBookWash } from "../../../hooks/useBookWash";
 import classes from "./carwashes.module.css";
-import ObjectList from "../../ObjectList/ObjectList.jsx";
+import WashesList from "../../ObjectList/WashesList/WashesList.jsx";
 import BookForm from "../../FormComponents/Forms/BookWashForm/BookForm.jsx";
 import { useState } from "react";
 export default function CarWashes() {
   const user = useContext(UserContext).user;
   const bookWashText = "Book Wash";
   const [isBookFormOpen, setIsBookFormOpen] = useState(false);
-
-  console.log(isBookFormOpen);
+  const mutation = useBookWash();
 
   const {
     status: washStatus,
@@ -30,13 +32,7 @@ export default function CarWashes() {
     status: categoryStatus,
     error: categoryError,
     data: categoryData,
-  } = useQuery({
-    staleTime: 5 * 60 * 1000,
-    queryKey: ["categories"],
-    queryFn: async () => {
-      return await fetchCategoriesData();
-    },
-  });
+  } = useCategories();
   const {
     status: carStatus,
     error: carError,
@@ -48,8 +44,6 @@ export default function CarWashes() {
       return await fetchUserCars(user.id);
     },
   });
-
-  const mutation = useMutation({});
 
   async function fetchUserData(userId) {
     try {
@@ -67,43 +61,11 @@ export default function CarWashes() {
     }
   }
 
-  async function mutateWashBooking(bookingData) {
-    try {
-    } catch (err) {}
-  }
-  async function bookWash(
-    Car_Plate,
-    Cust_Phone,
-    Wash_Date,
-    Category_ID,
-  ) {}
   async function fetchUserCars(userId) {
     try {
-      const response = await axios.get(
-        "http://localhost:5173/car" + `/${userId}`,
-        {
-          withCredentials: true,
-        },
-      );
-      return response.data;
+      return await getUserCars(userId);
     } catch (err) {
       console.error("Error fetching user cars:", err);
-    }
-  }
-
-  async function fetchCategoriesData() {
-    try {
-      console.log("Fetching categories data...");
-      const response = await axios.get(
-        "http://localhost:5173/category/get_categories",
-        {
-          withCredentials: true,
-        },
-      );
-
-      return response.data;
-    } catch (err) {
-      console.error("Error fetching category data:", err);
     }
   }
 
@@ -112,23 +74,24 @@ export default function CarWashes() {
       <div className={classes.Container}>
         {washStatus === "loading" && <p>Loading...</p>}
         {washStatus === "error" && <p>Error: {washError.message}</p>}
-        {washStatus === "success" && <ObjectList objects={washesData} />}
+        {washStatus === "success" && <WashesList objects={washesData} />}
       </div>
 
       <button
         className={classes.BookWashButton}
-        onClick={() => {
-          console.log("gdfgd");
-
-          setIsBookFormOpen(true);
-        }}
+        onClick={() => setIsBookFormOpen(true)}
       >
-        {bookWashText.split("").map((char, index) => (
-          <span key={index}>{char}</span>
-        ))}
+        {bookWashText}
       </button>
+
       {isBookFormOpen && (
-        <BookForm user={user} categories={categoryData} cars={carsData} />
+        <BookForm
+          user={user}
+          mutation={mutation}
+          setIsBookFormOpen={setIsBookFormOpen}
+          categories={categoryData}
+          cars={carsData}
+        />
       )}
     </>
   );

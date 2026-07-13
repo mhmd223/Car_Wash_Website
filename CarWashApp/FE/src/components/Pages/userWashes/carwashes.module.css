@@ -16,14 +16,14 @@
   border-radius: 4px;
   cursor: pointer;
   width: 150px;
+  height: 75px;
   text-align: center;
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: 5px;
+  bottom: 5px;
+
 }
 
-
-.floatingChar{
+.floatingChar {
   animation: float 1s timing-function delay iteration-count direction fill-mode;
 }
-

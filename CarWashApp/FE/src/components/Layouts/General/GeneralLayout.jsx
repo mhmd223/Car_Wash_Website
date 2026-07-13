@@ -12,6 +12,7 @@ export default function GeneralLayout({
   isLoggedIn,
   setIsLoggedIn,
   axios,
+  fetchUserCars,
 }) {
   return (
     <>
@@ -25,6 +26,7 @@ export default function GeneralLayout({
             user,
             setUser,
             axios,
+            fetchUserCars,
           }}
         >
           {!isLoggedIn && <Navigate to={"/login"} />}

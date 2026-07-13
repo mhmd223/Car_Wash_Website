@@ -1,0 +1,50 @@
+import classes from "./car.module.css";
+import drivinglicense from "../../assets/images/drivinglicense.png";
+import { CiCircleRemove } from "react-icons/ci";
+
+export default function Car({
+  car,
+  user,
+  removeCar,
+  setIsBookFormOpen,
+  setSelectedCar,
+}) {
+  return (
+    <div className={classes.carContainer}>
+      <p className={classes.carTitle}>
+        {car.Model} {car.Brand}
+      </p>
+      <div className={classes.carInfo}>
+        <div className={classes.carCell}>
+          <img src={drivinglicense} className={classes.carImage} />
+        </div>
+        <div className={classes.carCell}>
+          <p className={classes.carPlate}>{car.License_Plate}</p>
+        </div>
+        <div className={classes.carCell}>
+          <CiCircleRemove
+            className={classes.removeIcon}
+            onClick={async () =>
+              await removeCar({
+                User_Id: user.id,
+                License_Plate: car.License_Plate,
+              })
+            }
+          />
+        </div>
+      </div>
+
+      <button
+        className={classes.bookWashButton}
+        onClick={() => {
+          setSelectedCar((prevSelectedCar) => {
+            return car; // Select the car if it's not already selected
+          });
+          setIsBookFormOpen(true);
+        }}
+      >
+        Book Wash
+      </button>
+    </div>
+  );
+}

@@ -9,6 +9,7 @@
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.54);
+  font-family: "roboto", sans-serif;
 }
 
 .FormContainer {
@@ -20,7 +21,10 @@
   width: 60%;
   height: 80%;
   border-radius: 8px;
-  
+  animation: openForm 0.5s ease-in-out;
+}
+.FormContainer.closing {
+  animation: closeForm 0.5s ease-in-out;
 }
 .form {
   height: 70%;
@@ -29,6 +33,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  animation: fadeIn 0.5s ease-in-out;
 }
 .form label {
   font-size: 1.6rem;
@@ -63,4 +68,62 @@
 
 .submitButton:hover {
   background-color: var(--clr-darkpaige-);
+}
+.categoryName span {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.selectedCarInput {
+  outline: none;
+  padding: 10px;
+  width: 50%;
+  font-size: 1.6rem;
+  background: transparent;
+}
+
+.seperator {
+  font-weight: bold;
+}
+
+@keyframes openForm {
+  0% {
+    transform: scaleX(0);
+  }
+  25% {
+    transform: scaleX(0.25);
+  }
+  50%{
+    transform: scaleX(0.5);
+  }
+  75% {
+    transform: scaleX(0.75);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes closeForm {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 1;
+  }
 }

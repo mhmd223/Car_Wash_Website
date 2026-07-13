@@ -9,16 +9,21 @@
   background-color: var(--clr-org-);
   padding: 5px;
   border-radius: 30px;
-
   display: flex;
-
   flex-direction: column;
   justify-content: space-between;
-  flex: 0.4;
+  align-items: stretch;
   transition: all 0.3s ease;
+}
+.info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 .item > * {
   padding: 10px;
+  width: 100%;
 }
 .itemPending {
   border-bottom: 5px solid var(--clr-org-290);
@@ -40,7 +45,6 @@
   align-items: center;
 }
 .item * {
-  flex: 1;
   font-family: "Roboto", sans-serif;
 }
 .namePrice {
@@ -49,6 +53,7 @@
   align-items: center;
   font-weight: bold;
   width: 100%;
+  gap: 10px;
 }
 .namePrice * {
   text-align: center;
@@ -56,7 +61,9 @@
 
 .price {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
 }
 .label {
   font-weight: bold;
@@ -82,31 +89,35 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 3px;
+  gap: 8px;
 }
 .Icon {
   color: var(--clr-darkpaige-);
-  width: fit-content;
-  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  font-size: 3rem;
+  flex: 0 0 2rem;
+  border-right: 3px solid var(--clr-darkpaige-);
+  padding-right: 2px;
 }
 
 .phone .label {
   text-align: center;
 }
 .phone * {
-  width: fit-content;
-  flex: 0.5;
+  width: auto;
+  flex: 0 0 auto;
 }
 
 .carPlate {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  gap: 3px;
+  gap: 8px;
 }
 .carPlate * {
-  width: fit-content;
-  flex: 0.5;
+  width: auto;
+  flex: 0 0 auto;
 }
 
 .status {

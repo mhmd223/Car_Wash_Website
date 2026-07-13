@@ -12,6 +12,7 @@ export default function Login() {
   const setIsLoggedIn = useContext(UserContext).setIsLoggedIn;
   const setUser = useContext(UserContext).setUser;
   const fetchUserData = useContext(UserContext).fetchUserData;
+  const fetchUserCars = useContext(UserContext).fetchUserCars;
   const isLoggedIn = useContext(UserContext).isLoggedIn;
   const buttonClass = classes.Button;
 
@@ -42,9 +43,8 @@ export default function Login() {
 
   return (
     <div className={classes.Container}>
-
       {isLoggedIn && <Navigate to={"/home"} />}
-      
+
       <h2>{isRegistering ? "Register" : "Login"}</h2>
       <span>OR</span>
       <button
@@ -65,6 +65,7 @@ export default function Login() {
         setIsLoggedIn={setIsLoggedIn}
         setUser={setUser}
         fetchUserData={fetchUserData}
+        fetchUserCars={fetchUserCars}
         axios={axios}
         buttonClass={buttonClass}
       >

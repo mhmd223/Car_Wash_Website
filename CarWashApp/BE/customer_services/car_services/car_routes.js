@@ -2,6 +2,7 @@ import express from "express";
 
 // car_routes.js: defines endpoints for customer car operations
 import * as car_queries from "./car_queries.js";
+import { client } from "../../redis.js";
 export const router = express.Router();
 
 // middleware that checks for an authenticated session on every route
@@ -28,9 +29,9 @@ router.get("/:user_id", async (req, res) => {
 // POST /add_user_car - add a new car entry for a user
 router.post("/add_user_car", async (req, res) => {
   const { user_id, car_plate } = req.body;
-
   // ensure required fields are provided
   if (!user_id || !car_plate) {
+    console.log("Missing required fields:", { user_id, car_plate }); // debug log, can be removed later
     res.status(400).json({ status: "Missing required fields" });
     return;
   }
@@ -40,5 +41,20 @@ router.post("/add_user_car", async (req, res) => {
   } else {
     // either bad input or car already exists for user
     res.status(400).json({ status: "Invalid data or car already added" });
+  }
+});
+
+router.delete("/remove_user_car", async (req, res) => {
+  const { user_id, car_plate } = req.body;
+  if (!user_id || !car_plate) {
+    console.log("Missing required fields:", { user_id, car_plate });
+    res.status(400).json({ status: "Missing required fields" });
+    return;
+  }
+
+  if (await car_queries.remove_user_car(user_id, car_plate)) {
+    res.status(200).json({ message: "Car removed successfully" });
+  } else {
+    res.status(400).json({ status: "Invalid data or car not found" });
   }
 });

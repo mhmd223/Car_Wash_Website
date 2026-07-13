@@ -2,10 +2,11 @@
 
 .listContainer {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: center;
-  overflow: scroll;
-  width: 100%;
+  overflow: auto;
+  width: 60%;
+  height: 350px;
   gap: 20px;
 }

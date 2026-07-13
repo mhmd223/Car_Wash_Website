@@ -1,7 +1,7 @@
-import Item from "../Item/Item";
+import Item from "../../WashObject/wash";
 import classes from "./list.module.css";
 
-export default function ObjectList({ objects }) {
+export default function WashesList({ objects }) {
   console.log(objects);
 
   return (
@@ -10,5 +10,6 @@ export default function ObjectList({ objects }) {
         <Item key={object.ID} item={object} />
       ))}
     </div>
+    
   );
 }

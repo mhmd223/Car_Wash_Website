@@ -17,6 +17,7 @@ router.get("/user_washes/:id", async (req, res) => {
   const { id } = req.params;
 
   await client.del(`user:${id}:washes`);
+
   const userData = await client.get(`user:${id}:washes`);
 
   if (!userData) {
@@ -32,22 +33,28 @@ router.get("/user_washes/:id", async (req, res) => {
 });
 
 router.post("/book_wash", async (req, res) => {
-  const { Car_Plate, Cust_ID, Wash_Date, Wash_Price, Category_ID } = req.body;
+  const { Car_Plate, Cust_ID, Wash_Date, Category_ID } = req.body;
 
-  const alreadyBooked = await wash_operations.book_wash(
+  const { alreadyBooked, userWashes } = await wash_operations.book_wash(
     Car_Plate,
     Cust_ID,
     Wash_Date,
-    Wash_Price,
     Category_ID,
   );
 
-  console.log(alreadyBooked);
+  console.log(alreadyBooked, userWashes);
 
   if (alreadyBooked) res.status(400).send("Wash already booked");
-  else {
-    const userWashes = await wash_operations.get_user_washes(id);
-    client.set(`user:${id}:washes`, JSON.stringify(userWashes));
+  else if (userWashes) {
+    const userData = await client.get(`user:${Cust_ID}:washes`);
+
+    if (userData) {
+      const parsedData = JSON.parse(userData);
+
+      parsedData.push(userWashes);
+
+      client.set(`user:${Cust_ID}:washes`, JSON.stringify(parsedData));
+    }
 
     res.status(200).send("Wash succesfully booked");
   }
