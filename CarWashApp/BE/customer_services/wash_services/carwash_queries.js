@@ -3,7 +3,7 @@ import { dbConnection } from "../../sql_utils/DBconnection.js";
 
 export async function get_user_washes(customerID) {
   const res = await dbConnection.query(
-    "SELECT car_wash.ID, Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, wash_category.Price, Category_ID, Name FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID WHERE Cust_ID=?",
+    "SELECT car_wash.ID, car_wash.Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, wash_category.Price, Category_ID, wash_category.Name, cars.Brand AS Car_Brand, cars.Model AS Car_Model FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID LEFT JOIN cars ON car_wash.Car_Plate = cars.License_Plate WHERE Cust_ID=?",
     [customerID],
   );
 
@@ -63,7 +63,7 @@ async function isAlreadyBooked(Wash_Date) {
 
 async function get_specific_wash(washID) {
   const res = await dbConnection.query(
-    "SELECT car_wash.ID, Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, wash_category.Price, Category_ID, Name FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID WHERE car_wash.ID=?",
+    "SELECT car_wash.ID, car_wash.Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, wash_category.Price, Category_ID, wash_category.Name, cars.Brand AS Car_Brand, cars.Model AS Car_Model FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID LEFT JOIN cars ON car_wash.Car_Plate = cars.License_Plate WHERE car_wash.ID=?",
     [washID],
   );
   return res[0][0];

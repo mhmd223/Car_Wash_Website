@@ -16,7 +16,7 @@ import { getUserCars } from "../services/car_services";
 import Home from "../components/Pages/home/Home";
 import CarWashes from "../components/Pages/userWashes/CarWashes";
 import UserCars from "../components/Pages/userCars/UserCars";
-
+import Account from "../components/Pages/account/Account";
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
@@ -48,6 +48,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/washes" element={<CarWashes />} />
           <Route path="/cars" element={<UserCars />} />
+          <Route path="/account" element={<Account />} />
         </Route>
       </Routes>
     </Router>

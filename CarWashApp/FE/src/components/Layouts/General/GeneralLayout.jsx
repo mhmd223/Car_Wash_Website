@@ -1,4 +1,4 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
 
@@ -14,9 +14,11 @@ export default function GeneralLayout({
   axios,
   fetchUserCars,
 }) {
+  const location = useLocation();
+  const hideHeader = location.pathname === "/account";
   return (
     <>
-      {isLoggedIn && <Header username={user.username} />}
+      {isLoggedIn && !hideHeader && <Header username={user.username} />}
 
       <main>
         <UserContext.Provider

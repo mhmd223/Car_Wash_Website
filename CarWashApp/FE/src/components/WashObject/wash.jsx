@@ -1,31 +1,44 @@
 import classes from "./item.module.css";
 import { icons } from "../../data/icons/icons.js";
+
 export default function Item({ item }) {
-  const statusMap = {
-    [-1]: "Rejected",
-    0: "Pending",
-    1: "Accepted",
-    2: "Completed",
+  const statusConfig = {
+    [-1]: { label: "Rejected", cls: classes.statusRejected },
+    0: { label: "Pending", cls: classes.statusPending },
+    1: { label: "Accepted", cls: classes.statusAccepted },
+    2: { label: "Completed", cls: classes.statusCompleted },
   };
+
+  const status = statusConfig[item.Wash_Status] ?? { label: "Unknown", cls: "" };
+  const carName = [item.Car_Brand, item.Car_Model].filter(Boolean).join(" ");
+
   return (
-    <div className={classes.item + " " + classes.itemPending}>
-      <h2>{item.Car_Plate}</h2>
-      <div className={classes.namePrice}>
-        <p className={classes.price}>
-          {<icons.price className={classes.Icon} />} {item.Price}
-        </p>
-        <h3>{item.Name}</h3>
+    <div className={classes.item}>
+      <div className={classes.cardHeader}>
+        <span className={`${classes.statusBadge} ${status.cls}`}>{status.label}</span>
+        <p className={classes.carPlateLabel}>{item.Car_Plate}</p>
       </div>
-      <p className={classes.carPlate}>
-        {<icons.car className={classes.Icon} />}
-        {item.Car_Plate}
-      </p>
-      <p className={classes.phone}>
-        {<icons.phone className={classes.Icon} />}
-        {item.Cust_Phone}
-      </p>
+
+      {carName && <h2 className={classes.carName}>{carName}</h2>}
+
+      <div className={classes.divider} />
+
+      <div className={classes.row}>
+        <icons.car className={classes.Icon} />
+        <span>{item.Name}</span>
+      </div>
+
+      <div className={classes.row}>
+        <icons.price className={classes.Icon} />
+        <span>{item.Price} ₪</span>
+      </div>
+
+      <div className={classes.row}>
+        <icons.phone className={classes.Icon} />
+        <span>{item.Cust_Phone}</span>
+      </div>
+
       <p className={classes.date}>{item.Wash_Date}</p>
-      <p className={classes.status}>{statusMap[item.Wash_Status]}</p>
     </div>
   );
 }
