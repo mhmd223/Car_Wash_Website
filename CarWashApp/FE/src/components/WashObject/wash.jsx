@@ -1,21 +1,24 @@
 import classes from "./item.module.css";
 import { icons } from "../../data/icons/icons.js";
-
+export const statusConfig = {
+  [-1]: { label: "Rejected", cls: classes.statusRejected },
+  0: { label: "Pending", cls: classes.statusPending },
+  1: { label: "Accepted", cls: classes.statusAccepted },
+  2: { label: "Completed", cls: classes.statusCompleted },
+};
 export default function Item({ item }) {
-  const statusConfig = {
-    [-1]: { label: "Rejected", cls: classes.statusRejected },
-    0: { label: "Pending", cls: classes.statusPending },
-    1: { label: "Accepted", cls: classes.statusAccepted },
-    2: { label: "Completed", cls: classes.statusCompleted },
+  const status = statusConfig[item.Wash_Status] ?? {
+    label: "Unknown",
+    cls: "",
   };
-
-  const status = statusConfig[item.Wash_Status] ?? { label: "Unknown", cls: "" };
   const carName = [item.Car_Brand, item.Car_Model].filter(Boolean).join(" ");
 
   return (
     <div className={classes.item}>
       <div className={classes.cardHeader}>
-        <span className={`${classes.statusBadge} ${status.cls}`}>{status.label}</span>
+        <span className={`${classes.statusBadge} ${status.cls}`}>
+          {status.label}
+        </span>
         <p className={classes.carPlateLabel}>{item.Car_Plate}</p>
       </div>
 

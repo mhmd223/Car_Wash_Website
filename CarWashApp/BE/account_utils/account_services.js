@@ -1,6 +1,11 @@
 import express from "express";
 import { client } from "../redis.js";
-import { registerAcc, verifyAcc, validate_login } from "./acount_queries.js";
+import {
+  registerAcc,
+  verifyAcc,
+  validate_login,
+  edit_user,
+} from "./acount_queries.js";
 
 export const router = express.Router();
 /** 
@@ -102,4 +107,20 @@ router.get("/logout", (req, res) => {
       res.status(200).json({ message: "Successfully logged out!" });
     }
   });
+});
+
+router.post("/edit", async (req, res) => {
+  const { id, username, email, phone, password } = req.body;
+  const result = await edit_user(id, username, email, phone, password);
+  if (result?.status === "User not found") {
+    res.status(404).json({ status: "User not found", edited: result });
+  } else if (result?.status === "Invalid password") {
+    res.status(401).json({ status: "Invalid password", edited: result });
+  } else if (!result) {
+    res.status(500).json({ status: "Something went wrong", edited: result });
+  } else {
+    res
+      .status(200)
+      .json({ message: "Account edited successfully!", edited: result });
+  }
 });

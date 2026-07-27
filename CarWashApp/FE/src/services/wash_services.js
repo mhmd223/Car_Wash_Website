@@ -1,4 +1,5 @@
 import axios from "axios";
+import { statusConfig } from "../components/WashObject/wash";
 
 const API_URL = "http://localhost:5173/wash";
 
@@ -15,4 +16,16 @@ export const bookWash = async (bookingData) => {
   });
 
   return response.data;
+};
+
+export const getUserStats = async (washId) => {
+  const response = await axios.get(`${API_URL}/user_washes/${washId}`, {
+    withCredentials: true,
+  });
+  return {
+    amount_of_washes: response.data.length,
+    completed_washes: response.data.filter(
+      (wash) => statusConfig[wash.Wash_Status]?.label === "Completed",
+    ).length,
+  };
 };

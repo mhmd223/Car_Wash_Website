@@ -33,3 +33,13 @@ export const login = async (emailOrPhone, password) => {
 
   return response.data;
 };
+
+export const editAccount = async (id, username, email, phone, password) => {
+  const response = await axios.post(
+    `${API_URL}edit`,
+    { id, username, email, phone, password },
+    { withCredentials: true },
+  );
+
+  return response.data;
+};

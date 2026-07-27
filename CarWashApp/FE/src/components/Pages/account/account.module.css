@@ -45,8 +45,8 @@
 
 .accountActions button {
   padding: 8px;
-  width: 100px;
-  font-size: 14px;
+  width: 125px;
+  font-size: 1.6rem;
   cursor: pointer;
   background-color: var(--clr-darkpaige-);
   color: var(--clr-white);
@@ -57,4 +57,6 @@
   background-color: var(--clr-darkPaige-290);
   color: var(--clr-darkpaige-);
   transform: translateY(-2px);
+  font-weight: bold;
+  border: solid 1px var(--clr-darkpaige-);
 }

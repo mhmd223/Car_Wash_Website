@@ -69,7 +69,7 @@ export async function registerAcc(
       email &&
       !(await checkEmailExists(email))
     ) {
-       await dbConnection.query(
+      await dbConnection.query(
         "INSERT INTO users (username,email,password,phone,role) VALUES(?,?,?,?,?)",
         [username, email, hashed_password, phone, "Customer"],
       );
@@ -112,5 +112,56 @@ export async function get_user_by_id(id) {
     return null;
   } catch (err) {
     throw err;
+  }
+}
+
+export async function edit_user(id, username, email, phone, password) {
+  try {
+    const user = await dbConnection.query("SELECT * FROM users WHERE id = ?", [
+      id,
+    ]);
+    const validPassword =
+      password && (await compare_hash(user[0][0].password, password));
+    const userExists = user[0].length > 0;
+
+    if (!userExists) return { status: "User not found", edited: false };
+    if (!validPassword) return { status: "Invalid password", edited: false };
+
+    const fields = [];
+    const values = [];
+
+    if (username !== undefined) {
+      if (!check_username(username)) return null;
+      fields.push("username = (@newUsername := ?)");
+      values.push(username);
+    }
+
+    if (email !== undefined) {
+      if (await checkEmailExists(email)) return null;
+      fields.push("email = (@newEmail := ?)");
+      values.push(email);
+    }
+
+    if (phone !== undefined) {
+      if (!check_phone(phone)) return null;
+      fields.push("phone = (@newPhone := ?)");
+      values.push(phone);
+    }
+
+    if (!fields.length) return null;
+
+    values.push(id);
+    await dbConnection.query(
+      `UPDATE users SET ${fields.join(", ")} WHERE id = ?`,
+      values,
+    );
+
+    const updatedData = await dbConnection.query(
+      "SELECT id,  COALESCE(@newUsername, username) AS username, COALESCE(@newEmail, email) AS email, COALESCE(@newPhone, phone) AS phone FROM users WHERE id = ?",
+      [id],
+    );
+    return updatedData[0][0];
+  } catch (err) {
+    return null;
   }
 }

@@ -1,0 +1,74 @@
+.editAccForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: absolute;
+    
+  background-color: var(--clr-org-);
+  width: 700px;
+  height: 300px;
+  padding: 50px;
+  border-radius: 8px;
+  padding-bottom: 40px;
+}
+.editAccFormContainer {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100vw;
+  background-color: var(--clr-black-25e);
+}
+
+.editAccForm label {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.editAccForm input {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--clr-black-25e);
+  border: none;
+  border-bottom: 1px solid var(--clr-darkpaige-);
+  padding: 5px;
+  transition: all 0.5s ease;
+}
+
+.editAccForm input:focus {
+  outline: none;
+  border-bottom: 2px solid var(--clr-darkpaige-);
+  padding-bottom: 10px;
+}
+
+.editAccForm:focus-within input:not(:focus) {
+ 
+  padding: 0;
+  overflow: hidden;
+}
+
+.editAccFormButton {
+  width: 40%;
+  padding: 10px;
+  background-color: var(--clr-org-);
+  color: var(--clr-darkpaige-);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.editAccFormButton:hover {
+  background-color: var(--clr-darkpaige-);
+  color: black;
+}
