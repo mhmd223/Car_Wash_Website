@@ -1,19 +1,19 @@
 import classes from "./BookForm.module.css";
 import InputField from "../../inputField/InputField.jsx";
-import { data } from "react-router-dom";
+import { useBookWash } from "../../../../hooks/useBookWash.js";
 export default function BookForm({
   user,
   setIsBookFormOpen,
   categories,
   cars,
   car,
-  mutation,
 }) {
+  const mutation = useBookWash(user.id);
   let selectedCar = car ? car.License_Plate : null;
   let selectedCategory = null;
 
   console.log("User cars:", cars);
-    function getFullDate(time) {
+  function getFullDate(time) {
     const date = new Date();
     const [hours, minutes] = time.split(":").map(Number);
     date.setHours(hours, minutes, 0, 0);

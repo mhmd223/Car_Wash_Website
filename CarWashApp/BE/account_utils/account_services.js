@@ -5,6 +5,7 @@ import {
   verifyAcc,
   validate_login,
   edit_user,
+  get_user_by_id,
 } from "./acount_queries.js";
 
 export const router = express.Router();
@@ -109,7 +110,16 @@ router.get("/logout", (req, res) => {
   });
 });
 
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const result = await get_user_by_id(id);
+  if (!result) res.status(404).json({ status: "User not found" });
+  else res.status(200).json(result);
+});
+
 router.post("/edit", async (req, res) => {
+  console.log("editing user");
+
   const { id, username, email, phone, password } = req.body;
   const result = await edit_user(id, username, email, phone, password);
   if (result?.status === "User not found") {

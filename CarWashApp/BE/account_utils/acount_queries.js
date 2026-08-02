@@ -120,11 +120,14 @@ export async function edit_user(id, username, email, phone, password) {
     const user = await dbConnection.query("SELECT * FROM users WHERE id = ?", [
       id,
     ]);
-    const validPassword =
-      password && (await compare_hash(user[0][0].password, password));
+
     const userExists = user[0].length > 0;
 
     if (!userExists) return { status: "User not found", edited: false };
+
+    const validPassword =
+      password && (await compare_hash(user[0][0].password, password));
+
     if (!validPassword) return { status: "Invalid password", edited: false };
 
     const fields = [];
@@ -137,7 +140,8 @@ export async function edit_user(id, username, email, phone, password) {
     }
 
     if (email !== undefined) {
-      if (await checkEmailExists(email)) return null;
+      if (email !== user[0][0].email && (await checkEmailExists(email)))
+        return null;
       fields.push("email = (@newEmail := ?)");
       values.push(email);
     }
@@ -160,8 +164,12 @@ export async function edit_user(id, username, email, phone, password) {
       "SELECT id,  COALESCE(@newUsername, username) AS username, COALESCE(@newEmail, email) AS email, COALESCE(@newPhone, phone) AS phone FROM users WHERE id = ?",
       [id],
     );
+    console.log("succesfully updated user data ", updatedData[0][0]);
+
     return updatedData[0][0];
   } catch (err) {
+    console.log("editing user query error", err);
+
     return null;
   }
 }

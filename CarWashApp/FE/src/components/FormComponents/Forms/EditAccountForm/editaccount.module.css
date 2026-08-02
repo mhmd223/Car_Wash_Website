@@ -36,8 +36,8 @@
 .editAccForm input {
   width: 100%;
   box-sizing: border-box;
-  background-color: var(--clr-black-25e);
   border: none;
+  background-color: rgba(255, 255, 255, 0.301);
   border-bottom: 1px solid var(--clr-darkpaige-);
   padding: 5px;
   transition: all 0.5s ease;
@@ -55,6 +55,11 @@
   overflow: hidden;
 }
 
+.editAccFormButton:focus{
+  input{
+    padding: 5px;
+  }
+}
 .editAccFormButton {
   width: 40%;
   padding: 10px;

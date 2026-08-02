@@ -13,6 +13,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import axios from "axios";
 import { getUserCars } from "../services/car_services";
+import { useUserInfo } from "../hooks/useAccountStats";
 import Home from "../components/Pages/home/Home";
 import CarWashes from "../components/Pages/userWashes/CarWashes";
 import UserCars from "../components/Pages/userCars/UserCars";
@@ -21,6 +22,12 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [userCars, setUserCars] = useState([]);
+
+  const {
+    data: userInfo,
+    status: userInfoStatus,
+    error: userInfoError,
+  } = useUserInfo(user?.id);
 
   const fetchUserCars = async (user_id) => {
     const data = await getUserCars(user_id);
@@ -36,7 +43,7 @@ export default function App() {
             <GeneralLayout
               isLoggedIn={isLoggedIn}
               setIsLoggedIn={setIsLoggedIn}
-              user={user}
+              user={userInfo ?? user}
               setUser={setUser}
               axios={axios}
               fetchUserCars={fetchUserCars}

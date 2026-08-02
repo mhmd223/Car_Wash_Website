@@ -34,12 +34,24 @@ export const login = async (emailOrPhone, password) => {
   return response.data;
 };
 
-export const editAccount = async (id, username, email, phone, password) => {
-  const response = await axios.post(
-    `${API_URL}edit`,
-    { id, username, email, phone, password },
-    { withCredentials: true },
-  );
-
+export const getAccountInfo = async (userId) => {
+  const response = await axios.get(`${API_URL}${userId}`, {
+    withCredentials: true,
+  });
   return response.data;
+};
+
+export const editAccount = async (id, username, email, phone, password) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}edit`,
+      { id, username, email, phone, password },
+      { withCredentials: true },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error editing account:", error);
+    throw error;
+  }
 };

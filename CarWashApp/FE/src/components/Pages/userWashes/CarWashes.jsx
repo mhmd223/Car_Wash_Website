@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext";
 import { useCategories } from "../../../hooks/useCategories";
-import { useBookWash } from "../../../hooks/useBookWash";
 import { useUserWashes } from "../../../hooks/useUserWashes";
 import { useUserCars } from "../../../hooks/useUserCars";
 import classes from "./carwashes.module.css";
@@ -11,8 +10,6 @@ import BookForm from "../../FormComponents/Forms/BookWashForm/BookForm.jsx";
 export default function CarWashes() {
   const { user } = useContext(UserContext);
   const [isBookFormOpen, setIsBookFormOpen] = useState(false);
-
-  const mutation = useBookWash();
 
   const {
     status: washStatus,
@@ -42,7 +39,6 @@ export default function CarWashes() {
       {isBookFormOpen && (
         <BookForm
           user={user}
-          mutation={mutation}
           setIsBookFormOpen={setIsBookFormOpen}
           categories={categoryData}
           cars={carsData}

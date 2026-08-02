@@ -2,7 +2,7 @@ import classes from "./editaccount.module.css";
 import { UserContext } from "../../../ContextComponents/UserContext/UserContext";
 import { useContext, useState, useEffect } from "react";
 
-export default function EditAccForm({ onSubmit, userData }) {
+export default function EditAccForm({ onSubmit, userData, setEditMode }) {
   const { axios } = useContext(UserContext);
   const [missingPassword, setMissingPassword] = useState(false);
   useEffect(() => {
@@ -13,6 +13,7 @@ export default function EditAccForm({ onSubmit, userData }) {
       return () => clearTimeout(timer);
     }
   }, [missingPassword]);
+
   async function handleSubmit(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -28,10 +29,18 @@ export default function EditAccForm({ onSubmit, userData }) {
     }
 
     await onSubmit(id, username, email, phone, password);
+    setEditMode(false);
   }
   return (
-    <div className={classes.editAccFormContainer}>
-      <form onSubmit={handleSubmit} className={classes.editAccForm}>
+    <div
+      className={classes.editAccFormContainer}
+      onClick={() => setEditMode(false)}
+    >
+      <form
+        onSubmit={handleSubmit}
+        className={classes.editAccForm}
+        onClick={(e) => e.stopPropagation()}
+      >
         <label>
           Username
           <input type="text" name="username" defaultValue={userData.username} />
