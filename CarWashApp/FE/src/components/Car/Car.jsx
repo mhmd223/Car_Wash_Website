@@ -25,12 +25,9 @@ export default function Car({
         {isHovered && <span>{text}</span>}
       </p>
       <div className={classes.carInfo}>
-        <div className={classes.carCell}>
+        {/* <div className={classes.carCell}>
           <img src={drivinglicense} className={classes.carImage} />
-        </div>
-        <div className={classes.carCell}>
-          <p className={classes.carPlate}>{car.License_Plate}</p>
-        </div>
+        </div> */}
         <div className={classes.carCell}>
           <CiCircleRemove
             className={classes.removeIcon}
@@ -42,6 +39,10 @@ export default function Car({
             }
           />
         </div>
+        <div className={classes.carCell}>
+          <p className={classes.carPlate}>{car.License_Plate}</p>
+        </div>
+        
       </div>
       <div className={classes.bookWashButtonContainer}>
         <button

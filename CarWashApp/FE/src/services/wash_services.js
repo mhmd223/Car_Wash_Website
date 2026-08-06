@@ -29,3 +29,19 @@ export const getUserStats = async (washId) => {
     ).length,
   };
 };
+
+export const getAllWashes = async () => {
+  const response = await axios.get(`${API_URL}/all_washes`, {
+    withCredentials: true,
+  });
+  return response.data;
+};
+
+export const updateWashStatus = async (washId, status) => {
+  const response = await axios.put(
+    `${API_URL}/update_status/${washId}`,
+    { status },
+    { withCredentials: true },
+  );
+  return response.data;
+};

@@ -32,6 +32,27 @@ router.get("/user_washes/:id", async (req, res) => {
   res.json(userData);
 });
 
+router.get("/all_washes", async (req, res) => {
+  const role = req.session.user?.role?.toLowerCase();
+  if (role !== "washer" && role !== "admin") {
+    return res.status(403).json({ status: "Forbidden" });
+  }
+  const washes = await wash_operations.get_all_washes();
+  res.json(washes);
+});
+
+router.put("/update_status/:id", async (req, res) => {
+  const role = req.session.user?.role?.toLowerCase();
+  if (role !== "washer" && role !== "admin") {
+    return res.status(403).json({ status: "Forbidden" });
+  }
+  const { id } = req.params;
+  const { status } = req.body;
+  const result = await wash_operations.update_wash_status(id, status);
+  if (result) res.status(200).json({ message: "Status updated" });
+  else res.status(404).json({ status: "Wash not found" });
+});
+
 router.post("/book_wash", async (req, res) => {
   const { Car_Plate, Cust_ID, Wash_Date, Category_ID } = req.body;
 

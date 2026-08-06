@@ -7,10 +7,11 @@ import {
   useAccountStats,
   useEditAccount,
 } from "../../../hooks/useAccountStats";
+import { logout } from "../../../services/account_services";
 import EditAccForm from "../../FormComponents/Forms/EditAccountForm/EditAccForm";
 
 export default function Account() {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const { mutateAsync: editAccount } = useEditAccount();
 
   const handleEditSubmit = async (id, username, email, phone, password) => {
@@ -57,7 +58,16 @@ export default function Account() {
           >
             Edit
           </button>
-          <button className={classes.logoutButton}>Log Out</button>
+          <button
+            className={classes.logoutButton}
+            onClick={async () => {
+              await logout();
+              if (setUser) setUser(null);
+              window.location.href = "/login";
+            }}
+          >
+            Log Out
+          </button>
         </div>
       </div>
 

@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5%;
+  width: 10%;
   position: absolute;
   transition: all 0.3s;
 }
@@ -37,7 +37,7 @@
   text-overflow: ellipsis;
 }
 
-.carTitle:hover{
+.carTitle:hover {
   width: 100%;
 }
 
@@ -52,6 +52,7 @@
   grid-template-columns: auto 1fr auto;
   align-items: stretch;
   justify-items: center;
+  justify-self: center;
 }
 
 .carCell {
@@ -59,10 +60,8 @@
   align-items: center;
   justify-content: center;
   padding: 5px 5px;
-  width: 100%;
   height: 100%;
 }
-
 
 .carInfo p {
   text-align: left;
@@ -81,7 +80,6 @@
 .removeIcon:hover {
   color: red;
   transform: scale(1.2);
-
 }
 
 .bookWashButtonContainer {
@@ -93,17 +91,30 @@
 .bookWashButton {
   width: 50%;
   padding: 5px;
+  background-color: transparent;
   font-size: 1.6rem;
   font-weight: bold;
   border: none;
   cursor: pointer;
   transition:
-    background-color 0.3s,
-    color 0.3s;
-  
-
+    background-color 0.3s ease-out 0.3s,
+    width 0.3s 0.3s;
 }
 .bookWashButton:hover {
-  background-color: var(--clr-paige-);
+  background-color: var(--clr-darkpaige-);
   color: var(--clr-black-);
+  width: 100%;
+}
+
+
+
+
+
+@keyframes widthAnimation {
+  from {
+    width: 50%;
+  }
+  to {
+    width: 100%;
+  }
 }

@@ -105,7 +105,9 @@ router.get("/logout", (req, res) => {
     if (err) {
       res.status(500).json({ status: "Error occurred while logging out" });
     } else {
-      res.status(200).json({ message: "Successfully logged out!" });
+      res
+        .status(200)
+        .json({ message: "Successfully logged out!", loggedOut: true });
     }
   });
 });

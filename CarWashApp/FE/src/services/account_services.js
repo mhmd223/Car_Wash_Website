@@ -55,3 +55,17 @@ export const editAccount = async (id, username, email, phone, password) => {
     throw error;
   }
 };
+
+export const logout = async () => {
+  try {
+    const response = await axios.get(
+      `${API_URL}logout`,
+      {},
+      { withCredentials: true },
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error logging out:", error);
+    throw error;
+  }
+};

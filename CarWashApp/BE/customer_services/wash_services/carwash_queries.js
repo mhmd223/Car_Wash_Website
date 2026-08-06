@@ -68,3 +68,18 @@ async function get_specific_wash(washID) {
   );
   return res[0][0];
 }
+
+export async function get_all_washes() {
+  const res = await dbConnection.query(
+    "SELECT car_wash.ID, car_wash.Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, wash_category.Price, Category_ID, wash_category.Name, cars.Brand AS Car_Brand, cars.Model AS Car_Model FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID LEFT JOIN cars ON car_wash.Car_Plate = cars.License_Plate ORDER BY Wash_Date ASC",
+  );
+  return res[0];
+}
+
+export async function update_wash_status(washId, newStatus) {
+  const res = await dbConnection.query(
+    "UPDATE car_wash SET Wash_Status = ? WHERE ID = ?",
+    [newStatus, washId],
+  );
+  return res[0].affectedRows > 0;
+}

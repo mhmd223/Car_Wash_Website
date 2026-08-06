@@ -18,6 +18,7 @@ import Home from "../components/Pages/home/Home";
 import CarWashes from "../components/Pages/userWashes/CarWashes";
 import UserCars from "../components/Pages/userCars/UserCars";
 import Account from "../components/Pages/account/Account";
+import EmployeeDashboard from "../components/Pages/employee/EmployeeDashboard";
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
@@ -56,6 +57,7 @@ export default function App() {
           <Route path="/washes" element={<CarWashes />} />
           <Route path="/cars" element={<UserCars />} />
           <Route path="/account" element={<Account />} />
+          <Route path="/employee" element={<EmployeeDashboard />} />
         </Route>
       </Routes>
     </Router>
