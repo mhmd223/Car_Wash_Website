@@ -2,15 +2,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserStats } from "../services/wash_services";
 import { editAccount, getAccountInfo } from "../services/account_services";
 
-export const useUserInfo = (userId) => {
+export const useUserInfo = (userId, options = {}) => {
+  const enabled = !!userId && (options.enabled ?? true);
+
   return useQuery({
     queryKey: ["userInfo", userId],
     queryFn: () => getAccountInfo(userId),
+    enabled,
     staleTime: 5 * 60 * 1000,
   });
 };
 
-export const useAccountStats = (userId) => {
+export const useAccountStats = (userId, options = {}) => {
+  const enabled = !!userId && (options.enabled ?? true);
+
   return useQuery({
     queryKey: ["accountStats", userId],
     queryFn: async () => {
@@ -20,6 +25,7 @@ export const useAccountStats = (userId) => {
       ]);
       return { ...userInfo, ...washStats };
     },
+    enabled,
     staleTime: 5 * 60 * 1000,
   });
 };

@@ -1,12 +1,8 @@
 import classes from "./item.module.css";
 import { icons } from "../../data/icons/icons.js";
-export const statusConfig = {
-  [-1]: { label: "Rejected", cls: classes.statusRejected },
-  0: { label: "Pending", cls: classes.statusPending },
-  1: { label: "Accepted", cls: classes.statusAccepted },
-  2: { label: "Completed", cls: classes.statusCompleted },
-};
-export default function Item({ item }) {
+import { statusConfig } from "../../data/washStatus";
+export { statusConfig };
+export default function Item({ item, actions }) {
   const status = statusConfig[item.Wash_Status] ?? {
     label: "Unknown",
     cls: "",
@@ -16,7 +12,7 @@ export default function Item({ item }) {
   return (
     <div className={classes.item}>
       <div className={classes.cardHeader}>
-        <span className={`${classes.statusBadge} ${status.cls}`}>
+        <span className={`${classes.statusBadge} ${classes[status.cls] ?? ""}`}>
           {status.label}
         </span>
         <p className={classes.carPlateLabel}>{item.Car_Plate}</p>
@@ -42,6 +38,7 @@ export default function Item({ item }) {
       </div>
 
       <p className={classes.date}>{item.Wash_Date}</p>
+      {actions}
     </div>
   );
 }

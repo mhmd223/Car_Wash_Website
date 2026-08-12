@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import session from "express-session";
+import { createServer } from "http";
+import { initializeSocket } from "./sockets/index.js";
 import * as account_services from "./account_utils/account_services.js";
 import * as category_services from "./admin_services/category_services/category_services.js";
 import * as user_category_services from "./customer_services/category_services/category_routes.js";
@@ -10,10 +12,11 @@ import * as car_services from "./customer_services/car_services/car_routes.js";
 
 dotenv.config({ path: "../../.env" });
 
-const server = express();
+const app = express();
+const server = createServer(app);
 
-server.use(cors({ origin: "http://localhost:3000", credentials: true }));
-server.use(
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(
   session({
     secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
@@ -24,15 +27,15 @@ server.use(
   }),
 );
 
-server.use("/", (req, res, next) => {
+app.use("/", (req, res, next) => {
   console.log("Session data:", req.session);
   next();
 });
-server.use(express.json());
+app.use(express.json());
 
-server.use("/account", account_services.router);
+app.use("/account", account_services.router);
 //if the user is an admin, they can access the admin category services, otherwise they can only access the user category services
-server.use("/category", (req, res, next) => {
+app.use("/category", (req, res, next) => {
   if (req.session.user.role === "admin") {
     category_services.router(req, res, next);
   } else {
@@ -40,11 +43,12 @@ server.use("/category", (req, res, next) => {
   }
 });
 
-server.use("/wash", wash_services.router);
+app.use("/wash", wash_services.router);
 
-server.use("/car", car_services.router);
+app.use("/car", car_services.router);
 
 server.listen(5173, () => {
   console.log("listening on port 5173!");
-  
 });
+
+export const io = initializeSocket(server);

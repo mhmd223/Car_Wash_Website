@@ -52,8 +52,8 @@ Global Styles
 html,
 body {
   height: 100vh;
-
   overflow: hidden;
+  font-family: "Raleway", sans-serif;
 }
 body > div {
   height: 100%;

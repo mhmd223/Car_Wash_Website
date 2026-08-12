@@ -1,5 +1,5 @@
 import axios from "axios";
-import { statusConfig } from "../components/WashObject/wash";
+import { statusConfig } from "../data/washStatus";
 
 const API_URL = "http://localhost:5173/wash";
 
@@ -43,5 +43,5 @@ export const updateWashStatus = async (washId, status) => {
     { status },
     { withCredentials: true },
   );
-  return response.data;
+  return await  response.data;
 };

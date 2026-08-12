@@ -1,12 +1,35 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 .listContainer {
+  overflow-y: auto;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  width: 90%;
+  max-width: 900px;
+  height: 500px;
+  gap: 2rem;
+  margin: 0 auto;
+  padding: 1.6rem;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.hourGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.hourLabel {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--clr-darkpaige-);
+  border-bottom: 2px solid var(--clr-org-290);
+  padding-bottom: 0.4rem;
+}
+
+.hourCards {
+  display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  overflow: auto;
-  width: 60%;
-  height: 350px;
-  gap: 20px;
+  gap: 1.6rem;
 }

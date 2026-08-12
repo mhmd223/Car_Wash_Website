@@ -24,7 +24,9 @@ export default function Account() {
     data: accountStats,
     status: statsStatus,
     error: statsError,
-  } = useAccountStats(user?.id);
+  } = useAccountStats(user?.id, {
+    enabled: !!user?.id,
+  });
 
   const displayName = accountStats?.username ?? user.username;
 

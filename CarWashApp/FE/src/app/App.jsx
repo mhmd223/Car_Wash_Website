@@ -6,8 +6,8 @@
 import "./app.css";
 import Login from "../components/Pages/login/Login";
 import GeneralLayout from "../components/Layouts/General/GeneralLayout";
-
-import { useState } from "react";
+import socket from "../Socket/socket";
+import { useState, useEffect } from "react";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -22,19 +22,29 @@ import EmployeeDashboard from "../components/Pages/employee/EmployeeDashboard";
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  const [userCars, setUserCars] = useState([]);
+  // const [userCars, setUserCars] = useState([]);
+  useEffect(() => {
+    if (user) {
+      console.log("User is logged in:", user);
+      socket.auth = { userId: user.id, role: user.role };
+
+      socket.connect();
+
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [user]);
 
   const {
     data: userInfo,
     status: userInfoStatus,
     error: userInfoError,
-  } = useUserInfo(user?.id);
+  } = useUserInfo(user?.id, {
+    enabled: !!user?.id, // Only fetch if user.id is available
 
-  const fetchUserCars = async (user_id) => {
-    const data = await getUserCars(user_id);
-    setUserCars(data);
-    return data;
-  };
+    retry: false, // Disable automatic retries
+  });
 
   return (
     <Router>
@@ -47,7 +57,7 @@ export default function App() {
               user={userInfo ?? user}
               setUser={setUser}
               axios={axios}
-              fetchUserCars={fetchUserCars}
+              socket={socket}
             />
           }
         >

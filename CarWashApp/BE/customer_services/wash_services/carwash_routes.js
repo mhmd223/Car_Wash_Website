@@ -1,6 +1,8 @@
 import express from "express";
 import * as wash_operations from "./carwash_queries.js";
 import { client } from "../../redis.js";
+import { io } from "../../server.js";
+import { newWashEvent } from "../../sockets/washEvents.js";
 
 export const router = express.Router();
 
@@ -35,6 +37,7 @@ router.get("/user_washes/:id", async (req, res) => {
 router.get("/all_washes", async (req, res) => {
   const role = req.session.user?.role?.toLowerCase();
   if (role !== "washer" && role !== "admin") {
+    console.log("Forbidden access attempt by user with role:", role);
     return res.status(403).json({ status: "Forbidden" });
   }
   const washes = await wash_operations.get_all_washes();
@@ -77,6 +80,7 @@ router.post("/book_wash", async (req, res) => {
       client.set(`user:${Cust_ID}:washes`, JSON.stringify(parsedData));
     }
 
+    newWashEvent(io, userWashes);
     res.status(200).send("Wash succesfully booked");
   }
 });

@@ -1,87 +1,84 @@
-import { useState } from "react";
-import { useAllWashes, useUpdateWashStatus } from "../../../hooks/useEmployeeWashes";
-import { statusConfig } from "../../WashObject/wash";
+import {
+  useAllWashes,
+  useUpdateWashStatus,
+} from "../../../hooks/useEmployeeWashes";
+import { useFilterWash } from "../../../hooks/useFilterWash";
+import WashesList from "../../ObjectList/WashesList/WashesList";
 import classes from "./employee.module.css";
+import { useQueryClient } from "@tanstack/react-query";
+import { UserContext } from "../../ContextComponents/UserContext/UserContext";
+import { useContext } from "react";
 
+import useSocket from "../../../Socket/useSocket";
 const STATUS_FILTERS = [
+  { label: "All", value: null },
   { label: "Pending", value: 0 },
   { label: "Accepted", value: 1 },
-  { label: "All", value: null },
+  { label: "Completed", value: 2 },
+  { label: "Rejected", value: -1 },
 ];
 
 export default function EmployeeDashboard() {
-  const [filter, setFilter] = useState(0);
+  const { socket } = useContext(UserContext);
+  const queryClient = useQueryClient();
   const { data: washes, status, error } = useAllWashes();
   const { mutate: updateStatus } = useUpdateWashStatus();
+  const { filteredWashes, filter, plateFilter, setPlateFilter, setFilter } =
+    useFilterWash(washes || []);
 
-  const filtered = washes
-    ? filter === null
-      ? washes
-      : washes.filter((w) => w.Wash_Status === filter)
-    : [];
+  useSocket(socket, "NEW_WASH_BOOKED", (newWash) => {
+    console.log("Received NEW_WASH_BOOKED event");
+    queryClient.setQueryData(["allWashes"], (oldData) => [
+      ...(oldData || []),
+      newWash,
+    ]);
 
+    console.log("Updated washes after receiving new wash:", [
+      queryClient.getQueryData(["allWashes"]),
+    ]);
+  });
+
+  const filtered = filteredWashes;
+  console.log("Filtered washes:", filtered); // Debugging log
   return (
     <div className={classes.container}>
-      <h2 className={classes.title}>Wash Bookings</h2>
+      <div className={classes.header}>
+        <h2 className={classes.title}>Wash Bookings</h2>
 
-      <div className={classes.filters}>
-        {STATUS_FILTERS.map((f) => (
-          <button
-            key={f.label}
-            className={`${classes.filterBtn} ${filter === f.value ? classes.active : ""}`}
-            onClick={() => setFilter(f.value)}
-          >
-            {f.label}
-          </button>
-        ))}
+        <div className={classes.filters}>
+          {STATUS_FILTERS.map((f) => (
+            <button
+              key={f.label}
+              className={`${classes.filterBtn} ${filter === f.value ? classes.active : ""}`}
+              onClick={() => setFilter(f.value)}
+            >
+              {f.label}
+            </button>
+          ))}
+          <input
+            type="text"
+            placeholder="Filter by plate number"
+            value={plateFilter}
+            onChange={(e) => setPlateFilter(e.target.value)}
+            className={classes.plateInput}
+          />
+        </div>
       </div>
 
-      {status === "pending" && <p className={classes.msg}>Loading...</p>}
-      {status === "error" && <p className={classes.msg}>Error: {error.message}</p>}
+      <div className={classes.content}>
+        {status === "pending" && <p className={classes.msg}>Loading...</p>}
+        {status === "error" && (
+          <p className={classes.msg}>Error: {error.message}</p>
+        )}
 
-      {status === "success" && (
-        <div className={classes.grid}>
-          {filtered.length === 0 && (
-            <p className={classes.msg}>No bookings found.</p>
-          )}
-          {filtered.map((wash) => {
-            const statusInfo = statusConfig[wash.Wash_Status] ?? {
-              label: "Unknown",
-              cls: "",
-            };
-            const carName = [wash.Car_Brand, wash.Car_Model]
-              .filter(Boolean)
-              .join(" ");
-            return (
-              <div key={wash.ID} className={classes.card}>
-                <div className={classes.cardHeader}>
-                  <span className={`${classes.badge} ${statusInfo.cls}`}>
-                    {statusInfo.label}
-                  </span>
-                  <span className={classes.plate}>{wash.Car_Plate}</span>
-                </div>
-
-                {carName && <p className={classes.carName}>{carName}</p>}
-
-                <div className={classes.divider} />
-
-                <div className={classes.info}>
-                  <span className={classes.label}>Category</span>
-                  <span>{wash.Name}</span>
-                </div>
-                <div className={classes.info}>
-                  <span className={classes.label}>Price</span>
-                  <span>{wash.Price} ₪</span>
-                </div>
-                <div className={classes.info}>
-                  <span className={classes.label}>Phone</span>
-                  <span>{wash.Cust_Phone}</span>
-                </div>
-                <div className={classes.info}>
-                  <span className={classes.label}>Date</span>
-                  <span className={classes.date}>{wash.Wash_Date}</span>
-                </div>
-
+        {status === "success" && (
+          <>
+            {filtered.length === 0 && (
+              <p className={classes.msg}>No bookings found.</p>
+            )}
+            <WashesList
+              objects={filtered}
+              renderActions={(wash) => (
                 <div className={classes.actions}>
                   {wash.Wash_Status === 0 && (
                     <>
@@ -114,11 +111,11 @@ export default function EmployeeDashboard() {
                     </button>
                   )}
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+              )}
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 }

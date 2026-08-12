@@ -13,6 +13,7 @@ export default function GeneralLayout({
   setIsLoggedIn,
   axios,
   fetchUserCars,
+  socket,
 }) {
   const location = useLocation();
   const hideHeader = location.pathname === "/account";
@@ -29,6 +30,7 @@ export default function GeneralLayout({
             setUser,
             axios,
             fetchUserCars,
+            socket,
           }}
         >
           {!isLoggedIn && <Navigate to={"/login"} />}
