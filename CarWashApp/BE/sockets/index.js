@@ -11,8 +11,14 @@ export function initializeSocket(server) {
 
   io.on("connection", (socket) => {
     console.log("A user connected:", socket.id);
+    console.log("User role:", socket.handshake.auth.role);
+    console.log("User ID:", socket.handshake.auth.userId);
 
-    socket.join("user" + socket.handshake.auth.userId);
+    socket.join("user:" + socket.handshake.auth.userId);
+
+    io.in(`user:${socket.handshake.auth.userId}`)
+      .fetchSockets()
+      .then((sockets) => console.log(sockets.map((s) => s.id)));
 
     if (socket.handshake.auth.role === "washer") {
       socket.join("washer");

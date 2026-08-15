@@ -2,6 +2,7 @@ import {
   useAllWashes,
   useUpdateWashStatus,
 } from "../../../hooks/useEmployeeWashes";
+import { WASH_EVENTS } from "../../../../../shared/events";
 import { useFilterWash } from "../../../hooks/useFilterWash";
 import WashesList from "../../ObjectList/WashesList/WashesList";
 import classes from "./employee.module.css";
@@ -26,12 +27,20 @@ export default function EmployeeDashboard() {
   const { filteredWashes, filter, plateFilter, setPlateFilter, setFilter } =
     useFilterWash(washes || []);
 
-  useSocket(socket, "NEW_WASH_BOOKED", (newWash) => {
-    console.log("Received NEW_WASH_BOOKED event");
+  useSocket(socket, WASH_EVENTS.NEW_WASH_BOOKED, (newWash) => {
     queryClient.setQueryData(["allWashes"], (oldData) => [
       ...(oldData || []),
       newWash,
     ]);
+  });
+
+  useSocket(socket, WASH_EVENTS.WASH_STATUS_UPDATED, ({ washId, status }) => {
+    queryClient.setQueryData(["allWashes"], (oldData) => {
+      if (!oldData) return [];
+      return oldData.map((wash) =>
+        wash.ID === washId ? { ...wash, Wash_Status: status } : wash,
+      );
+    });
 
     console.log("Updated washes after receiving new wash:", [
       queryClient.getQueryData(["allWashes"]),
@@ -39,7 +48,6 @@ export default function EmployeeDashboard() {
   });
 
   const filtered = filteredWashes;
-  console.log("Filtered washes:", filtered); // Debugging log
   return (
     <div className={classes.container}>
       <div className={classes.header}>
@@ -85,7 +93,7 @@ export default function EmployeeDashboard() {
                       <button
                         className={classes.acceptBtn}
                         onClick={() =>
-                          updateStatus({ washId: wash.ID, status: 1 })
+                          updateStatus({ washId: wash.ID, status: 1 , custId: wash.Cust_ID})
                         }
                       >
                         Accept
@@ -93,7 +101,7 @@ export default function EmployeeDashboard() {
                       <button
                         className={classes.rejectBtn}
                         onClick={() =>
-                          updateStatus({ washId: wash.ID, status: -1 })
+                          updateStatus({ washId: wash.ID, status: -1 , custId: wash.Cust_ID})
                         }
                       >
                         Reject
@@ -104,7 +112,7 @@ export default function EmployeeDashboard() {
                     <button
                       className={classes.completeBtn}
                       onClick={() =>
-                        updateStatus({ washId: wash.ID, status: 2 })
+                        updateStatus({ washId: wash.ID, status: 2 , custId: wash.Cust_ID})
                       }
                     >
                       Mark Complete

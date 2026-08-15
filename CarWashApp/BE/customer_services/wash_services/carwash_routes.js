@@ -2,8 +2,7 @@ import express from "express";
 import * as wash_operations from "./carwash_queries.js";
 import { client } from "../../redis.js";
 import { io } from "../../server.js";
-import { newWashEvent } from "../../sockets/washEvents.js";
-
+import * as washEvents from "../../sockets/washEvents.js";
 export const router = express.Router();
 
 // middleware that checks for an authenticated session on every route
@@ -50,10 +49,12 @@ router.put("/update_status/:id", async (req, res) => {
     return res.status(403).json({ status: "Forbidden" });
   }
   const { id } = req.params;
-  const { status } = req.body;
+  const { status, custId } = req.body;
   const result = await wash_operations.update_wash_status(id, status);
-  if (result) res.status(200).json({ message: "Status updated" });
-  else res.status(404).json({ status: "Wash not found" });
+  if (result) {
+    washEvents.washStatusUpdatedEvent(io, custId, Number(id), status);
+    res.status(200).json({ message: "Status updated" });
+  } else res.status(404).json({ status: "Wash not found" });
 });
 
 router.post("/book_wash", async (req, res) => {
@@ -80,7 +81,7 @@ router.post("/book_wash", async (req, res) => {
       client.set(`user:${Cust_ID}:washes`, JSON.stringify(parsedData));
     }
 
-    newWashEvent(io, userWashes);
+    washEvents.newWashEvent(io, userWashes);
     res.status(200).send("Wash succesfully booked");
   }
 });

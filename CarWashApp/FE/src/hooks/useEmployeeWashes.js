@@ -12,7 +12,8 @@ export const useAllWashes = () => {
 export const useUpdateWashStatus = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ washId, status }) => updateWashStatus(washId, status),
+    mutationFn: ({ washId, status, custId }) =>
+      updateWashStatus(washId, status, custId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allWashes"] });
     },

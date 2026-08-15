@@ -37,11 +37,11 @@ export const getAllWashes = async () => {
   return response.data;
 };
 
-export const updateWashStatus = async (washId, status) => {
+export const updateWashStatus = async (washId, status, custId) => {
   const response = await axios.put(
     `${API_URL}/update_status/${washId}`,
-    { status },
+    { status, custId },
     { withCredentials: true },
   );
-  return await  response.data;
+  return await response.data;
 };
