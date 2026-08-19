@@ -10,7 +10,7 @@ import {
 import { logout } from "../../../services/account_services";
 import EditAccForm from "../../FormComponents/Forms/EditAccountForm/EditAccForm";
 
-export default function Account() {
+export default function Account({ queryClient }) {
   const { user, setUser } = useContext(UserContext);
   const { mutateAsync: editAccount } = useEditAccount();
 
@@ -63,7 +63,7 @@ export default function Account() {
           <button
             className={classes.logoutButton}
             onClick={async () => {
-              await logout();
+              await logout(queryClient);
               if (setUser) setUser(null);
               window.location.href = "/login";
             }}

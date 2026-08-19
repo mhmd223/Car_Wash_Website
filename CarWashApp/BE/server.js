@@ -28,7 +28,13 @@ app.use(
 );
 
 app.use("/", (req, res, next) => {
-  console.log("Session data:", req.session);
+  if (
+    !req.session.user &&
+    req.path !== "/account/login" &&
+    req.path !== "/account/register"
+  ) {
+    return res.status(401).json({ status: "Unauthorized" });
+  }
   next();
 });
 app.use(express.json());

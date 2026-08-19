@@ -19,7 +19,9 @@ export default function CarWashes() {
     status: washStatus,
     error: washError,
     data: washesData,
-  } = useUserWashes(user.id);
+  } = useUserWashes(user.id, {
+    retry: false,
+  });
 
   const { data: categoryData } = useCategories();
 

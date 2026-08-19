@@ -38,6 +38,8 @@ export const getAccountInfo = async () => {
   const response = await axios.get(`${API_URL}me`, {
     withCredentials: true,
   });
+
+  console.log("getAccountInfo response:", response.data);
   return [response.data, Boolean(response.data)];
 };
 
@@ -56,13 +58,15 @@ export const editAccount = async (id, username, email, phone, password) => {
   }
 };
 
-export const logout = async () => {
+export const logout = async (queryClient) => {
   try {
-    const response = await axios.get(
-      `${API_URL}logout`,
-      {},
-      { withCredentials: true },
-    );
+    const response = await axios.get(`${API_URL}logout`, {
+      withCredentials: true,
+    });
+    if (queryClient) {
+      queryClient.setQueryData(["userInfo"], null);
+      queryClient.clear();
+    }
     return response.data;
   } catch (error) {
     console.error("Error logging out:", error);

@@ -111,7 +111,7 @@ router.get("/logout", (req, res) => {
 
 router.get("/me", async (req, res) => {
   const result = req.session.user;
-  if (!result) res.status(404).json({ status: "User not found" });
+  if (!result) res.status(404).json(undefined);
   else res.status(200).json(result);
 });
 

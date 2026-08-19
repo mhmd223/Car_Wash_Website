@@ -138,6 +138,7 @@ export default function LoginForm({
         if (response.loggedIn) {
           setIsLoggedIn(true);
           setUser(response.user);
+          localStorage.setItem("isLoggedIn", "true");
           queryClient.invalidateQueries(["userInfo"]);
         }
       };

@@ -7,14 +7,12 @@ import "./app.css";
 import Login from "../components/Pages/login/Login";
 import GeneralLayout from "../components/Layouts/General/GeneralLayout";
 import socket from "../Socket/socket";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import axios from "axios";
-import { getUserCars } from "../services/car_services";
 import { useUserInfo } from "../hooks/useAccountStats";
-//import queryClient to invalidate queries after user info update
 import { useQueryClient } from "@tanstack/react-query";
 
 import Home from "../components/Pages/home/Home";
@@ -22,30 +20,32 @@ import CarWashes from "../components/Pages/userWashes/CarWashes";
 import UserCars from "../components/Pages/userCars/UserCars";
 import Account from "../components/Pages/account/Account";
 import EmployeeDashboard from "../components/Pages/employee/EmployeeDashboard";
+
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
+  const { data: [userInfo, isLoggedIn] = [], status: userInfoStatus } =
+    useUserInfo();
+
   const queryClient = useQueryClient();
 
+  // sync socket auth whenever the query-derived user changes
+  const setUser = (data) =>
+    queryClient.setQueryData(["userInfo"], data ? [data, true] : null);
+
+  const setIsLoggedIn = (val) => {
+    if (!val) queryClient.setQueryData(["userInfo"], null);
+  };
+
   useEffect(() => {
-    if (user) {
-      socket.auth = { userId: user.id, role: user.role };
-
+    if (userInfo) {
+      socket.auth = { userId: userInfo.id, role: userInfo.role };
       socket.connect();
-
       return () => {
         socket.disconnect();
       };
     }
-  }, [user]);
+  }, [userInfo]);
 
-  const {
-    data: [userInfo, isLoggedInFromServer] = [],
-    status: userInfoStatus,
-    error: userInfoError,
-  } = useUserInfo();
-
-  console.log(userInfo);
+  if (userInfoStatus === "pending") return null;
 
   return (
     <Router>
@@ -55,7 +55,7 @@ export default function App() {
             <GeneralLayout
               isLoggedIn={isLoggedIn}
               setIsLoggedIn={setIsLoggedIn}
-              user={userInfo ? userInfo : user}
+              user={userInfo}
               setUser={setUser}
               axios={axios}
               socket={socket}
@@ -67,7 +67,10 @@ export default function App() {
           <Route path="/login" element={<Login queryClient={queryClient} />} />
           <Route path="/washes" element={<CarWashes />} />
           <Route path="/cars" element={<UserCars />} />
-          <Route path="/account" element={<Account />} />
+          <Route
+            path="/account"
+            element={<Account queryClient={queryClient} />}
+          />
           <Route path="/employee" element={<EmployeeDashboard />} />
         </Route>
       </Routes>
