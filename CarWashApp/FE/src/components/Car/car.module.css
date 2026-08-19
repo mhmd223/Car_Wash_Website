@@ -32,9 +32,10 @@
 }
 .carTitle span {
   width: 100%;
-  overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  text-wrap: wrap;
+  overflow: hidden;
 }
 
 .carTitle:hover {
@@ -105,10 +106,6 @@
   color: var(--clr-black-);
   width: 100%;
 }
-
-
-
-
 
 @keyframes widthAnimation {
   from {

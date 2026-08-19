@@ -1,6 +1,5 @@
 import express from "express";
 import * as wash_operations from "./carwash_queries.js";
-import { client } from "../../redis.js";
 import { io } from "../../server.js";
 import * as washEvents from "../../sockets/washEvents.js";
 export const router = express.Router();
@@ -16,21 +15,8 @@ router.use("/", (req, res, next) => {
 
 router.get("/user_washes/:id", async (req, res) => {
   const { id } = req.params;
-
-  await client.del(`user:${id}:washes`);
-
-  const userData = await client.get(`user:${id}:washes`);
-
-  if (!userData) {
-    const userWashes = await wash_operations.get_user_washes(id);
-
-    client.set(`user:${id}:washes`, JSON.stringify(userWashes));
-
-    res.json(userWashes);
-    return;
-  }
-
-  res.json(userData);
+  const userWashes = await wash_operations.get_user_washes(id);
+  res.json(userWashes);
 });
 
 router.get("/all_washes", async (req, res) => {
@@ -71,16 +57,6 @@ router.post("/book_wash", async (req, res) => {
 
   if (alreadyBooked) res.status(400).send("Wash already booked");
   else if (userWashes) {
-    const userData = await client.get(`user:${Cust_ID}:washes`);
-
-    if (userData) {
-      const parsedData = JSON.parse(userData);
-
-      parsedData.push(userWashes);
-
-      client.set(`user:${Cust_ID}:washes`, JSON.stringify(parsedData));
-    }
-
     washEvents.newWashEvent(io, userWashes);
     res.status(200).send("Wash succesfully booked");
   }

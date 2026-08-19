@@ -2,7 +2,6 @@ import express from "express";
 
 // car_routes.js: defines endpoints for customer car operations
 import * as car_queries from "./car_queries.js";
-import { client } from "../../redis.js";
 export const router = express.Router();
 
 // middleware that checks for an authenticated session on every route

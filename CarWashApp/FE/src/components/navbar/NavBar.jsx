@@ -20,11 +20,6 @@ import classes from "./navbar.module.css";
 // Import navigation pages data
 import { pages } from "../../data/pages/pages";
 
-import { BiSolidCarWash } from "react-icons/bi";
-import { CgProfile } from "react-icons/cg";
-import { IoMdHome } from "react-icons/io";
-import { FaExclamationCircle } from "react-icons/fa";
-
 /**
  * Navigation bar component - Provides main site navigation
  * Renders navigation links with active state styling
@@ -43,16 +38,14 @@ export default function NavBar() {
       {/* Unordered list of navigation items */}
       <ul className={classes.navbar}>
         {/* Map through pages to create navigation links */}
-        {pages.map((page) => (
-          // Individual navigation item
-          <li className={classes.navbarItem} key={page}>
-            {/* NavLink with active state styling */}
+        {pages.map(({ name, icon: Icon }) => (
+          <li className={classes.navbarItem} key={name}>
             <NavLink
-              key={page}
-              to={"/" + page.toLowerCase()}
+              to={"/" + name}
               className={({ isActive }) => (isActive ? classes.active : "")}
             >
-              {page}
+              <Icon />
+              {name}
             </NavLink>
           </li>
         ))}

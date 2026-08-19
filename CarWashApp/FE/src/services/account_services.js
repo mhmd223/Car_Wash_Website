@@ -34,11 +34,11 @@ export const login = async (emailOrPhone, password) => {
   return response.data;
 };
 
-export const getAccountInfo = async (userId) => {
-  const response = await axios.get(`${API_URL}${userId}`, {
+export const getAccountInfo = async () => {
+  const response = await axios.get(`${API_URL}me`, {
     withCredentials: true,
   });
-  return response.data;
+  return [response.data, Boolean(response.data)];
 };
 
 export const editAccount = async (id, username, email, phone, password) => {

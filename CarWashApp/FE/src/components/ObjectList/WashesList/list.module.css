@@ -1,5 +1,53 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.filters {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.filterBtn {
+  padding: 0.6rem 1.6rem;
+  border: 2px solid var(--clr-org-290);
+  background: transparent;
+  border-radius: 999px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--clr-black);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.filterBtn:hover {
+  background: var(--clr-org-290);
+  color: #fff;
+}
+
+.filterBtn.active {
+  background: var(--clr-darkpaige-);
+  border-color: var(--clr-darkpaige-);
+  color: #fff;
+}
+
+.plateInput {
+  padding: 0.6rem 1.2rem;
+  border: 2px solid var(--clr-darkpaige-);
+  border-radius: 999px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--clr-black);
+  outline: none;
+}
+
 .listContainer {
   overflow-y: auto;
   display: flex;
@@ -32,4 +80,12 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1.6rem;
+}
+
+.noWashes {
+  font-size: 1.6rem;
+  color: var(--clr-darkpaige-);
+  text-align: center;
+  margin-top: 2rem;
+  font-weight: bold;
 }

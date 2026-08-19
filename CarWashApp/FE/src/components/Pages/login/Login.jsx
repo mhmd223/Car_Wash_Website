@@ -7,7 +7,7 @@ import InputField from "../../FormComponents/inputField/InputField";
 import classes from "./login.module.css";
 import LoginForm from "../../FormComponents/Forms/LoginForm/LoginForm.jsx";
 
-export default function Login() {
+export default function Login({ queryClient }) {
   const axios = useContext(UserContext).axios;
   const setIsLoggedIn = useContext(UserContext).setIsLoggedIn;
   const setUser = useContext(UserContext).setUser;
@@ -72,6 +72,7 @@ export default function Login() {
         fetchUserData={fetchUserData}
         fetchUserCars={fetchUserCars}
         axios={axios}
+        queryClient={queryClient}
         buttonClass={buttonClass}
       >
         {isRegistering && (

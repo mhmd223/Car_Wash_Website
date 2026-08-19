@@ -5,6 +5,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext";
 import { GrAdd } from "react-icons/gr";
 import { FaCar } from "react-icons/fa6";
+import { useUserCars } from "../../../hooks/useUserCars.js";
 import { getUserCars, removeUserCar } from "../../../services/car_services";
 import { useCategories } from "../../../hooks/useCategories";
 import { useBookWash } from "../../../hooks/useBookWash";
@@ -30,16 +31,21 @@ export default function UserCars() {
   } = useCategories();
 
   const {
-    data: carsData,
-    isFetching: carsFetching,
+    satus: carsStatus,
     error: carsError,
-  } = useQuery({
-    queryFn: async () => {
-      return await fetchUserCars(user.id);
-    },
-    staleTime: 5 * 60 * 1000,
-    queryKey: ["userCars"],
-  });
+    data: carsData,
+  } = useUserCars(user.id);
+  // const {
+  //   data: carsData,
+  //   isFetching: carsFetching,
+  //   error: carsError,
+  // } = useQuery({
+  //   queryFn: async () => {
+  //     return await fetchUserCars(user.id);
+  //   },
+  //   staleTime: 5 * 60 * 1000,
+  //   queryKey: ["userCars"],
+  // });
 
   const Addmutation = useMutation({
     mutationFn: mutateAddCar,
@@ -75,7 +81,7 @@ export default function UserCars() {
   return (
     <>
       <div className={classes.Container}>
-        {carsFetching && <p>Loading...</p>}
+        {carsStatus === "loading" && <p>Loading...</p>}
         {carsError && <p>Error fetching cars: {carsError.message}</p>}
         {carsData && (
           <CarsList

@@ -1,4 +1,3 @@
-import { client } from "../../redis.js";
 import { dbConnection } from "../../sql_utils/DBconnection.js";
 
 export async function get_user_washes(customerID) {

@@ -3,7 +3,6 @@ import {
   useUpdateWashStatus,
 } from "../../../hooks/useEmployeeWashes";
 import { WASH_EVENTS } from "../../../../../shared/events";
-import { useFilterWash } from "../../../hooks/useFilterWash";
 import WashesList from "../../ObjectList/WashesList/WashesList";
 import classes from "./employee.module.css";
 import { useQueryClient } from "@tanstack/react-query";
@@ -11,21 +10,12 @@ import { UserContext } from "../../ContextComponents/UserContext/UserContext";
 import { useContext } from "react";
 
 import useSocket from "../../../Socket/useSocket";
-const STATUS_FILTERS = [
-  { label: "All", value: null },
-  { label: "Pending", value: 0 },
-  { label: "Accepted", value: 1 },
-  { label: "Completed", value: 2 },
-  { label: "Rejected", value: -1 },
-];
 
 export default function EmployeeDashboard() {
   const { socket } = useContext(UserContext);
   const queryClient = useQueryClient();
   const { data: washes, status, error } = useAllWashes();
   const { mutate: updateStatus } = useUpdateWashStatus();
-  const { filteredWashes, filter, plateFilter, setPlateFilter, setFilter } =
-    useFilterWash(washes || []);
 
   useSocket(socket, WASH_EVENTS.NEW_WASH_BOOKED, (newWash) => {
     queryClient.setQueryData(["allWashes"], (oldData) => [
@@ -47,30 +37,10 @@ export default function EmployeeDashboard() {
     ]);
   });
 
-  const filtered = filteredWashes;
   return (
     <div className={classes.container}>
       <div className={classes.header}>
         <h2 className={classes.title}>Wash Bookings</h2>
-
-        <div className={classes.filters}>
-          {STATUS_FILTERS.map((f) => (
-            <button
-              key={f.label}
-              className={`${classes.filterBtn} ${filter === f.value ? classes.active : ""}`}
-              onClick={() => setFilter(f.value)}
-            >
-              {f.label}
-            </button>
-          ))}
-          <input
-            type="text"
-            placeholder="Filter by plate number"
-            value={plateFilter}
-            onChange={(e) => setPlateFilter(e.target.value)}
-            className={classes.plateInput}
-          />
-        </div>
       </div>
 
       <div className={classes.content}>
@@ -81,11 +51,9 @@ export default function EmployeeDashboard() {
 
         {status === "success" && (
           <>
-            {filtered.length === 0 && (
-              <p className={classes.msg}>No bookings found.</p>
-            )}
             <WashesList
-              objects={filtered}
+              objects={washes || []}
+              filterToday
               renderActions={(wash) => (
                 <div className={classes.actions}>
                   {wash.Wash_Status === 0 && (
@@ -93,7 +61,11 @@ export default function EmployeeDashboard() {
                       <button
                         className={classes.acceptBtn}
                         onClick={() =>
-                          updateStatus({ washId: wash.ID, status: 1 , custId: wash.Cust_ID})
+                          updateStatus({
+                            washId: wash.ID,
+                            status: 1,
+                            custId: wash.Cust_ID,
+                          })
                         }
                       >
                         Accept
@@ -101,7 +73,11 @@ export default function EmployeeDashboard() {
                       <button
                         className={classes.rejectBtn}
                         onClick={() =>
-                          updateStatus({ washId: wash.ID, status: -1 , custId: wash.Cust_ID})
+                          updateStatus({
+                            washId: wash.ID,
+                            status: -1,
+                            custId: wash.Cust_ID,
+                          })
                         }
                       >
                         Reject
@@ -112,7 +88,11 @@ export default function EmployeeDashboard() {
                     <button
                       className={classes.completeBtn}
                       onClick={() =>
-                        updateStatus({ washId: wash.ID, status: 2 , custId: wash.Cust_ID})
+                        updateStatus({
+                          washId: wash.ID,
+                          status: 2,
+                          custId: wash.Cust_ID,
+                        })
                       }
                     >
                       Mark Complete

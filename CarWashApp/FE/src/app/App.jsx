@@ -14,6 +14,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { getUserCars } from "../services/car_services";
 import { useUserInfo } from "../hooks/useAccountStats";
+//import queryClient to invalidate queries after user info update
+import { useQueryClient } from "@tanstack/react-query";
+
 import Home from "../components/Pages/home/Home";
 import CarWashes from "../components/Pages/userWashes/CarWashes";
 import UserCars from "../components/Pages/userCars/UserCars";
@@ -22,10 +25,10 @@ import EmployeeDashboard from "../components/Pages/employee/EmployeeDashboard";
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-  // const [userCars, setUserCars] = useState([]);
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     if (user) {
-      console.log("User is logged in:", user);
       socket.auth = { userId: user.id, role: user.role };
 
       socket.connect();
@@ -37,14 +40,12 @@ export default function App() {
   }, [user]);
 
   const {
-    data: userInfo,
+    data: [userInfo, isLoggedInFromServer] = [],
     status: userInfoStatus,
     error: userInfoError,
-  } = useUserInfo(user?.id, {
-    enabled: !!user?.id, // Only fetch if user.id is available
+  } = useUserInfo();
 
-    retry: false, // Disable automatic retries
-  });
+  console.log(userInfo);
 
   return (
     <Router>
@@ -54,7 +55,7 @@ export default function App() {
             <GeneralLayout
               isLoggedIn={isLoggedIn}
               setIsLoggedIn={setIsLoggedIn}
-              user={userInfo ?? user}
+              user={userInfo ? userInfo : user}
               setUser={setUser}
               axios={axios}
               socket={socket}
@@ -63,7 +64,7 @@ export default function App() {
         >
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login queryClient={queryClient} />} />
           <Route path="/washes" element={<CarWashes />} />
           <Route path="/cars" element={<UserCars />} />
           <Route path="/account" element={<Account />} />

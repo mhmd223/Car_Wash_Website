@@ -43,7 +43,7 @@ export default function GeneralLayout({
           </div>
         </UserContext.Provider>
       </main>
-      {isLoggedIn && <Footer />}
+      {isLoggedIn && user.role === "Customer" && <Footer user={user} />}
     </>
   );
 }

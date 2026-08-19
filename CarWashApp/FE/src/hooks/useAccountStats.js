@@ -2,13 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserStats } from "../services/wash_services";
 import { editAccount, getAccountInfo } from "../services/account_services";
 
-export const useUserInfo = (userId, options = {}) => {
-  const enabled = !!userId && (options.enabled ?? true);
-
+export const useUserInfo = () => {
   return useQuery({
-    queryKey: ["userInfo", userId],
-    queryFn: () => getAccountInfo(userId),
-    enabled,
+    queryKey: ["userInfo"],
+    queryFn: () => getAccountInfo(),
     staleTime: 5 * 60 * 1000,
   });
 };

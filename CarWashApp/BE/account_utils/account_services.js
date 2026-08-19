@@ -1,5 +1,4 @@
 import express from "express";
-import { client } from "../redis.js";
 import {
   registerAcc,
   verifyAcc,
@@ -56,8 +55,6 @@ router.post("/login", async (req, res) => {
       .status(401)
       .json({ status: "Invalid email or password", loggedIn: false });
   else {
-    client.set(`user:${result.id}`, JSON.stringify(result));
-
     req.session.user = {
       id: result.id,
       username: result.username,
@@ -112,9 +109,8 @@ router.get("/logout", (req, res) => {
   });
 });
 
-router.get("/:id", async (req, res) => {
-  const { id } = req.params;
-  const result = await get_user_by_id(id);
+router.get("/me", async (req, res) => {
+  const result = req.session.user;
   if (!result) res.status(404).json({ status: "User not found" });
   else res.status(200).json(result);
 });

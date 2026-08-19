@@ -11,6 +11,7 @@ import * as accountOperations from "../../../../services/account_services.js";
 import { ToastContainer, toast } from "react-toastify";
 
 export default function LoginForm({
+  queryClient,
   isRegistering,
   setIsRegistering,
   setSuccessFullyRegistered,
@@ -137,8 +138,7 @@ export default function LoginForm({
         if (response.loggedIn) {
           setIsLoggedIn(true);
           setUser(response.user);
-          fetchUserCars(response.user.id);
-          console.log(response.user);
+          queryClient.invalidateQueries(["userInfo"]);
         }
       };
 
