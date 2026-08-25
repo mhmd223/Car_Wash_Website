@@ -4,6 +4,9 @@ import cors from "cors";
 import session from "express-session";
 import { createServer } from "http";
 import { initializeSocket } from "./sockets/index.js";
+import { initializeJobs } from "./jobs/index.js";
+import loggedIn from "./middleware/loggedIn.js";
+
 import * as account_services from "./account_utils/account_services.js";
 import * as category_services from "./admin_services/category_services/category_services.js";
 import * as user_category_services from "./customer_services/category_services/category_routes.js";
@@ -11,6 +14,7 @@ import * as wash_services from "./customer_services/wash_services/carwash_routes
 import * as car_services from "./customer_services/car_services/car_routes.js";
 
 dotenv.config({ path: "../../.env" });
+await initializeJobs();
 
 const app = express();
 const server = createServer(app);
@@ -18,6 +22,7 @@ const server = createServer(app);
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(
   session({
+    name: "_sid",
     secret: process.env.SESSION_SECRET,
     saveUninitialized: true,
     cookie: {
@@ -27,16 +32,7 @@ app.use(
   }),
 );
 
-app.use("/", (req, res, next) => {
-  if (
-    !req.session.user &&
-    req.path !== "/account/login" &&
-    req.path !== "/account/register"
-  ) {
-    return res.status(401).json({ status: "Unauthorized" });
-  }
-  next();
-});
+app.use(loggedIn);
 app.use(express.json());
 
 app.use("/account", account_services.router);
@@ -52,6 +48,8 @@ app.use("/category", (req, res, next) => {
 app.use("/wash", wash_services.router);
 
 app.use("/car", car_services.router);
+
+
 
 server.listen(5173, () => {
   console.log("listening on port 5173!");

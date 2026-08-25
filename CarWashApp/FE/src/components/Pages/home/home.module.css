@@ -1,0 +1,167 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  gap: 15rem;
+  padding: 3.2rem 2.4rem;
+  overflow-y: auto;
+}
+
+/* ── Upcoming washes alerts ── */
+.alerts {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.alertsHeader {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--clr-black);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+.alertList {
+  display: flex;
+  justify-content: center;
+  gap: 1.6rem;
+  overflow-x: auto;
+  padding-bottom: 0.6rem;
+}
+
+.alertList::-webkit-scrollbar {
+  height: 4px;
+}
+
+.alertList::-webkit-scrollbar-thumb {
+  background: var(--clr-org-290);
+  border-radius: 999px;
+}
+
+.alertItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1.6rem 2rem;
+  background: var(--clr-white);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--clr-black);
+  min-width: 30rem;
+  flex-shrink: 0;
+  transition: var(--transition);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.alertItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.alertBadge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  width: fit-content;
+}
+
+.statusPending {
+  background: #fef9c3;
+  color: #854d0e;
+}
+.statusAccepted {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.alertPlate {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.alertMeta {
+  font-size: 1.3rem;
+  color: #666;
+}
+
+.alertDate {
+  font-size: 1.2rem;
+  color: #999;
+}
+
+/* ── Shortcut cards ── */
+.grid {
+  display: flex;
+  gap: 2.4rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 4rem;
+  border-radius: var(--radius);
+  background: var(--clr-org-);
+  color: var(--clr-black);
+  text-decoration: none;
+  transition: var(--transition);
+  min-width: 25.6rem;
+}
+
+.card:hover {
+  background: var(--clr-darkpaige-);
+  color: var(--clr-white);
+  transform: translateY(-3px);
+}
+
+.badge {
+  position: absolute;
+  top: -0.6rem;
+  right: -0.6rem;
+  background: var(--clr-darkpaige-);
+  color: var(--clr-white);
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 700;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card:hover .badge {
+  background: var(--clr-white);
+  color: var(--clr-darkpaige-);
+}
+
+.icon {
+  font-size: 2.4rem;
+}
+
+.label {
+  font-size: 1.4rem;
+  text-transform: capitalize;
+  font-weight: 600;
+  letter-spacing: var(--spacing);
+}
+
+.desc {
+  font-size: 1rem;
+  opacity: 0.7;
+  text-align: center;
+}

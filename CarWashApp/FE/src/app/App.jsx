@@ -14,6 +14,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import axios from "axios";
 import { useUserInfo } from "../hooks/useAccountStats";
 import { useQueryClient } from "@tanstack/react-query";
+import AdminDashboard from "../components/Pages/adminDashboard/AdminDashboard";
 
 import Home from "../components/Pages/home/Home";
 import CarWashes from "../components/Pages/userWashes/CarWashes";
@@ -71,7 +72,11 @@ export default function App() {
             path="/account"
             element={<Account queryClient={queryClient} />}
           />
-          <Route path="/employee" element={<EmployeeDashboard />} />
+
+          <Route>
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/employee" element={<EmployeeDashboard />} />
+          </Route>
         </Route>
       </Routes>
     </Router>

@@ -61,3 +61,4 @@ router.post("/book_wash", async (req, res) => {
     res.status(200).send("Wash succesfully booked");
   }
 });
+

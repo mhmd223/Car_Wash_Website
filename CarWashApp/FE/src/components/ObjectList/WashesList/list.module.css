@@ -62,6 +62,14 @@
   border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
+.listContainer::-webkit-scrollbar {
+  width: 6px;
+}
+.listContainer::-webkit-scrollbar-thumb {
+  background: var(--clr-org-290);
+  border-radius: 999px;
+}
+
 .hourGroup {
   display: flex;
   flex-direction: column;

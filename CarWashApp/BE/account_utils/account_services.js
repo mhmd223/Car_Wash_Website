@@ -61,6 +61,7 @@ router.post("/login", async (req, res) => {
       email: result.email,
       phone: result.phone,
       role: result.role,
+      user_agent: req.headers["user-agent"] || "unknown",
     };
 
     req.session.save(() => {

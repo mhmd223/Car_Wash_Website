@@ -9,10 +9,9 @@ import {
 // Validate user credentials during login.
 // Returns the user object if valid, otherwise `null`.
 export async function validate_login(email, password) {
+  const conn = await dbConnection.getConnection();
   try {
-    let res = await dbConnection.query("SELECT * FROM users WHERE email=?", [
-      email,
-    ]);
+    let res = await conn.query("SELECT * FROM users WHERE email=?", [email]);
 
     if (res[0].length) {
       const user = res[0][0];
@@ -25,18 +24,19 @@ export async function validate_login(email, password) {
     return null;
   } catch (err) {
     return null;
+  } finally {
+    conn.release();
   }
 }
 // Retrieve a user by their numeric `id`.
 // Returns the user object (id, username, email, phone, role) or `null` if not found.
 export async function verifyAcc(id) {
+  const conn = await dbConnection.getConnection();
   try {
     let res = await get_user_by_id(id);
 
     if (res) {
-      await dbConnection.query("UPDATE users SET verified = 1 WHERE id=?", [
-        id,
-      ]);
+      await conn.query("UPDATE users SET verified = 1 WHERE id=?", [id]);
 
       return res;
     }
@@ -44,6 +44,8 @@ export async function verifyAcc(id) {
     return res;
   } catch (err) {
     return null;
+  } finally {
+    conn.release();
   }
 }
 
@@ -56,6 +58,7 @@ export async function registerAcc(
   password,
   confirmPasswowrd,
 ) {
+  const conn = await dbConnection.getConnection();
   try {
     const hashed_password = await hash_password(password);
 
@@ -69,7 +72,7 @@ export async function registerAcc(
       email &&
       !(await checkEmailExists(email))
     ) {
-      await dbConnection.query(
+      await conn.query(
         "INSERT INTO users (username,email,password,phone,role) VALUES(?,?,?,?,?)",
         [username, email, hashed_password, phone, "Customer"],
       );
@@ -79,30 +82,34 @@ export async function registerAcc(
     }
   } catch (err) {
     return false;
+  } finally {
+    conn.release();
   }
 }
 
 // Check whether an email already exists in the `users` table.
 // Returns `true` if found, otherwise `false`.
 export async function checkEmailExists(email) {
+  const conn = await dbConnection.getConnection();
   try {
-    let res = await dbConnection.query("SELECT * FROM users WHERE email=?", [
-      email,
-    ]);
+    let res = await conn.query("SELECT * FROM users WHERE email=?", [email]);
 
     if (res[0].length) return true;
 
     return false;
   } catch (err) {
     throw err;
+  } finally {
+    conn.release();
   }
 }
 
 // Fetch a user record by `id` (public helper).
 // Returns the user object or `null` if not found.
 export async function get_user_by_id(id) {
+  const conn = await dbConnection.getConnection();
   try {
-    let res = await dbConnection.query(
+    let res = await conn.query(
       "SELECT id,username,email,phone,role FROM users WHERE id = ?",
       [id],
     );
@@ -112,14 +119,15 @@ export async function get_user_by_id(id) {
     return null;
   } catch (err) {
     throw err;
+  } finally {
+    conn.release();
   }
 }
 
 export async function edit_user(id, username, email, phone, password) {
+  const conn = await dbConnection.getConnection();
   try {
-    const user = await dbConnection.query("SELECT * FROM users WHERE id = ?", [
-      id,
-    ]);
+    const user = await conn.query("SELECT * FROM users WHERE id = ?", [id]);
 
     const userExists = user[0].length > 0;
 
@@ -155,12 +163,12 @@ export async function edit_user(id, username, email, phone, password) {
     if (!fields.length) return null;
 
     values.push(id);
-    await dbConnection.query(
+    await conn.query(
       `UPDATE users SET ${fields.join(", ")} WHERE id = ?`,
       values,
     );
 
-    const updatedData = await dbConnection.query(
+    const updatedData = await conn.query(
       "SELECT id,  COALESCE(@newUsername, username) AS username, COALESCE(@newEmail, email) AS email, COALESCE(@newPhone, phone) AS phone FROM users WHERE id = ?",
       [id],
     );
@@ -171,5 +179,7 @@ export async function edit_user(id, username, email, phone, password) {
     console.log("editing user query error", err);
 
     return null;
+  } finally {
+    conn.release();
   }
 }
