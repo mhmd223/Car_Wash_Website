@@ -2,13 +2,28 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
+  height: 50%;
   padding: 2.4rem;
   gap: 2rem;
-}
+  overflow-y: auto;
 
+  background-color: var(--clr-background);
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--clr-darkpaige-);
+  border-radius: 4px;
+}
 .title {
   font-size: 2rem;
   font-weight: 700;
   color: var(--clr-black);
+}
+
+.userList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }

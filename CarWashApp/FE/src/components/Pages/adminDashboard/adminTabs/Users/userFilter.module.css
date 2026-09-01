@@ -1,0 +1,40 @@
+.filterBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.phoneInput,
+.select {
+  min-height: 3.8rem;
+  padding: 0.7rem 1.1rem;
+  border: 2px solid var(--clr-org-290);
+  border-radius: 6px;
+  background-color: var(--clr-background);
+  color: var(--clr-black);
+  font: inherit;
+  font-size: 1.4rem;
+  outline: none;
+}
+
+.phoneInput {
+  flex: 1 1 22rem;
+}
+
+.select {
+  flex: 1 1 14rem;
+  cursor: pointer;
+}
+
+.phoneInput:focus,
+.select:focus {
+  border-color: var(--clr-darkpaige-);
+  box-shadow: 0 0 0 3px rgba(214, 123, 33, 0.2);
+}
+
+@media (max-width: 520px) {
+  .filterBar > * {
+    flex-basis: 100%;
+  }
+}

@@ -1,7 +1,7 @@
 import express from "express";
 import * as category_queries from "./category_queries.js";
 import { roles } from "../../data/roles.js";
-export const router = express.Router();
+const router = express.Router();
 
 router.post("/add_category", async (req, res) => {
   try {
@@ -38,5 +38,4 @@ router.delete("/remove_category", async (req, res) => {
   }
 });
 
-
-
+export default router;

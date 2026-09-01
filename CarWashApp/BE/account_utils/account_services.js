@@ -71,6 +71,7 @@ router.post("/login", async (req, res) => {
         user: req.session.user,
       });
     });
+    console.log(`User ${req.session.user.username} logged in successfully.`);
   }
 });
 

@@ -1,4 +1,4 @@
-import { dbConnection } from "../../sql_utils/DBconnection";
+import { dbConnection } from "../../sql_utils/DBconnection.js";
 
 export async function get_sales_report() {
   const conn = await dbConnection.getConnection();

@@ -4,13 +4,6 @@ import { roles } from "../../data/roles.js";
 
 const router = express.Router();
 
-router.use("/", (req, res, next) => {
-  if (!req.session.user || req.session.user.role !== roles.ADMIN) {
-    res.status(403).json({ status: "Unauthorized" });
-    return;
-  }
-  next();
-});
 
 router.get("/sales_report", async (req, res) => {
   try {
@@ -32,3 +25,5 @@ router.get("/sales_report", async (req, res) => {
       .json({ status: "Internal Server Error", error: err.message });
   }
 });
+
+export default router;

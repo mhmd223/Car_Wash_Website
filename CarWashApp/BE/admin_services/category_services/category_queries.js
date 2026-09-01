@@ -32,7 +32,7 @@ export async function remove_category_query(categoryID) {
 export async function update_category_query(categoryID, name, price) {
   const conn = await dbConnection.getConnection();
   try {
-    await conn.query("UPDATE wash_category name=? price=? WHERE id=?", [
+    await conn.query("UPDATE wash_category SET name=?, price=? WHERE id=?", [
       name,
       price,
       categoryID,

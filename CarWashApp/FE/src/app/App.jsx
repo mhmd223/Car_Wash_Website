@@ -73,7 +73,7 @@ export default function App() {
             element={<Account queryClient={queryClient} />}
           />
 
-          <Route>
+          <Route >
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/employee" element={<EmployeeDashboard />} />
           </Route>

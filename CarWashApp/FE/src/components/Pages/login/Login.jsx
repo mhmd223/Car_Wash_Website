@@ -46,7 +46,11 @@ export default function Login({ queryClient }) {
     <div className={classes.Container}>
       {isLoggedIn && (
         <Navigate
-          to={user?.role?.toLowerCase() === "washer" ? "/employee" : "/home"}
+          to={
+            { admin: "/admin/dashboard", washer: "/employee" }[
+              user?.role?.toLowerCase()
+            ] ?? "/home"
+          }
         />
       )}
 

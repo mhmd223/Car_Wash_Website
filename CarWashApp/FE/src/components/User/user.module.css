@@ -1,0 +1,136 @@
+.userContainer {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  height: fit-content;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background-color: white;
+  font-family: "Roboto", sans-serif;
+  transition: all 0.3s ease;
+}
+.userContainer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.actionContainer {
+  width: 50%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  justify-content: center;
+  align-content: center;
+
+  font-size: 1.5rem;
+  font-weight: 500;
+
+  gap: 16px;
+}
+.verifyContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 8px;
+}
+.verifyButton {
+  padding: 16px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: white;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.verifiedButton {
+  background-color: var(--clr-darkpaige-);
+  color: black;
+  cursor: not-allowed;
+}
+.verifyButton:hover {
+  background-color: var(--clr-darkpaige-);
+  color: black;
+}
+.roleContainer {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+.roles {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.role {
+  font-weight: 500;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 16px 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.role:hover {
+  background-color: var(--clr-darkpaige-);
+  color: white;
+}
+
+.selectedRole {
+  background-color: var(--clr-darkpaige-);
+  color: white;
+}
+.selectedRole {
+  font-weight: 700;
+  background-color: var(--clr-darkpaige-);
+  color: white;
+}
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-size: 3rem;
+  gap: 10px;
+  border: 1px solid #ccc;
+  border-radius: 99px;
+  background-color: grey;
+  width: fit-content;
+  padding: 4px;
+}
+.userIdLabel {
+  font-style: italic;
+}
+.userInfoContainer {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  gap: 20px;
+  font-weight: 500;
+}
+.divider {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 2rem;
+  padding: 5px;
+  border-top: 2px solid grey;
+  color: grey;
+}
+
+@media (max-width: 768px) {
+  .actionContainer {
+    width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  }
+  .userContainer {
+    flex-direction: column;
+  }
+}

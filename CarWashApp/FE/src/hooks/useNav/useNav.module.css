@@ -1,0 +1,29 @@
+.nav {
+  display: flex;
+  gap: 0.8rem;
+  padding: 1.2rem 1.6rem;
+  border-bottom: 2px solid var(--clr-org-290);
+}
+
+.navButton {
+  padding: 0.8rem 2rem;
+  border: 2px solid var(--clr-org-290);
+  background: transparent;
+  border-radius: 999px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--clr-black);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.navButton:hover {
+  background: var(--clr-org-290);
+  color: var(--clr-white);
+}
+
+.active {
+  background: var(--clr-darkpaige-);
+  border-color: var(--clr-darkpaige-);
+  color: var(--clr-white);
+}

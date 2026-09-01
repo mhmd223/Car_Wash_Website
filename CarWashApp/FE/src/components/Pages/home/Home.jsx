@@ -1,5 +1,5 @@
 import { useContext, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { pages } from "../../../data/pages/pages.js";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext.js";
 import { useUserWashes } from "../../../hooks/useUserWashes.js";
@@ -14,8 +14,13 @@ const SHORTCUT_DESC = {
   account: "Profile & stats",
 };
 
+const ROLE_REDIRECT = { admin: "/admin/dashboard", washer: "/employee" };
+
 export default function Home() {
   const { user } = useContext(UserContext);
+
+  const redirect = ROLE_REDIRECT[user?.role?.toLowerCase()];
+  if (redirect) return <Navigate to={redirect} replace />;
 
   const { data: washes = [] } = useUserWashes(user?.id, { retry: false });
 

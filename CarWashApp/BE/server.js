@@ -6,7 +6,7 @@ import { createServer } from "http";
 import { initializeSocket } from "./sockets/index.js";
 import { initializeJobs } from "./jobs/index.js";
 import loggedIn from "./middleware/loggedIn.js";
-
+import admin_services_router from "./admin_services/router.js";
 import * as account_services from "./account_utils/account_services.js";
 import * as category_services from "./admin_services/category_services/category_services.js";
 import * as user_category_services from "./customer_services/category_services/category_routes.js";
@@ -49,7 +49,7 @@ app.use("/wash", wash_services.router);
 
 app.use("/car", car_services.router);
 
-
+app.use("/admin", admin_services_router);
 
 server.listen(5173, () => {
   console.log("listening on port 5173!");
