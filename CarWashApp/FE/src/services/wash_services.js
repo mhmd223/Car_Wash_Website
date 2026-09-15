@@ -1,7 +1,7 @@
 import axios from "axios";
 import { statusConfig } from "../data/washStatus";
 
-const API_URL = "http://localhost:5173/wash";
+const API_URL = `${import.meta.env.VITE_API_URL || "http://localhost:5173"}/wash`;
 
 export const getUserWashes = async (userId) => {
   const response = await axios.get(`${API_URL}/user_washes/${userId}`, {

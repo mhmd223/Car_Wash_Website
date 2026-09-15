@@ -1,9 +1,7 @@
 import classes from "./editaccount.module.css";
-import { UserContext } from "../../../ContextComponents/UserContext/UserContext";
-import { useContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 export default function EditAccForm({ onSubmit, userData, setEditMode }) {
-  const { axios } = useContext(UserContext);
   const [missingPassword, setMissingPassword] = useState(false);
   useEffect(() => {
     if (missingPassword) {
@@ -43,19 +41,38 @@ export default function EditAccForm({ onSubmit, userData, setEditMode }) {
       >
         <label>
           Username
-          <input type="text" name="username" defaultValue={userData.username} />
+          <input
+            type="text"
+            name="username"
+            defaultValue={userData?.username ?? ""}
+            autoComplete="username"
+          />
         </label>
         <label>
           Email
-          <input type="email" name="email" defaultValue={userData.email} />
+          <input
+            type="email"
+            name="email"
+            defaultValue={userData?.email ?? ""}
+            autoComplete="email"
+          />
         </label>
         <label>
           Phone
-          <input type="tel" name="phone" defaultValue={userData.phone} />
+          <input
+            type="tel"
+            name="phone"
+            defaultValue={userData?.phone ?? ""}
+            autoComplete="tel"
+          />
         </label>
         <label>
           Password
-          <input type="password" name="password" />
+          <input
+            type="password"
+            name="password"
+            autoComplete="current-password"
+          />
         </label>
         <button type="submit" className={classes.editAccFormButton}>
           Save Changes

@@ -1,3 +1,4 @@
+// Customer wash history page with live status updates and booking entry point.
 import { useContext, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext";
@@ -9,7 +10,7 @@ import { useUserCars } from "../../../hooks/useUserCars";
 import classes from "./carwashes.module.css";
 import WashesList from "../../ObjectList/WashesList/WashesList.jsx";
 import BookForm from "../../FormComponents/Forms/BookWashForm/BookForm.jsx";
-
+import { useSchedule } from "../../../hooks/useSchedule.js";
 export default function CarWashes() {
   const { user, socket } = useContext(UserContext);
   const queryClient = useQueryClient();
@@ -17,8 +18,8 @@ export default function CarWashes() {
 
   const {
     status: washStatus,
-    error: washError,
     data: washesData,
+    refetch: refetchWashes,
   } = useUserWashes(user.id, {
     retry: false,
   });
@@ -26,6 +27,8 @@ export default function CarWashes() {
   const { data: categoryData } = useCategories();
 
   const { data: carsData } = useUserCars(user.id);
+
+  const { scheduleQuery } = useSchedule();
 
   useSocket(socket, WASH_EVENTS.WASH_STATUS_UPDATED, ({ washId, status }) => {
     queryClient.setQueryData(["userWashes", user.id], (oldData) => {
@@ -47,14 +50,28 @@ export default function CarWashes() {
   return (
     <>
       <div className={classes.Container}>
-        {washStatus === "pending" && <p>Loading...</p>}
-        {washStatus === "error" && <p>Error: {washError.message}</p>}
+        {washStatus === "pending" && (
+          <div className={classes.statusCard} role="status">
+            <span className={classes.spinner} />
+            <p>Loading your washes...</p>
+          </div>
+        )}
+        {washStatus === "error" && (
+          <div className={classes.statusCard} role="alert">
+            <p>We could not load your washes.</p>
+            <button type="button" onClick={() => refetchWashes()}>
+              Try again
+            </button>
+          </div>
+        )}
         {washStatus === "success" && <WashesList objects={washesData} />}
       </div>
 
       <button
         className={classes.BookWashButton}
         onClick={() => setIsBookFormOpen(true)}
+        title="Book a wash"
+        aria-label="Book a wash"
       >
         Book Wash
       </button>
@@ -65,6 +82,7 @@ export default function CarWashes() {
           setIsBookFormOpen={setIsBookFormOpen}
           categories={categoryData}
           cars={carsData}
+          schedule={scheduleQuery.data}
         />
       )}
     </>

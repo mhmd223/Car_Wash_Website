@@ -28,9 +28,40 @@ export async function get_user_washes(customerID) {
 
 export async function book_wash(Car_Plate, Cust_ID, Wash_Date, Category_ID) {
   const conn = await dbConnection.getConnection();
+  let transactionStarted = false;
+  let lockName;
   try {
+    const [ownedCar] = await conn.query(
+      "SELECT 1 FROM user_cars WHERE user_id=? AND car_plate=? AND deleted_at IS NULL LIMIT 1",
+      [Cust_ID, Car_Plate],
+    );
+    if (!ownedCar.length) {
+      return { errorCode: "CAR_NOT_OWNED" };
+    }
+
+    const [category] = await conn.query(
+      "SELECT 1 FROM wash_category WHERE ID=? LIMIT 1",
+      [Category_ID],
+    );
+    if (!category.length) {
+      return { errorCode: "CATEGORY_NOT_FOUND" };
+    }
+
+    // Serialize requests for the same time slot before checking availability.
+    lockName = `carwash:booking:${String(Wash_Date).slice(0, 16)}`;
+    const [lockResult] = await conn.query("SELECT GET_LOCK(?, 5) AS acquired", [
+      lockName,
+    ]);
+    if (Number(lockResult[0]?.acquired) !== 1) {
+      return { errorCode: "BOOKING_BUSY" };
+    }
+
+    // The lock, availability check, insert, and commit share one connection.
+    await conn.beginTransaction();
+
+    transactionStarted = true;
     const alreadyBooked = await isAlreadyBooked(conn, Wash_Date);
-    if (alreadyBooked) return { alreadyBooked, userWashes: null };
+    if (alreadyBooked) return { errorCode: "ALREADY_BOOKED" };
 
     const user = await conn.query("SELECT phone from users where id=?", [
       Cust_ID,
@@ -43,11 +74,25 @@ export async function book_wash(Car_Plate, Cust_ID, Wash_Date, Category_ID) {
     );
 
     const newUserWash = await get_specific_wash(conn, result[0].insertId);
+    await conn.commit();
+    transactionStarted = false;
 
     return { alreadyBooked: false, userWashes: newUserWash };
   } catch (err) {
+    if (transactionStarted) {
+      await conn.rollback();
+      transactionStarted = false;
+    }
     throw err;
   } finally {
+    if (transactionStarted) {
+      await conn.rollback();
+    }
+    if (lockName) {
+      await conn
+        .query("SELECT RELEASE_LOCK(?)", [lockName])
+        .catch(() => undefined);
+    }
     conn.release();
   }
 }

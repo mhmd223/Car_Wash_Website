@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://localhost:5173/account/";
+const API_URL = `${import.meta.env.VITE_API_URL || "http://localhost:5173"}/account/`;
 
 export const register = async (
   username,
@@ -74,4 +74,35 @@ export const logout = async (queryClient) => {
   }
 };
 
+export const verifyEmail = async (email, code) => {
+  const response = await axios.post(
+    `${API_URL}verify-email`,
+    { email, code },
+    { withCredentials: true },
+  );
+  return response.data;
+};
 
+export const resendVerification = async (email) => {
+  const response = await axios.post(
+    `${API_URL}resend-verification`,
+    { email },
+    { withCredentials: true },
+  );
+  return response.data;
+};
+
+export const verifyUser = async (id) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}verify`,
+      { id },
+      { withCredentials: true },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Error verifying user:", error);
+    throw error;
+  }
+};

@@ -1,7 +1,7 @@
 import { WASH_EVENTS } from "../../shared/events.js";
 
+// New bookings go to staff rooms; status changes go to customers and staff.
 export function newWashEvent(io, wash) {
-  console.log("Emitting NEW_WASH_BOOKED event for wash:", wash);
   io.to("washer").emit(WASH_EVENTS.NEW_WASH_BOOKED, wash);
   io.to("admin").emit(WASH_EVENTS.NEW_WASH_BOOKED, wash);
 }

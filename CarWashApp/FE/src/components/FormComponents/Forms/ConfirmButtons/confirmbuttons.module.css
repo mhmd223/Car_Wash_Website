@@ -1,6 +1,8 @@
 .confirmButtonsContainer {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
 }
 
@@ -8,7 +10,6 @@
   background-color: #f44336;
   color: white;
   border: none;
-  padding: 8px 16px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -17,12 +18,13 @@
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 8px 16px;
   cursor: pointer;
 }
 
 .button {
   transition: all 0.3s ease;
+  padding: 16px 16px;
+  width: 100%;
 }
 
 .button:hover {

@@ -1,15 +1,31 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 
 header {
-  width: 100vw;
-  height: fit-content;
-  background-color: var(--clr-paige-);
-  padding-top: 5rem;
+  width: 100%;
+  min-height: 7.6rem;
+  display: flex;
+  align-items: center;
+  padding: 1.8rem 3.2rem;
+  border-bottom: 1px solid rgba(117, 95, 70, 0.14);
+  background: rgba(247, 241, 231, 0.82);
+  box-shadow: 0 0.8rem 2.4rem rgba(67, 48, 32, 0.05);
+  backdrop-filter: blur(1.2rem);
 }
 header h1 {
-  color: black;
-  font-family: "Roboto", sans-serif;
-  font-size: 3rem;
-  text-align: center;
+  color: var(--clr-black);
+  font-family: "Paytone One", sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 0;
   margin: 0;
+}
+
+@media (max-width: 600px) {
+  header {
+    min-height: 6.4rem;
+    padding: 1.4rem 1.8rem;
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+  }
 }

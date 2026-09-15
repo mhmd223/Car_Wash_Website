@@ -4,14 +4,17 @@ dotenv.config({
   path: "../../../../.env",
 });
 
-const old_car_regex = /((\d{3})[\s-]?(\d{2})[\s-]?(\d{3}))/;
+const old_car_regex = /^(\d{3})[\s-]?(\d{2})[\s-]?(\d{3})$/;
 
-const new_car_regex = /((\d{2})[\s-]?(\d{3})[\s-]?(\d{2}))/;
+const new_car_regex = /^(\d{2})[\s-]?(\d{3})[\s-]?(\d{2})$/;
 /***
  * checks if license plate number is in valid format
  * @param plate_num - car license plate number
  */
 export function validatePlateFormat(plate_num) {
+  if (typeof plate_num !== "string") return false;
+
+  plate_num = plate_num.trim();
   let res_old = old_car_regex.test(plate_num);
   let res_new = new_car_regex.test(plate_num);
   return res_old || res_new;

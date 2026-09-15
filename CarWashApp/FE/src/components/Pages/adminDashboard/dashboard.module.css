@@ -1,9 +1,82 @@
 .dashboardContainer {
-  padding: 20px;
+  width: 100%;
+  min-height: 100%;
+  padding: 2.4rem 3.2rem 4rem;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 2rem;
+  align-items: stretch;
+  color: var(--clr-black);
+}
+
+.dashboardHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 2.4rem 2.8rem;
+  border: 1px solid rgba(117, 95, 70, 0.16);
+  border-bottom: 0.4rem solid var(--clr-darkpaige-);
+  border-radius: 1.2rem;
+  background: linear-gradient(120deg, var(--clr-org-) 0%, #f7c98b 100%);
+}
+
+.dashboardHeader h1 {
+  margin: 0.5rem 0 0;
+  font-size: 2.8rem;
+}
+
+.headerActions {
+  display: flex;
+  gap: 0.8rem;
   align-items: center;
+}
+
+.editButton,
+.logoutButton {
+  padding: 1rem 1.6rem;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  font-size: 1.4rem;
+  font-weight: 700;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.editButton {
+  border: 1px solid var(--clr-darkpaige-);
+  color: var(--clr-darkpaige-);
+  background: transparent;
+}
+
+.editButton:hover,
+.editButton:focus-visible {
+  color: white;
+  background: var(--clr-darkpaige-);
+  outline: none;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--clr-darkpaige-);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.12rem;
+  text-transform: uppercase;
+}
+
+.logoutButton {
+  border: 1px solid #9b4d3d;
+  color: #9b4d3d;
+  background: transparent;
+}
+
+.logoutButton:hover,
+.logoutButton:focus-visible {
+  color: white;
+  background: #9b4d3d;
+  outline: none;
 }
 
 .dashboardContainer nav .navButton {
@@ -18,4 +91,29 @@
 
 .dashboardContainer .navButton:hover {
   background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+  .dashboardContainer {
+    padding: 1.6rem;
+  }
+
+  .dashboardHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 2rem;
+  }
+
+  .logoutButton {
+    width: 100%;
+  }
+
+  .headerActions {
+    width: 100%;
+  }
+
+  .editButton,
+  .logoutButton {
+    flex: 1;
+  }
 }

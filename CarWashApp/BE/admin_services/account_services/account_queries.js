@@ -42,3 +42,16 @@ export async function update_user_role(usersToUpdate) {
 
   return updateSuccessful;
 }
+
+export async function verify_user(email) {
+  const conn = await dbConnection.getConnection();
+  try {
+    const res = await conn.query("UPDATE users SET verified=? WHERE email=?", [
+      true,
+      email,
+    ]);
+    return res[0].affectedRows > 0;
+  } finally {
+    conn.release();
+  }
+}

@@ -32,6 +32,12 @@
   color: #fff;
 }
 
+.filterBtn:focus-visible,
+.plateInput:focus-visible {
+  outline: 3px solid rgba(117, 95, 70, 0.3);
+  outline-offset: 2px;
+}
+
 .filterBtn.active {
   background: var(--clr-darkpaige-);
   border-color: var(--clr-darkpaige-);
@@ -39,6 +45,7 @@
 }
 
 .plateInput {
+  min-width: 20rem;
   padding: 0.6rem 1.2rem;
   border: 2px solid var(--clr-darkpaige-);
   border-radius: 999px;
@@ -96,4 +103,27 @@
   text-align: center;
   margin-top: 2rem;
   font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .filters {
+    align-items: stretch;
+    justify-content: stretch;
+  }
+
+  .filterBtn,
+  .plateInput {
+    flex: 1 1 calc(50% - 0.8rem);
+  }
+
+  .plateInput {
+    min-width: 0;
+  }
+
+  .listContainer {
+    width: 100%;
+    height: auto;
+    max-height: 60vh;
+    padding: 1.2rem;
+  }
 }

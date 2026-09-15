@@ -9,5 +9,5 @@ export default function useSocket(socket, eventName, callBack) {
     return () => {
       socket.off(eventName, callBack);
     };
-  }, []);
+  }, [socket, eventName, callBack]);
 }

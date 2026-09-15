@@ -21,7 +21,7 @@ export async function add_category_query(
 export async function remove_category_query(categoryID) {
   const conn = await dbConnection.getConnection();
   try {
-    await conn.query("DELETE FROM wash_category where ID=?", categoryID);
+    await conn.query("DELETE FROM wash_category WHERE ID=?", [categoryID]);
   } catch (err) {
     throw err;
   } finally {

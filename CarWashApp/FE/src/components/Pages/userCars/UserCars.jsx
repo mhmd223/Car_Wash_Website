@@ -1,39 +1,35 @@
+// Customer car management page and car-specific booking entry point.
 import classes from "./usercars.module.css";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addUserCar } from "../../../services/car_services";
 import { useContext, useState } from "react";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext";
 import { GrAdd } from "react-icons/gr";
 import { FaCar } from "react-icons/fa6";
 import { useUserCars } from "../../../hooks/useUserCars.js";
-import { getUserCars, removeUserCar } from "../../../services/car_services";
+import { removeUserCar } from "../../../services/car_services";
 import { useCategories } from "../../../hooks/useCategories";
 import { useBookWash } from "../../../hooks/useBookWash";
+import { useSchedule } from "../../../hooks/useSchedule";
 
 import CarsList from "../../ObjectList/CarsList/CarsList";
 import AddCarForm from "../../FormComponents/Forms/AddCarForm/AddCarForm.jsx";
 import BookForm from "../../FormComponents/Forms/BookWashForm/BookForm.jsx";
 export default function UserCars() {
   const user = useContext(UserContext).user;
-  const fetchUserCars = useContext(UserContext).fetchUserCars;
-  const lsLoggedIn = useContext(UserContext).isLoggedIn;
-
   const queryClient = useQueryClient();
   const bookWashMutation = useBookWash();
+  const { scheduleQuery } = useSchedule();
   const [isCarFormOpen, setIsCarFormOpen] = useState(false);
   const [isBookFormOpen, setIsBookFormOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
 
-  const {
-    status: categoryStatus,
-    error: categoryError,
-    data: categoryData,
-  } = useCategories();
+  const { data: categoryData } = useCategories();
 
   const {
-    satus: carsStatus,
-    error: carsError,
+    status: carsStatus,
     data: carsData,
+    refetch: refetchCars,
   } = useUserCars(user.id);
   // const {
   //   data: carsData,
@@ -81,9 +77,21 @@ export default function UserCars() {
   return (
     <>
       <div className={classes.Container}>
-        {carsStatus === "loading" && <p>Loading...</p>}
-        {carsError && <p>Error fetching cars: {carsError.message}</p>}
-        {carsData && (
+        {carsStatus === "pending" && (
+          <div className={classes.statusCard} role="status">
+            <span className={classes.spinner} />
+            <p>Loading your cars...</p>
+          </div>
+        )}
+        {carsStatus === "error" && (
+          <div className={classes.statusCard} role="alert">
+            <p>We could not load your cars.</p>
+            <button type="button" onClick={() => refetchCars()}>
+              Try again
+            </button>
+          </div>
+        )}
+        {carsStatus === "success" && carsData && (
           <CarsList
             setSelectedCar={setSelectedCar}
             setIsBookFormOpen={setIsBookFormOpen}
@@ -99,6 +107,8 @@ export default function UserCars() {
         onClick={() => {
           setIsCarFormOpen(true);
         }}
+        title="Add a car"
+        aria-label="Add a car"
       >
         <span className={classes.ButtonIcons}>
           <GrAdd className={classes.AddIcon} size={40} />
@@ -120,6 +130,7 @@ export default function UserCars() {
           user={user}
           categories={categoryData}
           car={selectedCar}
+          schedule={scheduleQuery.data}
         />
       )}
     </>

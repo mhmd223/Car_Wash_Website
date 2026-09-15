@@ -1,3 +1,4 @@
+// Login, registration, and verification-page state for the account entry flow.
 import * as regexPatterns from "../../../data/regex/regex";
 import { useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
@@ -6,6 +7,7 @@ import { Navigate } from "react-router-dom";
 import InputField from "../../FormComponents/inputField/InputField";
 import classes from "./login.module.css";
 import LoginForm from "../../FormComponents/Forms/LoginForm/LoginForm.jsx";
+import VerificationPage from "./VerificationPage.jsx";
 
 export default function Login({ queryClient }) {
   const axios = useContext(UserContext).axios;
@@ -24,6 +26,7 @@ export default function Login({ queryClient }) {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [verificationEmail, setVerificationEmail] = useState("");
 
   const emptyAllfields = () => {
     setUsername("");
@@ -54,106 +57,122 @@ export default function Login({ queryClient }) {
         />
       )}
 
-      <h2>{isRegistering ? "Register" : "Login"}</h2>
-      <span>OR</span>
-      <button
-        className={buttonClass}
-        onClick={() => setIsRegistering((prev) => !prev)}
-      >
-        {isRegistering ? "Login" : "Register"}
-      </button>
-      <LoginForm
-        isRegistering={isRegistering}
-        setIsRegistering={setIsRegistering}
-        setSuccessFullyRegistered={setSuccessFullyRegistered}
-        username={isRegistering ? username : undefined}
-        emailOrPhone={emailOrPhone}
-        phone={isRegistering ? phone : undefined}
-        password={password}
-        confirmPassword={isRegistering ? confirmPassword : undefined}
-        setIsLoggedIn={setIsLoggedIn}
-        setUser={setUser}
-        fetchUserData={fetchUserData}
-        fetchUserCars={fetchUserCars}
-        axios={axios}
-        queryClient={queryClient}
-        buttonClass={buttonClass}
-      >
-        {isRegistering && (
-          <InputField
-            {...{
-              id: "username",
-              name: "username",
-              type: "text",
-              label: "Username",
-              placeHolder: "Enter your username",
-              textFormat: isRegistering
-                ? regexPatterns.usernameRegex
-                : undefined,
-              errorMessage: "Please enter a valid username",
-              setText: setUsername,
-            }}
-          />
-        )}
-
-        <InputField
-          {...{
-            id: "email or phone",
-            name: "emailOrPhone",
-            type: "text",
-            label: "Email or Phone",
-            placeHolder: "Enter your email or phone",
-            textFormat: isRegistering ? regexPatterns.emailRegex : undefined,
-            errorMessage: "Please enter a valid email or phone number",
-            setText: setEmailOrPhone,
-          }}
+      {verificationEmail ? (
+        <VerificationPage
+          email={verificationEmail}
+          onVerified={() => setVerificationEmail("")}
         />
+      ) : (
+        <>
+          <h2>{isRegistering ? "Register" : "Login"}</h2>
+          <span>OR</span>
+          <button
+            className={buttonClass}
+            onClick={() => setIsRegistering((prev) => !prev)}
+          >
+            {isRegistering ? "Login" : "Register"}
+          </button>
+          <LoginForm
+            isRegistering={isRegistering}
+            setIsRegistering={setIsRegistering}
+            setSuccessFullyRegistered={setSuccessFullyRegistered}
+            setVerificationEmail={setVerificationEmail}
+            username={isRegistering ? username : undefined}
+            emailOrPhone={emailOrPhone}
+            phone={isRegistering ? phone : undefined}
+            password={password}
+            confirmPassword={isRegistering ? confirmPassword : undefined}
+            setIsLoggedIn={setIsLoggedIn}
+            setUser={setUser}
+            fetchUserData={fetchUserData}
+            fetchUserCars={fetchUserCars}
+            axios={axios}
+            queryClient={queryClient}
+            buttonClass={buttonClass}
+          >
+            {isRegistering && (
+              <InputField
+                {...{
+                  id: "username",
+                  name: "username",
+                  type: "text",
+                  label: "Username",
+                  placeHolder: "Enter your username",
+                  textFormat: isRegistering
+                    ? regexPatterns.usernameRegex
+                    : undefined,
+                  errorMessage: "Please enter a valid username",
+                  setText: setUsername,
+                }}
+              />
+            )}
 
-        {isRegistering && (
-          <InputField
-            {...{
-              id: "phone",
-              name: "phone",
-              type: "phone",
-              label: "Phone",
-              placeHolder: "Enter your phone number",
-              textFormat: isRegistering ? regexPatterns.phoneRegex : undefined,
-              errorMessage: "Please enter a valid phone number",
-              setText: setPhone,
-            }}
-          />
-        )}
-        <InputField
-          {...{
-            id: "password",
-            name: "password",
-            type: "password",
-            label: "Password",
-            placeHolder: "Enter your password",
-            textFormat: isRegistering ? regexPatterns.passwordRegex : undefined,
-            errorMessage:
-              "Password must be at least 8 characters and include letters and numbers",
+            <InputField
+              {...{
+                id: "email or phone",
+                name: "emailOrPhone",
+                type: "text",
+                label: "Email or Phone",
+                placeHolder: "Enter your email or phone",
+                textFormat: isRegistering
+                  ? regexPatterns.emailRegex
+                  : undefined,
+                errorMessage: "Please enter a valid email or phone number",
+                setText: setEmailOrPhone,
+              }}
+            />
 
-            setText: setPassword,
-          }}
-        />
-        {isRegistering && (
-          <InputField
-            {...{
-              id: "confirm password",
-              name: "confirmPassword",
-              type: "password",
-              label: "Confirm Password",
-              placeHolder: "Confirm your password",
-              textFormat: isRegistering
-                ? regexPatterns.passwordRegex
-                : undefined,
-              errorMessage: "Passwords do not match",
-              setText: setConfirmPassword,
-            }}
-          />
-        )}
-      </LoginForm>
+            {isRegistering && (
+              <InputField
+                {...{
+                  id: "phone",
+                  name: "phone",
+                  type: "phone",
+                  label: "Phone",
+                  placeHolder: "Enter your phone number",
+                  textFormat: isRegistering
+                    ? regexPatterns.phoneRegex
+                    : undefined,
+                  errorMessage: "Please enter a valid phone number",
+                  setText: setPhone,
+                }}
+              />
+            )}
+            <InputField
+              {...{
+                id: "password",
+                name: "password",
+                type: "password",
+                label: "Password",
+                placeHolder: "Enter your password",
+                textFormat: isRegistering
+                  ? regexPatterns.passwordRegex
+                  : undefined,
+                errorMessage:
+                  "Password must be at least 8 characters and include letters and numbers",
+
+                setText: setPassword,
+              }}
+            />
+            {isRegistering && (
+              <InputField
+                {...{
+                  id: "confirm password",
+                  name: "confirmPassword",
+                  type: "password",
+                  label: "Confirm Password",
+                  placeHolder: "Confirm your password",
+                  textFormat: isRegistering
+                    ? regexPatterns.passwordRegex
+                    : undefined,
+                  errorMessage: "Passwords do not match",
+                  setText: setConfirmPassword,
+                }}
+              />
+            )}
+          </LoginForm>
+        </>
+      )}
     </div>
   );
 }

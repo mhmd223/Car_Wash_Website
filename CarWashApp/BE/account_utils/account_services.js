@@ -1,13 +1,53 @@
 import express from "express";
 import {
   registerAcc,
-  verifyAcc,
   validate_login,
   edit_user,
   get_user_by_id,
 } from "./acount_queries.js";
+import {
+  initializeVerificationTable,
+  sendVerificationCode,
+  verifyEmailCode,
+} from "./verification_service.js";
 
 export const router = express.Router();
+
+router.post("/verify-email", async (req, res) => {
+  const { email, code } = req.body;
+  if (typeof email !== "string" || !/^\d{6}$/.test(String(code))) {
+    return res.status(400).json({ code: "INVALID_VERIFICATION_INPUT" });
+  }
+
+  try {
+    const result = await verifyEmailCode(
+      email.trim().toLowerCase(),
+      String(code),
+    );
+    if (!result.verified) return res.status(400).json(result);
+    return res.json({ verified: true, message: "Email verified successfully" });
+  } catch (error) {
+    console.error("Error verifying email:", error);
+    return res.status(500).json({ code: "VERIFICATION_FAILED" });
+  }
+});
+
+router.post("/resend-verification", async (req, res) => {
+  const email =
+    typeof req.body.email === "string"
+      ? req.body.email.trim().toLowerCase()
+      : "";
+  if (!email) return res.status(400).json({ code: "INVALID_EMAIL" });
+
+  try {
+    const result = await sendVerificationCode(email);
+    if (!result.sent) return res.status(429).json(result);
+    return res.json({ sent: true });
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+    return res.status(500).json({ code: "VERIFICATION_EMAIL_FAILED" });
+  }
+});
 /** 
 @route POST /register
 @desc Register a new user with email, username, phone, password, and confirmPassword.
@@ -33,10 +73,19 @@ router.post("/register", async (req, res) => {
     res
       .status(500)
       .json({ status: "Something went wrong", registered: result });
-  else
-    res
-      .status(200)
-      .json({ message: "Successfully registered!", registered: result });
+  else {
+    try {
+      await sendVerificationCode(email.trim().toLowerCase());
+    } catch (error) {
+      console.error("Error sending registration verification email:", error);
+      return res.status(500).json({ code: "VERIFICATION_EMAIL_FAILED" });
+    }
+    res.status(200).json({
+      message: "Successfully registered!",
+      registered: result,
+      verificationRequired: true,
+    });
+  }
 });
 /**
  * @route POST /login
@@ -54,13 +103,21 @@ router.post("/login", async (req, res) => {
     res
       .status(401)
       .json({ status: "Invalid email or password", loggedIn: false });
-  else {
+  else if (!result.verified) {
+    return res.status(403).json({
+      code: "EMAIL_NOT_VERIFIED",
+      email: result.email,
+      status: "Verify your email before logging in",
+      loggedIn: false,
+    });
+  } else {
     req.session.user = {
       id: result.id,
       username: result.username,
       email: result.email,
       phone: result.phone,
       role: result.role,
+      verified: result.verified,
       user_agent: req.headers["user-agent"] || "unknown",
     };
 
@@ -82,15 +139,6 @@ router.post("/login", async (req, res) => {
  * parameters:
  * - id: User's numeric ID (integer, passed as URL parameter)
  */
-router.put("/verify/:id", async (req, res) => {
-  const { id } = req.params;
-  const result = await verifyAcc(id);
-
-  if (!result) res.status(404).json({ status: "User not found" });
-  else res.status(200).json({ message: "Account verified successfully!" });
-  return;
-});
-
 /**
  *
  * @route GET /logout
@@ -120,8 +168,14 @@ router.get("/me", async (req, res) => {
 router.post("/edit", async (req, res) => {
   console.log("editing user");
 
-  const { id, username, email, phone, password } = req.body;
-  const result = await edit_user(id, username, email, phone, password);
+  const { username, email, phone, password } = req.body;
+  const result = await edit_user(
+    req.session.user.id,
+    username,
+    email,
+    phone,
+    password,
+  );
   if (result?.status === "User not found") {
     res.status(404).json({ status: "User not found", edited: result });
   } else if (result?.status === "Invalid password") {

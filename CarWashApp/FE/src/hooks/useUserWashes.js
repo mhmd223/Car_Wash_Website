@@ -5,6 +5,7 @@ export function useUserWashes(userId, { retry }) {
   return useQuery({
     queryKey: ["userWashes", userId],
     queryFn: () => getUserWashes(userId),
+    enabled: Boolean(userId),
     staleTime: 5 * 60 * 1000,
     retry: retry ?? true,
   });

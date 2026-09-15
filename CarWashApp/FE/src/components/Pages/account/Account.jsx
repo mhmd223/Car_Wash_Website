@@ -1,3 +1,4 @@
+// Customer/admin profile page: details, activity statistics, editing, and logout.
 import classes from "./account.module.css";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import AccountStats from "../../ObjectList/AccountStats/AccountStats";
@@ -20,15 +21,16 @@ export default function Account({ queryClient }) {
 
   const [editMode, setEditMode] = useState(false);
 
-  const {
-    data: accountStats,
-    status: statsStatus,
-    error: statsError,
-  } = useAccountStats(user?.id, {
+  const { data: accountStats } = useAccountStats(user?.id, {
     enabled: !!user?.id,
   });
+  const profileData = { ...user, ...accountStats };
 
-  const displayName = accountStats?.username ?? user.username;
+  const displayName = profileData.username;
+  const email = profileData.email;
+  const phone = profileData.phone;
+  const role = (profileData.role ?? "customer").toLowerCase();
+  const isVerified = profileData.verified;
 
   const stats = [
     {
@@ -49,7 +51,11 @@ export default function Account({ queryClient }) {
         <div className={classes.accountDetails}>
           <div className={classes.accountIcon}>
             <IoPersonCircleOutline className={classes.icon} />
-            <p className={classes.accountName}>{displayName}</p>
+            <div>
+              <p className={classes.accountEyebrow}>My account</p>
+              <p className={classes.accountName}>{displayName}</p>
+              <p className={classes.accountRole}>{role}</p>
+            </div>
           </div>
         </div>
 
@@ -73,10 +79,54 @@ export default function Account({ queryClient }) {
         </div>
       </div>
 
-      <AccountStats stats={stats} />
+      <main className={classes.accountContent}>
+        <section className={classes.profilePanel}>
+          <div className={classes.sectionHeading}>
+            <div>
+              <p className={classes.sectionEyebrow}>Profile details</p>
+              <h2>Keep your account current</h2>
+            </div>
+            <span
+              className={isVerified ? classes.verified : classes.unverified}
+            >
+              {isVerified ? "Verified" : "Not verified"}
+            </span>
+          </div>
+          <div className={classes.detailGrid}>
+            <div className={classes.detailItem}>
+              <span>Email</span>
+              <strong>{email || "Not provided"}</strong>
+            </div>
+            <div className={classes.detailItem}>
+              <span>Phone</span>
+              <strong>{phone || "Not provided"}</strong>
+            </div>
+            <div className={classes.detailItem}>
+              <span>Account type</span>
+              <strong>{role}</strong>
+            </div>
+            <div className={classes.detailItem}>
+              <span>Member access</span>
+              <strong>Active</strong>
+            </div>
+          </div>
+        </section>
+
+        <section className={classes.statsPanel}>
+          <div className={classes.sectionHeading}>
+            <div>
+              <p className={classes.sectionEyebrow}>Activity</p>
+              <h2>Your wash history</h2>
+            </div>
+            <span className={classes.sectionNote}>All time</span>
+          </div>
+          <AccountStats stats={stats} />
+        </section>
+      </main>
       {editMode && (
         <EditAccForm
-          userData={accountStats ?? user}
+          key={profileData.id}
+          userData={profileData}
           onSubmit={handleEditSubmit}
           setEditMode={setEditMode}
         />

@@ -1,0 +1,126 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 2.4rem 3.2rem 4rem;
+  gap: 1.2rem;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eyebrow {
+  color: var(--clr-darkpaige-);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.12rem;
+  text-transform: uppercase;
+}
+
+.title {
+  font-family: "Paytone One", sans-serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--clr-black);
+}
+
+.subtitle,
+.message {
+  color: #755f46;
+  font-size: 1.4rem;
+}
+
+.message {
+  padding: 2rem 0;
+}
+
+.uploadRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.uploadButton {
+  padding: 1rem 2rem;
+  border-radius: 0.6rem;
+  background-color: #fa8112;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.uploadButton:hover {
+  background-color: #d76b0a;
+}
+
+.fileName {
+  color: var(--clr-black);
+  font-size: 1.4rem;
+}
+
+.clearButton {
+  padding: 0.7rem 1.4rem;
+  border: 1px solid #9b4d3d;
+  border-radius: 0.6rem;
+  background-color: transparent;
+  color: #9b4d3d;
+  cursor: pointer;
+}
+
+.clearButton:hover {
+  background-color: #9b4d3d11;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border-radius: 0.8rem;
+  border: 1px solid #22222212;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 1rem 1.4rem;
+  text-align: left;
+  font-size: 1.3rem;
+  border-bottom: 1px solid #22222212;
+  white-space: nowrap;
+}
+
+.table th {
+  background-color: #fa811222;
+  font-weight: 700;
+}
+
+.saveSchedule {
+  padding: 1rem 2rem;
+  font-size: 1.4rem;
+  border-radius: 0.6rem;
+  background-color: #fa8112;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid #fa8112;
+}
+
+.saveSchedule:hover {
+  background-color: #d76b0a;
+}

@@ -1,7 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserStats } from "../services/wash_services";
 import { editAccount, getAccountInfo } from "../services/account_services";
-import { getAllUsers } from "../services/admin_services";
+import {
+  getAllUsers,
+  getSalesReports,
+  updateUserRole,
+  verifyUser,
+} from "../services/admin_services";
 
 export const useUserInfo = () => {
   return useQuery({
@@ -41,7 +46,6 @@ export const useEditAccount = () => {
   });
 };
 
-
 export const useAllUsers = (options = {}) => {
   return useQuery({
     queryKey: ["allUsers"],
@@ -51,5 +55,30 @@ export const useAllUsers = (options = {}) => {
     },
     enabled: options.enabled ?? true,
     staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useBusinessReport = (options = {}) => {
+  return useQuery({
+    queryKey: ["businessReport"],
+    queryFn: getSalesReports,
+    enabled: options.enabled ?? true,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ email, newRole, verified }) => {
+      const [roleStatus, verifiedStatus] = await Promise.all([
+        updateUserRole(email, newRole),
+        verified ? verifyUser(email) : Promise.resolve(),
+      ]);
+      return { roleStatus, verifiedStatus };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["allUsers"] });
+    },
   });
 };

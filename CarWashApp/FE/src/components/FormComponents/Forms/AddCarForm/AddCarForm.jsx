@@ -1,5 +1,6 @@
 import classes from "./AddCarForm.module.css";
 import InputField from "../../inputField/InputField.jsx";
+import { toast } from "react-toastify";
 
 export default function AddCarForm({ setIsAddCarFormOpen, mutation, userId }) {
   async function handleSubmit(e) {
@@ -10,8 +11,19 @@ export default function AddCarForm({ setIsAddCarFormOpen, mutation, userId }) {
       License_Plate: formData.get("License_Plate"),
       User_Id: userId,
     };
-    setIsAddCarFormOpen(false);
-    await mutation.mutateAsync(data);
+    try {
+      await mutation.mutateAsync(data);
+      setIsAddCarFormOpen(false);
+      toast.success("Car added successfully.");
+    } catch (error) {
+      const code = error.response?.data?.code;
+      const messages = {
+        INVALID_CAR_PLATE: "Enter a valid license plate number.",
+        CAR_NOT_FOUND_OR_ALREADY_ADDED:
+          "That car could not be found or is already on your account.",
+      };
+      toast.error(messages[code] || "Couldn't add the car. Please try again.");
+    }
   }
 
   return (

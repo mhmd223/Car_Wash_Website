@@ -11,7 +11,7 @@ main {
 }
 
 .outlet {
-  background-color: var(--clr-paige-);
+  background: transparent;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -21,7 +21,7 @@ main {
 
 .outletAbsolute {
   position: absolute;
-  background-color: var(--clr-paige-);
+  background: transparent;
   width: 100vw;
   height: 100vh;
   top: 0;

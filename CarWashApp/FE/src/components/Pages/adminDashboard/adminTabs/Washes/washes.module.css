@@ -3,12 +3,79 @@
   flex-direction: column;
   width: 100%;
   height: 100%;
-  padding: 2.4rem;
-  gap: 2rem;
+  padding: 2.4rem 3.2rem 4rem;
+  gap: 1.2rem;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eyebrow {
+  color: var(--clr-darkpaige-);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.12rem;
+  text-transform: uppercase;
 }
 
 .title {
-  font-size: 2rem;
+  font-family: "Paytone One", sans-serif;
+  font-size: 2.6rem;
   font-weight: 700;
   color: var(--clr-black);
+}
+
+.subtitle,
+.message {
+  color: #755f46;
+  font-size: 1.4rem;
+}
+
+.message {
+  padding: 2rem 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.actions button {
+  flex: 1;
+  min-width: 9rem;
+  padding: 0.7rem 1rem;
+  border: 0;
+  border-radius: var(--radius);
+  color: var(--clr-white);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.acceptButton {
+  background: #3b8b5a;
+}
+
+.rejectButton {
+  background: #9b4d3d;
+}
+
+.completeButton {
+  background: var(--clr-darkpaige-);
+}
+
+.actions button:hover {
+  filter: brightness(0.9);
+}
+
+@media (max-width: 48rem) {
+  .container {
+    padding: 2rem 1.6rem 3rem;
+  }
 }

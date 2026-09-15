@@ -1,3 +1,4 @@
+// Socket.IO bootstrap and room assignment for customers, washers, and admins.
 import { Server } from "socket.io";
 
 export function initializeSocket(server) {
@@ -23,6 +24,10 @@ export function initializeSocket(server) {
     if (socket.handshake.auth.role === "washer") {
       socket.join("washer");
       console.log("User joined washer room:", socket.id);
+    }
+    if (socket.handshake.auth.role === "admin") {
+      socket.join("admin");
+      console.log("User joined admin room:", socket.id);
     }
 
     socket.on("disconnect", () => {

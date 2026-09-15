@@ -110,7 +110,7 @@ export async function get_user_by_id(id) {
   const conn = await dbConnection.getConnection();
   try {
     let res = await conn.query(
-      "SELECT id,username,email,phone,role FROM users WHERE id = ?",
+      "SELECT id,username,email,phone,role,verified FROM users WHERE id = ?",
       [id],
     );
 
@@ -143,20 +143,20 @@ export async function edit_user(id, username, email, phone, password) {
 
     if (username !== undefined) {
       if (!check_username(username)) return null;
-      fields.push("username = (@newUsername := ?)");
+      fields.push("username = ?");
       values.push(username);
     }
 
     if (email !== undefined) {
       if (email !== user[0][0].email && (await checkEmailExists(email)))
         return null;
-      fields.push("email = (@newEmail := ?)");
+      fields.push("email = ?");
       values.push(email);
     }
 
     if (phone !== undefined) {
       if (!check_phone(phone)) return null;
-      fields.push("phone = (@newPhone := ?)");
+      fields.push("phone = ?");
       values.push(phone);
     }
 
@@ -169,7 +169,7 @@ export async function edit_user(id, username, email, phone, password) {
     );
 
     const updatedData = await conn.query(
-      "SELECT id,  COALESCE(@newUsername, username) AS username, COALESCE(@newEmail, email) AS email, COALESCE(@newPhone, phone) AS phone FROM users WHERE id = ?",
+      "SELECT id, username, email, phone, role, verified FROM users WHERE id = ?",
       [id],
     );
     console.log("succesfully updated user data ", updatedData[0][0]);

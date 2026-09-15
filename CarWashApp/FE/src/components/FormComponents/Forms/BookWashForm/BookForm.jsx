@@ -1,12 +1,14 @@
 import classes from "./BookForm.module.css";
 import InputField from "../../inputField/InputField.jsx";
 import { useBookWash } from "../../../../hooks/useBookWash.js";
+import { toast } from "react-toastify";
 export default function BookForm({
   user,
   setIsBookFormOpen,
   categories,
   cars,
   car,
+  schedule,
 }) {
   const mutation = useBookWash(user.id);
   let selectedCar = car ? car.License_Plate : null;
@@ -32,8 +34,23 @@ export default function BookForm({
       Wash_Date: getFullDate(formData.get("Time")),
       Category_ID: selectedCategory,
     };
-    setIsBookFormOpen(false);
-    await mutation.mutateAsync(data);
+    try {
+      await mutation.mutateAsync(data);
+      setIsBookFormOpen(false);
+      toast.success("Wash successfully booked.");
+    } catch (error) {
+      const code = error.response?.data?.code;
+      const messages = {
+        ALREADY_BOOKED: "That time is already booked. Choose another time.",
+        CAR_NOT_OWNED: "That car is not on your account.",
+        CATEGORY_NOT_FOUND: "That wash category is unavailable.",
+        INVALID_WASH_DATE: "Choose a future wash time.",
+        INVALID_BOOKING: "Select a car, category, and time.",
+      };
+      toast.error(
+        messages[code] || "Couldn't book the wash. Please try again.",
+      );
+    }
   }
   return (
     <div
@@ -109,6 +126,7 @@ export default function BookForm({
             key={"time"}
             label={"Time"}
             name={"Time"}
+            schedule={schedule}
             placeHolder={"Select a time"}
             textFormat={/^\d{2}:\d{2}$/}
             errorMessage={"Time should be in HH:MM format."}

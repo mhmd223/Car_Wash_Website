@@ -2,38 +2,66 @@
 .accountContainer {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
+  gap: 2.4rem;
+  min-height: 100%;
+  padding: 2.4rem 3.2rem 4rem;
   font-family: "Roboto", sans-serif;
+  color: var(--clr-black);
 }
 
 .accountInfo {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
-  background-color: var(--clr-org-);
-  padding: 20px;
-  border-bottom: 5px solid var(--clr-darkpaige-);
+  padding: 2.4rem 2.8rem;
+  border: 1px solid rgba(117, 95, 70, 0.16);
+  border-bottom: 0.4rem solid var(--clr-darkpaige-);
+  border-radius: 1.2rem;
+  background: linear-gradient(120deg, var(--clr-org-) 0%, #f7c98b 100%);
+  box-shadow: 0 1.2rem 3rem rgba(117, 95, 70, 0.12);
 }
 .icon {
-  width: 100px;
-  height: 100px;
+  width: 7.2rem;
+  height: 7.2rem;
   border-radius: 50%;
   object-fit: contain;
+  color: var(--clr-darkpaige-);
 }
 
 .accountName {
-  margin-top: 10px;
-  font-size: 18px;
+  margin: 0.4rem 0 0;
+  font-size: 2.4rem;
   font-weight: bold;
-  text-align: center;
+}
+
+.accountEyebrow,
+.sectionEyebrow {
+  margin: 0;
+  color: var(--clr-darkpaige-);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.12rem;
+  text-transform: uppercase;
+}
+
+.accountRole {
+  margin: 0.4rem 0 0;
+  color: rgba(33, 28, 23, 0.68);
+  font-size: 1.4rem;
+  text-transform: capitalize;
 }
 
 .accountDetails {
   display: flex;
   align-items: center;
+}
+
+.accountIcon {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
 }
 
 .accountActions {
@@ -44,9 +72,10 @@
 }
 
 .accountActions button {
-  padding: 8px;
-  width: 125px;
-  font-size: 1.6rem;
+  min-width: 10rem;
+  padding: 1rem 1.4rem;
+  border-radius: 0.6rem;
+  font-size: 1.4rem;
   cursor: pointer;
   background-color: var(--clr-darkpaige-);
   color: var(--clr-white);
@@ -59,4 +88,141 @@
   transform: translateY(-2px);
   font-weight: bold;
   border: solid 1px var(--clr-darkpaige-);
+}
+
+.accountActions button:focus-visible,
+.accountActions button:hover {
+  outline: 3px solid rgba(117, 95, 70, 0.3);
+  outline-offset: 2px;
+}
+
+.accountContent {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 2rem;
+  width: 100%;
+}
+
+.profilePanel,
+.statsPanel {
+  padding: 2.4rem;
+  border: 1px solid rgba(117, 95, 70, 0.15);
+  border-radius: 1.2rem;
+  background: rgba(255, 255, 255, 0.42);
+  box-shadow: 0 0.8rem 2rem rgba(117, 95, 70, 0.08);
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.sectionHeading h2 {
+  margin: 0.5rem 0 0;
+  font-size: 2rem;
+}
+
+.verified,
+.unverified,
+.sectionNote {
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.verified {
+  color: #23633b;
+  background: #d9f0df;
+}
+
+.unverified {
+  color: #8a4a20;
+  background: #fbe0c8;
+}
+
+.sectionNote {
+  color: var(--clr-darkpaige-);
+  background: rgba(117, 95, 70, 0.1);
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 1.3rem;
+  border-radius: 0.8rem;
+  background: rgba(250, 129, 18, 0.08);
+}
+
+.detailItem span {
+  color: var(--clr-darkpaige-);
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.detailItem strong {
+  overflow: hidden;
+  font-size: 1.4rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.statsPanel :global(.accountStats) {
+  margin-top: 0;
+}
+
+@media (max-width: 760px) {
+  .accountContainer {
+    padding: 1.6rem;
+  }
+
+  .accountInfo {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .accountContent {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .accountIcon {
+    align-items: flex-start;
+  }
+
+  .icon {
+    width: 5.6rem;
+    height: 5.6rem;
+  }
+
+  .accountName {
+    font-size: 2rem;
+  }
+
+  .accountActions {
+    width: 100%;
+  }
+
+  .accountActions button {
+    flex: 1;
+  }
+
+  .detailGrid {
+    grid-template-columns: 1fr;
+  }
 }

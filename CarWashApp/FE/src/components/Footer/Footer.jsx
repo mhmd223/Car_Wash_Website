@@ -1,6 +1,5 @@
 import NavBar from "../navbar/NavBar";
-import classes from "./footer.module.css";
-export default function Footer({ instagram, phone, user }) {
+export default function Footer({ user }) {
   return (
     <footer>
       <NavBar user={user} />

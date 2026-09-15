@@ -1,7 +1,8 @@
+// Authenticated shell: navigation chrome, user context, and login redirect.
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 import Header from "../../Header/Header";
 import Footer from "../../Footer/Footer";
-
+import { roles } from "../../../../../BE/data/roles";
 import classes from "./General.module.css";
 // import videoBg from "../../../assets/videos/dododo.mp4";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext";
@@ -33,7 +34,9 @@ export default function GeneralLayout({
             socket,
           }}
         >
-          {!isLoggedIn && <Navigate to={"/login"} />}
+          {!isLoggedIn && location.pathname !== "/login" && (
+            <Navigate to="/login" replace />
+          )}
 
           {!isLoggedIn && (
             <video className={classes.video} src={""} autoPlay loop muted />
@@ -43,7 +46,10 @@ export default function GeneralLayout({
           </div>
         </UserContext.Provider>
       </main>
-      {isLoggedIn && user.role === "Customer" && <Footer user={user} />}
+      {isLoggedIn &&
+        user.role.toLowerCase() === roles.CUSTOMER.toLowerCase() && (
+          <Footer user={user} />
+        )}
     </>
   );
 }

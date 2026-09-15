@@ -1,3 +1,4 @@
+// Application routes, session-derived user state, sockets, and global toasts.
 // functional component
 // Rules:
 // 1. the name MUST start with big letter (PascalCase)
@@ -21,10 +22,10 @@ import CarWashes from "../components/Pages/userWashes/CarWashes";
 import UserCars from "../components/Pages/userCars/UserCars";
 import Account from "../components/Pages/account/Account";
 import EmployeeDashboard from "../components/Pages/employee/EmployeeDashboard";
+import { ToastContainer } from "react-toastify";
 
 export default function App() {
-  const { data: [userInfo, isLoggedIn] = [], status: userInfoStatus } =
-    useUserInfo();
+  const { data: [userInfo, isLoggedIn] = [] } = useUserInfo();
 
   const queryClient = useQueryClient();
 
@@ -46,10 +47,9 @@ export default function App() {
     }
   }, [userInfo]);
 
-  if (userInfoStatus === "pending") return null;
-
   return (
     <Router>
+      <ToastContainer />
       <Routes>
         <Route
           element={
@@ -73,7 +73,7 @@ export default function App() {
             element={<Account queryClient={queryClient} />}
           />
 
-          <Route >
+          <Route>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/employee" element={<EmployeeDashboard />} />
           </Route>

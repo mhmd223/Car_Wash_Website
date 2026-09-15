@@ -1,3 +1,4 @@
+// Shared login/register form validation and account API submission.
 import classes from "./form.module.css";
 import {
   isValidElement,
@@ -15,6 +16,7 @@ export default function LoginForm({
   isRegistering,
   setIsRegistering,
   setSuccessFullyRegistered,
+  setVerificationEmail,
   username,
   emailOrPhone,
   phone,
@@ -37,7 +39,7 @@ export default function LoginForm({
       toast.error("Please fix the errors in the form before submitting.");
       toggleAllErrorsOff();
     }
-  }, [isError]);
+  }, [isError, isRegistering]);
 
   const checkIfPasswordsMatch = () => {
     setConfirmPasswordError(
@@ -123,6 +125,7 @@ export default function LoginForm({
           confirmPassword,
         );
         if (response) {
+          setVerificationEmail(emailOrPhone);
           setSuccessFullyRegistered(true);
           setIsRegistering(false);
         } else {
@@ -133,13 +136,27 @@ export default function LoginForm({
         event.preventDefault();
 
         checkFormErrors();
-        const response = await accountOperations.login(emailOrPhone, password);
+        try {
+          const response = await accountOperations.login(
+            emailOrPhone,
+            password,
+          );
 
-        if (response.loggedIn) {
-          setIsLoggedIn(true);
-          setUser(response.user);
-          localStorage.setItem("isLoggedIn", "true");
-          queryClient.invalidateQueries(["userInfo"]);
+          if (response.loggedIn) {
+            setIsLoggedIn(true);
+            setUser(response.user);
+            localStorage.setItem("isLoggedIn", "true");
+            queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+          }
+        } catch (error) {
+          if (error.response?.data?.code === "EMAIL_NOT_VERIFIED") {
+            setVerificationEmail(error.response.data.email || emailOrPhone);
+            toast.info("Verify your email before logging in.");
+          } else {
+            toast.error(
+              error.response?.data?.status || "Invalid email or password.",
+            );
+          }
         }
       };
 

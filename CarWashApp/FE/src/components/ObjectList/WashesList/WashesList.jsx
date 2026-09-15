@@ -24,7 +24,6 @@ export default function WashesList({
   const { filteredWashes, filter, plateFilter, setPlateFilter, setFilter } =
     useFilterWash(objects, { filterToday });
   const grouped = groupByHour(filteredWashes);
-  console.log("Grouped washes by hour:", grouped); // Debugging log
   return (
     <div className={classes.wrapper}>
       <div className={classes.filters}>
@@ -40,6 +39,7 @@ export default function WashesList({
         <input
           type="text"
           placeholder="Filter by plate number"
+          aria-label="Filter washes by plate number"
           value={plateFilter}
           onChange={(e) => setPlateFilter(e.target.value)}
           className={classes.plateInput}

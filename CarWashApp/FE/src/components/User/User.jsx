@@ -6,9 +6,36 @@ import { useState } from "react";
 // CSS classes should be added in user.module.css:
 // .username { font-weight: bold; }
 // .userIdLabel { font-style: italic; }
-export function User({ user, verifyUser, updateUserRole }) {
-  console.log(user);
-  const [selectedRole, setSelectedRole] = useState(user.role);
+export function User({ user, updateUser }) {
+  const savedVerified = Boolean(user.verified);
+  const [draft, setDraft] = useState({
+    role: user.role,
+    verified: savedVerified,
+  });
+
+  const hasChanges =
+    draft.role.toLowerCase() !== user.role.toLowerCase() ||
+    draft.verified !== savedVerified;
+
+  const handleRoleChange = (selectedRole) => {
+    setDraft((prev) => ({ ...prev, role: selectedRole }));
+  };
+
+  const handleVerifyUser = () => {
+    setDraft((prev) => ({ ...prev, verified: true }));
+  };
+
+  const handleCancelEdit = () => {
+    setDraft({ role: user.role, verified: savedVerified });
+  };
+
+  const handleConfirmEdit = async () => {
+    await updateUser.mutateAsync({
+      email: user.email,
+      newRole: draft.role,
+      verified: !savedVerified ? draft.verified : null,
+    });
+  };
   return (
     <div className={classes.userContainer}>
       <div className={classes.userInfoContainer}>
@@ -27,8 +54,9 @@ export function User({ user, verifyUser, updateUserRole }) {
         <div className={classes.roleContainer}>
           <div className={classes.roles}>
             <p
+              onClick={() => handleRoleChange("customer")}
               className={
-                user.role.toLowerCase() === "customer"
+                draft.role.toLowerCase() === "customer"
                   ? `${classes.role} ${classes.selectedRole}`
                   : classes.role
               }
@@ -36,8 +64,9 @@ export function User({ user, verifyUser, updateUserRole }) {
               Customer
             </p>
             <p
+              onClick={() => handleRoleChange("washer")}
               className={
-                user.role.toLowerCase() === "washer"
+                draft.role.toLowerCase() === "washer"
                   ? `${classes.role} ${classes.selectedRole}`
                   : classes.role
               }
@@ -45,8 +74,9 @@ export function User({ user, verifyUser, updateUserRole }) {
               Washer
             </p>
             <p
+              onClick={() => handleRoleChange("admin")}
               className={
-                user.role.toLowerCase() === "admin"
+                draft.role.toLowerCase() === "admin"
                   ? `${classes.role} ${classes.selectedRole}`
                   : classes.role
               }
@@ -54,26 +84,23 @@ export function User({ user, verifyUser, updateUserRole }) {
               Admin
             </p>
           </div>
-          <ConfirmButtons
-            onConfirm={updateUserRole}
-            onCancel={() => {}}
-            isConfirming={false}
-          />
         </div>
         <div className={classes.verifyContainer}>
           <button
-            disabled={user.verified}
-            className={`${classes.verifyButton} ${user.verified ? classes.verifiedButton : ""}`}
+            onClick={handleVerifyUser}
+            disabled={draft.verified}
+            className={`${classes.verifyButton} ${draft.verified ? classes.verifiedButton : ""}`}
           >
-            {user.verified ? "Verified" : "Verify User"}
+            {draft.verified ? "Verified" : "Verify User"}
           </button>
-          <ConfirmButtons
-            onConfirm={verifyUser}
-            onCancel={() => {}}
-            isConfirming={false}
-          />
         </div>
       </div>
+      <ConfirmButtons
+        onConfirm={handleConfirmEdit}
+        onCancel={handleCancelEdit}
+        show={hasChanges}
+        isConfirming={updateUser.isPending}
+      />
     </div>
   );
 }

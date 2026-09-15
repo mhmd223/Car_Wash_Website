@@ -1,0 +1,44 @@
+# Copy to /etc/nginx/sites-available/carwash and replace the example domains.
+# Obtain certificates with your ACME provider (for example, certbot) before enabling HTTPS.
+
+server {
+    listen 80;
+    server_name frontend.example.com api.example.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name api.example.com;
+
+    ssl_certificate /etc/letsencrypt/live/api.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.example.com/privkey.pem;
+
+    client_max_body_size 100k;
+
+    location / {
+        proxy_pass http://127.0.0.1:5173;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    server_name frontend.example.com;
+
+    ssl_certificate /etc/letsencrypt/live/frontend.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/frontend.example.com/privkey.pem;
+
+    root /srv/carwash/frontend/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}

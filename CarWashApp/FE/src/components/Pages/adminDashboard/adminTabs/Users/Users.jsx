@@ -4,7 +4,7 @@ import { User } from "../../../../User/User";
 import { useUserFilter } from "../../../../../hooks/useUserFilter";
 import UserFilter from "./UserFilter";
 
-export default function Users({ allUsers, isLoading }) {
+export default function Users({ allUsers, isLoading, updateUser }) {
   const {
     filteredUsers,
     phoneFilter,
@@ -36,7 +36,7 @@ export default function Users({ allUsers, isLoading }) {
         <ul className={classes.userList}>
           {filteredUsers.map((user) => (
             <li key={user.id} className={classes.userItem}>
-              <User user={user} />
+              <User user={user} updateUser={updateUser} />
             </li>
           ))}
         </ul>

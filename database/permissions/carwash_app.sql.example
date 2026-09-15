@@ -1,0 +1,15 @@
+-- Run as a MariaDB administrator after creating the database.
+-- Replace the password before execution and keep this file out of version control
+-- if you add real credentials.
+
+CREATE USER IF NOT EXISTS 'carwash_app'@'backend-private-host'
+  IDENTIFIED BY 'REPLACE_WITH_A_LONG_RANDOM_PASSWORD';
+
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX
+  ON carwash_database.*
+  TO 'carwash_app'@'backend-private-host';
+
+FLUSH PRIVILEGES;
+
+-- Do not grant FILE, SUPER, PROCESS, or global privileges to the application user.
+-- Restrict the host to the backend network rather than using '%'.

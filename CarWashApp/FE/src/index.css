@@ -11,19 +11,21 @@ Variables
   font-size: 62.5%;
 
   /* primary/main color */
-  --clr-paige-: #faf3e1;
-  --clr-darkpaige-: #fa8112;
+  --clr-paige-: #f7f1e7;
+  --clr-darkpaige-: #c45b24;
 
   --clr-org-290: #fa82128f;
-  --clr-org-: #f5e7c6;
+  --clr-org-: #f2dfc0;
   --clr-darkPaige-290: #f5e7c6ba;
   --clr-white: #fff;
-  --clr-black: #222;
+  --clr-black: #2b2926;
   --clr-black-25e: #2222225e;
 
   --transition: all 0.4s linear;
   --spacing: 0.1rem;
-  --radius: 0.25rem;
+  --radius: 0.7rem;
+  --shadow-soft: 0 1.2rem 3rem rgba(67, 48, 32, 0.1);
+  --shadow-lift: 0 1.8rem 4rem rgba(67, 48, 32, 0.16);
 
   --max-width: 900px;
 }
@@ -54,12 +56,40 @@ body {
   height: 100vh;
   overflow: hidden;
   font-family: "Raleway", sans-serif;
+  color: var(--clr-black);
+  background: var(--clr-paige-);
 }
 body > div {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--clr-paige-);
+  background:
+    radial-gradient(
+      circle at 8% 8%,
+      rgba(242, 223, 192, 0.72),
+      transparent 28rem
+    ),
+    linear-gradient(135deg, #fbf8f2 0%, var(--clr-paige-) 100%);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid rgba(196, 91, 36, 0.38);
+  outline-offset: 2px;
+}
+
+::selection {
+  color: var(--clr-white);
+  background: var(--clr-darkpaige-);
 }
 
 /* ul {

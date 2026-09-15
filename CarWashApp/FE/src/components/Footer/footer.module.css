@@ -1,3 +1,6 @@
 footer {
-  background-color: var(--clr-darkpaige-);
+  flex-shrink: 0;
+  border-top: 1px solid rgba(117, 95, 70, 0.16);
+  background: rgba(242, 223, 192, 0.82);
+  box-shadow: 0 -0.8rem 2.4rem rgba(67, 48, 32, 0.06);
 }

@@ -1,5 +1,11 @@
 import classes from "./confirmbuttons.module.css";
-export default function ConfirmButtons({ onConfirm, onCancel, isConfirming }) {
+export default function ConfirmButtons({
+  onConfirm,
+  onCancel,
+  show,
+  isConfirming,
+}) {
+  if (!show) return null;
   return (
     <div className={classes.confirmButtonsContainer}>
       <button

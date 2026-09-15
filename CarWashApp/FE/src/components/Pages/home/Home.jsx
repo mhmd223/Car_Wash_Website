@@ -20,14 +20,14 @@ export default function Home() {
   const { user } = useContext(UserContext);
 
   const redirect = ROLE_REDIRECT[user?.role?.toLowerCase()];
-  if (redirect) return <Navigate to={redirect} replace />;
-
   const { data: washes = [] } = useUserWashes(user?.id, { retry: false });
 
   const upcomingWashes = useMemo(
     () => washes.filter((w) => w.Wash_Status === 0 || w.Wash_Status === 1),
     [washes],
   );
+
+  if (redirect) return <Navigate to={redirect} replace />;
 
   return (
     <div className={classes.container}>
