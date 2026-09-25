@@ -38,10 +38,25 @@ if (process.env.SKIP_STARTUP_JOBS !== "true") {
 const app = express();
 const server = createServer(app);
 const sessionMaxAge = Number(process.env.SESH_EXPIRE_MS) || 1000 * 60 * 60;
-const clientOrigin =
-  process.env.NODE_ENV === "production"
-    ? process.env.PROD_ORIGIN || "http://localhost:5173"
-    : process.env.CLIENT_ORIGIN || "http://localhost:3000";
+const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "") || "";
+const allowedOrigins = new Set(
+  [
+    process.env.CLIENT_ORIGIN,
+    process.env.PROD_ORIGIN,
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+  ]
+    .flatMap((value) =>
+      (value || "").split(",").map(normalizeOrigin).filter(Boolean),
+    )
+    .map((value) => value.toLowerCase()),
+);
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  return allowedOrigins.has(origin.toLowerCase().replace(/\/$/, ""));
+};
 const port = Number(process.env.PORT) || 5173;
 
 if (process.env.NODE_ENV === "production" && !process.env.SESSION_SECRET) {
@@ -56,9 +71,27 @@ if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
 }
 
-app.use(cors({ origin: clientOrigin, credentials: true }));
+app.use(
+  cors({
+    origin(origin, callback) {
+      if (!origin || isAllowedOrigin(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error(`Origin not allowed by CORS: ${origin}`));
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With",
+      "x-request-id",
+    ],
+  }),
+);
 app.use(helmet());
-  
+
 app.use((req, res, next) => {
   const requestId = req.get("x-request-id") || randomUUID();
   const startedAt = Date.now();
@@ -98,7 +131,7 @@ app.use("/account/resend-verification", verificationLimiter);
 app.use((req, res, next) => {
   if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
     const requestOrigin = req.get("origin");
-    if (requestOrigin && requestOrigin !== clientOrigin) {
+    if (requestOrigin && !isAllowedOrigin(requestOrigin)) {
       return res.status(403).json({ status: "Invalid request origin" });
     }
   }

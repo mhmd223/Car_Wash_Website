@@ -9,7 +9,7 @@ export const register = async (
   confirmPassword,
 ) => {
   const response = await axios.post(`${API_URL}register`, {
-    username,
+    username,   
     email: email,
     phone,
     password,
