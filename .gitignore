@@ -1,6 +1,7 @@
 node_modules
 .env
 .env.example
+verification_service.js
 **/test-results/
 coverage/
 logs/
