@@ -39,7 +39,10 @@ if (process.env.SKIP_DATABASE_INITIALIZATION !== "true") {
 const app = express();
 const server = createServer(app);
 const sessionMaxAge = Number(process.env.SESH_EXPIRE_MS) || 1000 * 60 * 60;
-const clientOrigin = process.env.CLIENT_ORIGIN || "http://localhost:3000";
+const clientOrigin =
+  process.env.NODE_ENV === "production"
+    ? process.env.PROD_ORIGIN || "http://localhost:5173"
+    : process.env.CLIENT_ORIGIN || "http://localhost:3000";
 const port = Number(process.env.PORT) || 5173;
 
 if (process.env.NODE_ENV === "production" && !process.env.SESSION_SECRET) {
