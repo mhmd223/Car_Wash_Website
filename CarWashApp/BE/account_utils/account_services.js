@@ -107,6 +107,9 @@ router.post("/login", async (req, res) => {
  */
 
 router.get("/logout", (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ status: "Not logged in" });
+  }
   req.session.destroy((err) => {
     if (err) {
       res.status(500).json({ status: "Error occurred while logging out" });
@@ -127,6 +130,9 @@ router.get("/me", async (req, res) => {
 router.post("/edit", async (req, res) => {
   console.log("editing user");
 
+  if (!req.session.user) {
+    return res.status(401).json({ status: "Not logged in" });
+  }
   const { username, email, phone, password } = req.body;
   const result = await edit_user(
     req.session.user.id,

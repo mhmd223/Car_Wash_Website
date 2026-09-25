@@ -150,10 +150,11 @@ app.use(
   }),
 );
 
+app.use("/account", account_services.router);
+
 // JSON is parsed before route handlers; loggedIn protects all app routes.
 app.use(loggedIn);
 
-app.use("/account", account_services.router);
 //if the user is an admin, they can access the admin category services, otherwise they can only access the user category services
 app.use("/category", (req, res, next) => {
   if (req.session.user.role === "admin") {
