@@ -61,7 +61,7 @@ export async function registerAcc(
   const conn = await dbConnection.getConnection();
   try {
     const hashed_password = await hash_password(password);
-
+    const verified = 1; //until email verification is implemented
     if (
       username &&
       check_username(username) &&
@@ -73,8 +73,8 @@ export async function registerAcc(
       !(await checkEmailExists(email))
     ) {
       await conn.query(
-        "INSERT INTO users (username,email,password,phone,role) VALUES(?,?,?,?,?)",
-        [username, email, hashed_password, phone, "Customer"],
+        "INSERT INTO users (username,email,password,phone,role,verified) VALUES(?,?,?,?,?,?)",
+        [username, email, hashed_password, phone, "Customer", verified],
       );
       return true;
     } else {
