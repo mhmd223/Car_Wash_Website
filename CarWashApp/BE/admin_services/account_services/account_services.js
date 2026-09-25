@@ -3,8 +3,13 @@ import * as accountQueries from "./account_queries.js";
 
 const router = express.Router();
 
-const destroySessionsForUser = (req, email) =>
-  new Promise((resolve, reject) => {
+const destroySessionsForUser = (req, email) => {
+  if (typeof req.sessionStore.destroyByUserEmail === "function") {
+    return req.sessionStore.destroyByUserEmail(email);
+  }
+
+  return new Promise((resolve, reject) => {
+    // Fallback keeps this route compatible with alternative express-session stores.
     req.sessionStore.all((error, sessions) => {
       if (error) {
         reject(error);
@@ -30,6 +35,7 @@ const destroySessionsForUser = (req, email) =>
         .catch(reject);
     });
   });
+};
 
 router.get("/all", async (req, res) => {
   try {

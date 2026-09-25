@@ -3,8 +3,10 @@
 import { User } from "../../../../User/User";
 import { useUserFilter } from "../../../../../hooks/useUserFilter";
 import UserFilter from "./UserFilter";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
-export default function Users({ allUsers, isLoading, updateUser }) {
+export default function Users({ allUsers, isLoading, isError, updateUser }) {
   const {
     filteredUsers,
     phoneFilter,
@@ -16,6 +18,12 @@ export default function Users({ allUsers, isLoading, updateUser }) {
     setRoleFilter,
     setVerificationFilter,
   } = useUserFilter(allUsers);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("Could not load users.");
+    }
+  }, [isError]);
 
   return (
     <div className={classes.container}>
@@ -32,6 +40,8 @@ export default function Users({ allUsers, isLoading, updateUser }) {
       />
       {isLoading ? (
         <p>Loading...</p>
+      ) : isError ? (
+        <p role="alert">Unable to load users.</p>
       ) : (
         <ul className={classes.userList}>
           {filteredUsers.map((user) => (

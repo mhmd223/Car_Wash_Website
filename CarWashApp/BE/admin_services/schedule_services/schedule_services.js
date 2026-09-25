@@ -6,6 +6,8 @@ import {
   clearSchedule,
 } from "./schedule_queries.js";
 import { scheduleSchema } from "./schedule_validation.js";
+import { io } from "../../server.js";
+import { WASH_EVENTS } from "../../../shared/events.js";
 
 const router = express.Router();
 
@@ -22,6 +24,7 @@ router.post("/upload", async (req, res) => {
 
   try {
     const result = await uploadSchedule(parsedSchedule.data);
+    io.emit(WASH_EVENTS.SCHEDULE_UPDATED);
     return res.json(result);
   } catch (error) {
     return res.status(500).json({ error: "Failed to upload schedule" });
@@ -31,6 +34,7 @@ router.post("/upload", async (req, res) => {
 router.delete("/clear", async (req, res) => {
   try {
     const result = await clearSchedule();
+    io.emit(WASH_EVENTS.SCHEDULE_UPDATED);
     return res.json(result);
   } catch (error) {
     return res.status(500).json({ error: "Failed to clear schedule" });

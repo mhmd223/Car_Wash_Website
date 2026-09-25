@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllWashes, updateWashStatus } from "../services/wash_services";
+import { toast } from "react-toastify";
 
 export const useAllWashes = () => {
   return useQuery({
@@ -16,6 +17,10 @@ export const useUpdateWashStatus = () => {
       updateWashStatus(washId, status, custId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allWashes"] });
+      toast.success("Wash status updated successfully.");
+    },
+    onError: () => {
+      toast.error("Could not update the wash status.");
     },
   });
 };

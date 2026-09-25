@@ -7,11 +7,14 @@ import { dbConnection } from "./DBconnection.js";
  * close it; server shutdown closes the pool after this store is stopped.
  */
 export default class MariaSessionStore extends session.Store {
-  constructor() {
+  constructor({ initialize = true } = {}) {
     super();
-    this.ready = this.initialize();
+    // Initialize the store and set up periodic cleanup of expired sessions.
+    this.ready = initialize ? this.initialize() : Promise.resolve();
     this.cleanupInterval = setInterval(
-      () => this.clearExpired().catch(() => undefined),
+      () => {
+        if (initialize) this.clearExpired().catch(() => undefined);
+      },
       15 * 60 * 1000,
     );
     this.cleanupInterval.unref();
@@ -25,6 +28,11 @@ export default class MariaSessionStore extends session.Store {
         data MEDIUMTEXT NOT NULL
       ) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
     `);
+    // Earlier session-store packages use a 32-bit expires column. Unix
+    // millisecond timestamps overflow that type, so normalize old tables.
+    await dbConnection.query(
+      "ALTER TABLE sessions MODIFY expires BIGINT UNSIGNED NOT NULL",
+    );
   }
 
   onReady() {
@@ -68,6 +76,7 @@ export default class MariaSessionStore extends session.Store {
       .catch((error) => callback?.(error));
   }
 
+  // Update the expiration time of an existing session without modifying its data.
   touch(sessionId, sessionData, callback) {
     const expires = Date.now() + Number(sessionData.cookie?.maxAge || 86400000);
     dbConnection
@@ -90,6 +99,16 @@ export default class MariaSessionStore extends session.Store {
     return dbConnection.query("DELETE FROM sessions WHERE expires <= ?", [
       Date.now(),
     ]);
+  }
+
+  /** Remove every active session belonging to one account after a role change. */
+  async destroyByUserEmail(email) {
+    const [result] = await dbConnection.query(
+      `DELETE FROM sessions
+       WHERE JSON_UNQUOTE(JSON_EXTRACT(data, '$.user.email')) = ?`,
+      [email],
+    );
+    return result.affectedRows;
   }
 
   length(callback) {

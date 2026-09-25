@@ -9,7 +9,7 @@ import {
 } from "react";
 import Button from "../../Button/Button.jsx";
 import * as accountOperations from "../../../../services/account_services.js";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function LoginForm({
   queryClient,
@@ -170,7 +170,6 @@ export default function LoginForm({
           text={isRegistering ? "Register" : "Login"}
           type="submit"
         />
-        <ToastContainer />
       </form>
     </>
   );

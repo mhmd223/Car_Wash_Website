@@ -43,16 +43,28 @@ async function parseScheduleFile(file, extension) {
   }
 
   const { default: readXlsxFile } = await import("read-excel-file/browser");
-  const rows = await readXlsxFile(file);
-  const headers = (rows[0] || []).map(String);
+  const sheets = await readXlsxFile(file);
+  const rows = sheets[0]?.data ?? [];
+  const headers = rows[0]?.map((header) => String(header).trim()) ?? [];
 
-  return rows.slice(1).map((values) => {
-    const parsedRow = {};
-    headers.forEach((header, index) => {
-      parsedRow[header] = values[index] ?? "";
+  if (!headers.length || headers.every((header) => !header)) {
+    throw new Error("The spreadsheet does not contain a header row");
+  }
+
+  return rows
+    .slice(1)
+    .filter((values) =>
+      values.some(
+        (value) => value !== null && value !== undefined && value !== "",
+      ),
+    )
+    .map((values) => {
+      const parsedRow = {};
+      headers.forEach((header, index) => {
+        if (header) parsedRow[header] = values[index] ?? "";
+      });
+      return parsedRow;
     });
-    return parsedRow;
-  });
 }
 
 export default function Schedule() {
@@ -87,6 +99,18 @@ export default function Schedule() {
     }
   };
 
+  const handleEmergencyClose = async () => {
+    if (
+      !window.confirm(
+        "Emergency close will delete the current schedule and close all open days. Continue?",
+      )
+    ) {
+      return;
+    }
+
+    await handleClearSchedule();
+  };
+
   const handleFileChange = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -119,11 +143,14 @@ export default function Schedule() {
 
       setFileName(file.name);
       setRows(parsedRows);
+
       toast.success(`Loaded ${parsedRows.length} row(s) from ${file.name}.`);
     } catch (error) {
       toast.error(
         "Couldn't read that file. Please upload a valid XLSX or CSV file.",
       );
+      console.error(error);
+
       resetState();
     } finally {
       setIsParsing(false);
@@ -166,6 +193,20 @@ export default function Schedule() {
             Clear
           </button>
         )}
+      </div>
+
+      <div className={classes.emergencyRow}>
+        <button
+          type="button"
+          className={classes.emergencyButton}
+          onClick={handleEmergencyClose}
+          disabled={clearScheduleMutation.isPending || isParsing}
+        >
+          {clearScheduleMutation.isPending ? "Closing..." : "Emergency close"}
+        </button>
+        <span className={classes.emergencyHint}>
+          Deletes the schedule and closes all open days.
+        </span>
       </div>
 
       {rows.length > 0 && (

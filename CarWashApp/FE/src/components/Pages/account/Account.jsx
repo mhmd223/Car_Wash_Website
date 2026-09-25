@@ -3,13 +3,14 @@ import classes from "./account.module.css";
 import { IoPersonCircleOutline } from "react-icons/io5";
 import AccountStats from "../../ObjectList/AccountStats/AccountStats";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   useAccountStats,
   useEditAccount,
 } from "../../../hooks/useAccountStats";
 import { logout } from "../../../services/account_services";
 import EditAccForm from "../../FormComponents/Forms/EditAccountForm/EditAccForm";
+import { toast } from "react-toastify";
 
 export default function Account({ queryClient }) {
   const { user, setUser } = useContext(UserContext);
@@ -21,9 +22,18 @@ export default function Account({ queryClient }) {
 
   const [editMode, setEditMode] = useState(false);
 
-  const { data: accountStats } = useAccountStats(user?.id, {
-    enabled: !!user?.id,
-  });
+  const { data: accountStats, isError: accountStatsError } = useAccountStats(
+    user?.id,
+    {
+      enabled: !!user?.id,
+    },
+  );
+
+  useEffect(() => {
+    if (accountStatsError) {
+      toast.error("Could not load your account statistics.");
+    }
+  }, [accountStatsError]);
   const profileData = { ...user, ...accountStats };
 
   const displayName = profileData.username;
@@ -69,9 +79,14 @@ export default function Account({ queryClient }) {
           <button
             className={classes.logoutButton}
             onClick={async () => {
-              await logout(queryClient);
-              if (setUser) setUser(null);
-              window.location.href = "/login";
+              try {
+                await logout(queryClient);
+                if (setUser) setUser(null);
+                toast.success("Logged out successfully.");
+                window.location.href = "/login";
+              } catch (error) {
+                toast.error("Could not log out. Please try again.");
+              }
             }}
           >
             Log Out

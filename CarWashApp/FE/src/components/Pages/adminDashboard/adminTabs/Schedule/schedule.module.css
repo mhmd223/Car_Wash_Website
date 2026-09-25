@@ -85,6 +85,38 @@
   background-color: #9b4d3d11;
 }
 
+.emergencyRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.emergencyButton {
+  padding: 0.9rem 1.6rem;
+  border: 1px solid #9b4d3d;
+  border-radius: 0.6rem;
+  background-color: #9b4d3d;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.emergencyButton:hover {
+  background-color: #7e392e;
+}
+
+.emergencyButton:disabled,
+.clearButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.emergencyHint {
+  color: #755f46;
+  font-size: 1.3rem;
+}
+
 .tableWrapper {
   overflow-x: auto;
   border-radius: 0.8rem;

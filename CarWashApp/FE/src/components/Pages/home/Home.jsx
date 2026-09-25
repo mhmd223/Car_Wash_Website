@@ -1,10 +1,11 @@
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { pages } from "../../../data/pages/pages.js";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext.js";
 import { useUserWashes } from "../../../hooks/useUserWashes.js";
 import { statusConfig } from "../../../data/washStatus.js";
 import classes from "./home.module.css";
+import { toast } from "react-toastify";
 
 const shortcuts = pages.filter((p) => p.name !== "about" && p.name !== "home");
 
@@ -20,7 +21,13 @@ export default function Home() {
   const { user } = useContext(UserContext);
 
   const redirect = ROLE_REDIRECT[user?.role?.toLowerCase()];
-  const { data: washes = [] } = useUserWashes(user?.id, { retry: false });
+  const { data: washes = [], isError: washesError } = useUserWashes(user?.id, {
+    retry: false,
+  });
+
+  useEffect(() => {
+    if (washesError) toast.error("Could not load your upcoming washes.");
+  }, [washesError]);
 
   const upcomingWashes = useMemo(
     () => washes.filter((w) => w.Wash_Status === 0 || w.Wash_Status === 1),

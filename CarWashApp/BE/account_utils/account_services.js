@@ -99,18 +99,27 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const result = await validate_login(email, password);
 
-  if (!result)
-    res
+  if (!result) {
+    return res
       .status(401)
       .json({ status: "Invalid email or password", loggedIn: false });
-  else if (!result.verified) {
+  }
+
+  if (!result.verified) {
     return res.status(403).json({
       code: "EMAIL_NOT_VERIFIED",
       email: result.email,
       status: "Verify your email before logging in",
       loggedIn: false,
     });
-  } else {
+  }
+
+  return req.session.regenerate((regenerateError) => {
+    if (regenerateError) {
+      console.error("Error regenerating session after login:", regenerateError);
+      return res.status(500).json({ code: "SESSION_CREATE_FAILED" });
+    }
+
     req.session.user = {
       id: result.id,
       username: result.username,
@@ -121,15 +130,20 @@ router.post("/login", async (req, res) => {
       user_agent: req.headers["user-agent"] || "unknown",
     };
 
-    req.session.save(() => {
-      res.status(200).json({
+    return req.session.save((saveError) => {
+      if (saveError) {
+        console.error("Error saving login session:", saveError);
+        return res.status(500).json({ code: "SESSION_SAVE_FAILED" });
+      }
+
+      console.log(`User ${req.session.user.username} logged in successfully.`);
+      return res.status(200).json({
         message: `Welcome, ${result.username}!`,
         loggedIn: true,
         user: req.session.user,
       });
     });
-    console.log(`User ${req.session.user.username} logged in successfully.`);
-  }
+  });
 });
 
 /**

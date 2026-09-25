@@ -1,11 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useContext } from "react";
 
 import { getSchedule } from "../services/schedule_services";
 import { uploadSchedule, clearSchedule } from "../services/admin_services";
+import { UserContext } from "../components/ContextComponents/UserContext/UserContext";
+import useSocket from "../Socket/useSocket";
+import { WASH_EVENTS } from "../../../shared/events";
 
 // Reads and admin mutations share this cache key across schedule screens.
 export const useSchedule = () => {
   const queryClient = useQueryClient();
+  const { socket } = useContext(UserContext);
+
+  useSocket(socket, WASH_EVENTS.SCHEDULE_UPDATED, () => {
+    queryClient.invalidateQueries({ queryKey: ["schedule"] });
+  });
 
   const scheduleQuery = useQuery({
     queryKey: ["schedule"],

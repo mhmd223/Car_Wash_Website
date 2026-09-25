@@ -1,5 +1,6 @@
 import classes from "./editaccount.module.css";
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function EditAccForm({ onSubmit, userData, setEditMode }) {
   const [missingPassword, setMissingPassword] = useState(false);
@@ -23,6 +24,7 @@ export default function EditAccForm({ onSubmit, userData, setEditMode }) {
 
     if (!password) {
       setMissingPassword(true);
+      toast.error("Enter your current password to save changes.");
       return;
     }
 

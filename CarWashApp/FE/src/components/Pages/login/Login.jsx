@@ -38,7 +38,7 @@ export default function Login({ queryClient }) {
 
   useEffect(() => {
     if (successFullyRegistered) {
-      toast.success("success");
+      toast.success("Logged in successfully.");
       setSuccessFullyRegistered(false);
 
       emptyAllfields();

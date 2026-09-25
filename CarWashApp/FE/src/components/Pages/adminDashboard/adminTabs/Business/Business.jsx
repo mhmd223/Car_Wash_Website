@@ -11,6 +11,8 @@
 } from "chart.js";
 import { Bar, Line } from "react-chartjs-2";
 import classes from "./business.module.css";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 ChartJS.register(
   CategoryScale,
@@ -44,6 +46,16 @@ const dateLabel = (value) => {
 };
 
 export default function Business({ data, isLoading, isError }) {
+  useEffect(() => {
+    if (isError) toast.error("Could not load the business report.");
+  }, [isError]);
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("Could not load the business report.");
+    }
+  }, [isError]);
+
   const salesReport = (Array.isArray(data?.salesReport) ? data.salesReport : [])
     .map((report) => ({
       date: String(report.Wash_Date || "").trim(),

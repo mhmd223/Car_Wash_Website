@@ -7,6 +7,7 @@ import {
   updateUserRole,
   verifyUser,
 } from "../services/admin_services";
+import { toast } from "react-toastify";
 
 export const useUserInfo = () => {
   return useQuery({
@@ -42,6 +43,10 @@ export const useEditAccount = () => {
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ["accountStats", id] });
       queryClient.invalidateQueries({ queryKey: ["userInfo", id] });
+      toast.success("Account updated successfully.");
+    },
+    onError: () => {
+      toast.error("Could not update the account.");
     },
   });
 };
@@ -79,6 +84,10 @@ export const useUpdateUser = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["allUsers"] });
+      toast.success("User permissions updated successfully.");
+    },
+    onError: () => {
+      toast.error("Could not update user permissions.");
     },
   });
 };

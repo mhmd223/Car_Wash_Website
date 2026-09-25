@@ -22,7 +22,6 @@ import CarWashes from "../components/Pages/userWashes/CarWashes";
 import UserCars from "../components/Pages/userCars/UserCars";
 import Account from "../components/Pages/account/Account";
 import EmployeeDashboard from "../components/Pages/employee/EmployeeDashboard";
-import { ToastContainer } from "react-toastify";
 
 export default function App() {
   const { data: [userInfo, isLoggedIn] = [] } = useUserInfo();
@@ -49,7 +48,6 @@ export default function App() {
 
   return (
     <Router>
-      <ToastContainer />
       <Routes>
         <Route
           element={

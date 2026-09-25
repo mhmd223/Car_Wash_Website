@@ -2,7 +2,7 @@
 import classes from "./usercars.module.css";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addUserCar } from "../../../services/car_services";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../ContextComponents/UserContext/UserContext";
 import { GrAdd } from "react-icons/gr";
 import { FaCar } from "react-icons/fa6";
@@ -11,6 +11,7 @@ import { removeUserCar } from "../../../services/car_services";
 import { useCategories } from "../../../hooks/useCategories";
 import { useBookWash } from "../../../hooks/useBookWash";
 import { useSchedule } from "../../../hooks/useSchedule";
+import { toast } from "react-toastify";
 
 import CarsList from "../../ObjectList/CarsList/CarsList";
 import AddCarForm from "../../FormComponents/Forms/AddCarForm/AddCarForm.jsx";
@@ -24,13 +25,29 @@ export default function UserCars() {
   const [isBookFormOpen, setIsBookFormOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
 
-  const { data: categoryData } = useCategories();
+  const { data: categoryData, isError: categoriesError } = useCategories();
+
+  useEffect(() => {
+    if (categoriesError) toast.error("Could not load wash categories.");
+    if (scheduleQuery.isError) {
+      toast.error("Could not load the wash schedule.");
+    }
+  }, [categoriesError, scheduleQuery.isError]);
 
   const {
     status: carsStatus,
     data: carsData,
     refetch: refetchCars,
   } = useUserCars(user.id);
+
+  const handleRetryCars = async () => {
+    const result = await refetchCars();
+    if (result.isError) {
+      toast.error("Could not load your cars. Please try again.");
+      return;
+    }
+    toast.success("Cars loaded successfully.");
+  };
   // const {
   //   data: carsData,
   //   isFetching: carsFetching,
@@ -54,6 +71,10 @@ export default function UserCars() {
     mutationFn: mutateRemoveCar,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["userCars"] });
+      toast.success("Car removed successfully.");
+    },
+    onError: () => {
+      toast.error("Could not remove the car.");
     },
   });
 
@@ -86,7 +107,7 @@ export default function UserCars() {
         {carsStatus === "error" && (
           <div className={classes.statusCard} role="alert">
             <p>We could not load your cars.</p>
-            <button type="button" onClick={() => refetchCars()}>
+            <button type="button" onClick={handleRetryCars}>
               Try again
             </button>
           </div>

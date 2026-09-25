@@ -17,4 +17,10 @@ export const dbConnection = await sqlConnect.createPool({
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "carwash_database",
   port: Number(process.env.DB_PORT) || 3306,
+  ssl: {
+    rejectUnauthorized: true,
+  },
 });
+
+
+

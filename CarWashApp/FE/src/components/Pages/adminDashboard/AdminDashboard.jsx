@@ -13,6 +13,7 @@ import { useEditAccount } from "../../../hooks/useAccountStats.js";
 import EditAccForm from "../../FormComponents/Forms/EditAccountForm/EditAccForm";
 import useSocket from "../../../Socket/useSocket";
 import { WASH_EVENTS } from "../../../../../shared/events";
+import { toast } from "react-toastify";
 
 import {
   useAllUsers,
@@ -98,9 +99,14 @@ export default function AdminDashboard() {
     tabs.find((tab) => tab.component === ActiveComponent)?.props || {};
 
   const handleLogout = async () => {
-    await logout(queryClient);
-    setUser(null);
-    window.location.href = "/login";
+    try {
+      await logout(queryClient);
+      setUser(null);
+      toast.success("Logged out successfully.");
+      window.location.href = "/login";
+    } catch (error) {
+      toast.error("Could not log out. Please try again.");
+    }
   };
 
   const handleEditSubmit = async (id, username, email, phone, password) => {

@@ -18,9 +18,11 @@ export default function GeneralLayout({
 }) {
   const location = useLocation();
   const hideHeader = location.pathname === "/account";
+  const isLoginPage = location.pathname === "/login";
+  const shouldRenderOutlet = isLoggedIn || isLoginPage;
   return (
     <>
-      {isLoggedIn && !hideHeader && <Header username={user.username} />}
+      {isLoggedIn && !hideHeader && <Header username={user?.username} />}
 
       <main>
         <UserContext.Provider
@@ -34,16 +36,18 @@ export default function GeneralLayout({
             socket,
           }}
         >
-          {!isLoggedIn && location.pathname !== "/login" && (
-            <Navigate to="/login" replace />
-          )}
+          {!isLoggedIn && !isLoginPage && <Navigate to="/login" replace />}
 
-          {!isLoggedIn && (
+          {!isLoggedIn && !isLoginPage && (
             <video className={classes.video} src={""} autoPlay loop muted />
           )}
-          <div className={isLoggedIn ? classes.outlet : classes.outletAbsolute}>
-            <Outlet />
-          </div>
+          {shouldRenderOutlet && (
+            <div
+              className={isLoggedIn ? classes.outlet : classes.outletAbsolute}
+            >
+              <Outlet />
+            </div>
+          )}
         </UserContext.Provider>
       </main>
       {isLoggedIn &&

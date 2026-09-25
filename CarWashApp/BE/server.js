@@ -3,7 +3,6 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
-import rateLimit from "express-rate-limit";
 import session from "express-session";
 import { createServer } from "http";
 import { randomUUID } from "crypto";
@@ -12,6 +11,11 @@ import path from "path";
 import { initializeSocket } from "./sockets/index.js";
 import { initializeJobs } from "./jobs/index.js";
 import loggedIn from "./middleware/loggedIn.js";
+import {
+  globalLimiter,
+  loginLimiter,
+  verificationLimiter,
+} from "./middleware/rateLimiters.js";
 import admin_services_router from "./admin_services/router.js";
 import * as account_services from "./account_utils/account_services.js";
 import * as category_services from "./admin_services/category_services/category_services.js";
@@ -28,7 +32,9 @@ dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
 if (process.env.SKIP_STARTUP_JOBS !== "true") {
   await initializeJobs();
 }
-await initializeVerificationTable();
+if (process.env.SKIP_DATABASE_INITIALIZATION !== "true") {
+  await initializeVerificationTable();
+}
 
 const app = express();
 const server = createServer(app);
@@ -40,28 +46,13 @@ if (process.env.NODE_ENV === "production" && !process.env.SESSION_SECRET) {
   throw new Error("SESSION_SECRET must be configured in production");
 }
 
-const sessionStore = new MariaSessionStore();
+const sessionStore = new MariaSessionStore({
+  initialize: process.env.SKIP_DATABASE_INITIALIZATION !== "true",
+});
 await sessionStore.onReady();
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
 }
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 10,
-  standardHeaders: "draft-8",
-  legacyHeaders: false,
-  message: { code: "LOGIN_RATE_LIMITED", status: "Too many login attempts" },
-});
-const verificationLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 10,
-  standardHeaders: "draft-8",
-  legacyHeaders: false,
-  message: {
-    code: "VERIFICATION_RATE_LIMITED",
-    status: "Too many verification attempts",
-  },
-});
 
 app.use(cors({ origin: clientOrigin, credentials: true }));
 app.use(helmet());
@@ -97,14 +88,7 @@ app.get("/health/ready", async (req, res) => {
     return res.status(503).json({ status: "unavailable" });
   }
 });
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    limit: 300,
-    standardHeaders: "draft-8",
-    legacyHeaders: false,
-  }),
-);
+app.use(globalLimiter);
 app.use("/account/login", loginLimiter);
 app.use("/account/verify-email", verificationLimiter);
 app.use("/account/resend-verification", verificationLimiter);
@@ -117,6 +101,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+app.use(express.json({ limit: "100kb" }));
 app.use(
   session({
     name: "_sid",
@@ -133,9 +118,8 @@ app.use(
   }),
 );
 
-// Parse JSON before handlers read req.body; loggedIn protects all app routes.
+// JSON is parsed before route handlers; loggedIn protects all app routes.
 app.use(loggedIn);
-app.use(express.json({ limit: "100kb" }));
 
 app.use("/account", account_services.router);
 //if the user is an admin, they can access the admin category services, otherwise they can only access the user category services

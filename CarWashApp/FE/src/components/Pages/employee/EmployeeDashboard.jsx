@@ -10,12 +10,20 @@ import { UserContext } from "../../ContextComponents/UserContext/UserContext";
 import { useContext } from "react";
 
 import useSocket from "../../../Socket/useSocket";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function EmployeeDashboard() {
   const { socket } = useContext(UserContext);
   const queryClient = useQueryClient();
   const { data: washes, status, error } = useAllWashes();
   const { mutate: updateStatus } = useUpdateWashStatus();
+
+  useEffect(() => {
+    if (status === "error") {
+      toast.error("Could not load wash bookings.");
+    }
+  }, [status]);
 
   useSocket(socket, WASH_EVENTS.NEW_WASH_BOOKED, (newWash) => {
     queryClient.setQueryData(["allWashes"], (oldData) => [

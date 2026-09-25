@@ -13,3 +13,6 @@ CREATE TABLE IF NOT EXISTS email_verification_codes (
   last_sent_at DATETIME NOT NULL,
   attempts TINYINT UNSIGNED NOT NULL DEFAULT 0
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+
+-- Upgrade databases created by older session stores that used INT expires.
+ALTER TABLE sessions MODIFY expires BIGINT UNSIGNED NOT NULL;
