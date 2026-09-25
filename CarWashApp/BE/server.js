@@ -58,6 +58,7 @@ if (process.env.NODE_ENV === "production") {
 
 app.use(cors({ origin: clientOrigin, credentials: true }));
 app.use(helmet());
+  
 app.use((req, res, next) => {
   const requestId = req.get("x-request-id") || randomUUID();
   const startedAt = Date.now();
