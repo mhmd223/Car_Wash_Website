@@ -25,16 +25,15 @@ import * as car_services from "./customer_services/car_services/car_routes.js";
 import customer_schedule_router from "./customer_services/schedule_routes.js";
 import { dbConnection } from "./sql_utils/DBconnection.js";
 import MariaSessionStore from "./sql_utils/MariaSessionStore.js";
-import { initializeVerificationTable } from "./account_utils/verification_service.js";
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
 if (process.env.SKIP_STARTUP_JOBS !== "true") {
   await initializeJobs();
 }
-if (process.env.SKIP_DATABASE_INITIALIZATION !== "true") {
-  await initializeVerificationTable();
-}
+// if (process.env.SKIP_DATABASE_INITIALIZATION !== "true") {
+//   await initializeVerificationTable();
+// }
 
 const app = express();
 const server = createServer(app);
