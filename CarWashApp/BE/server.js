@@ -76,10 +76,10 @@ app.use(
   cors({
     origin(origin, callback) {
       if (!origin || isAllowedOrigin(origin)) {
-        callback(null, true);
+        callback(null, origin || true);
         return;
       }
-      callback(new Error(`Origin not allowed by CORS: ${origin}`));
+      callback(null, false);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -88,7 +88,6 @@ app.use(
       "Authorization",
       "X-Requested-With",
       "x-request-id",
-      "Access-Control-Allow-Origin",
     ],
   }),
 );
