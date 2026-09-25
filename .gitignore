@@ -1,7 +1,7 @@
 node_modules
 .env
 .env.example
-verification_service.js
+Car_Wash_Website\CarWashApp\BE\account_utils\verification_service.js
 **/test-results/
 coverage/
 logs/
