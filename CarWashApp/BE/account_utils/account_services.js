@@ -59,15 +59,6 @@ router.post("/login", async (req, res) => {
       .json({ status: "Invalid email or password", loggedIn: false });
   }
 
-  if (!result.verified) {
-    return res.status(403).json({
-      code: "EMAIL_NOT_VERIFIED",
-      email: result.email,
-      status: "Verify your email before logging in",
-      loggedIn: false,
-    });
-  }
-
   return req.session.regenerate((regenerateError) => {
     if (regenerateError) {
       console.error("Error regenerating session after login:", regenerateError);

@@ -16,7 +16,6 @@ export default function LoginForm({
   isRegistering,
   setIsRegistering,
   setSuccessFullyRegistered,
-  setVerificationEmail,
   username,
   emailOrPhone,
   phone,
@@ -125,7 +124,6 @@ export default function LoginForm({
           confirmPassword,
         );
         if (response) {
-          setVerificationEmail(emailOrPhone);
           setSuccessFullyRegistered(true);
           setIsRegistering(false);
         } else {
@@ -149,14 +147,9 @@ export default function LoginForm({
             queryClient.invalidateQueries({ queryKey: ["userInfo"] });
           }
         } catch (error) {
-          if (error.response?.data?.code === "EMAIL_NOT_VERIFIED") {
-            setVerificationEmail(error.response.data.email || emailOrPhone);
-            toast.info("Verify your email before logging in.");
-          } else {
-            toast.error(
-              error.response?.data?.status || "Invalid email or password.",
-            );
-          }
+          toast.error(
+            error.response?.data?.status || "Invalid email or password.",
+          );
         }
       };
 

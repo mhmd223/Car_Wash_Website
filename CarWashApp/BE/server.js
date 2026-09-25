@@ -11,11 +11,7 @@ import path from "path";
 import { initializeSocket } from "./sockets/index.js";
 import { initializeJobs } from "./jobs/index.js";
 import loggedIn from "./middleware/loggedIn.js";
-import {
-  globalLimiter,
-  loginLimiter,
-  verificationLimiter,
-} from "./middleware/rateLimiters.js";
+import { globalLimiter, loginLimiter } from "./middleware/rateLimiters.js";
 import admin_services_router from "./admin_services/router.js";
 import * as account_services from "./account_utils/account_services.js";
 import * as category_services from "./admin_services/category_services/category_services.js";
@@ -128,8 +124,6 @@ app.get("/health/ready", async (req, res) => {
 });
 app.use(globalLimiter);
 app.use("/account/login", loginLimiter);
-app.use("/account/verify-email", verificationLimiter);
-app.use("/account/resend-verification", verificationLimiter);
 app.use((req, res, next) => {
   if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
     const requestOrigin = req.get("origin");

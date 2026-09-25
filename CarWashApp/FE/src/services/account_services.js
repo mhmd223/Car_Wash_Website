@@ -9,7 +9,7 @@ export const register = async (
   confirmPassword,
 ) => {
   const response = await axios.post(`${API_URL}register`, {
-    username,   
+    username,
     email: email,
     phone,
     password,
@@ -72,24 +72,6 @@ export const logout = async (queryClient) => {
     console.error("Error logging out:", error);
     throw error;
   }
-};
-
-export const verifyEmail = async (email, code) => {
-  const response = await axios.post(
-    `${API_URL}verify-email`,
-    { email, code },
-    { withCredentials: true },
-  );
-  return response.data;
-};
-
-export const resendVerification = async (email) => {
-  const response = await axios.post(
-    `${API_URL}resend-verification`,
-    { email },
-    { withCredentials: true },
-  );
-  return response.data;
 };
 
 export const verifyUser = async (id) => {
