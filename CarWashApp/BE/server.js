@@ -88,6 +88,7 @@ app.use(
       "Authorization",
       "X-Requested-With",
       "x-request-id",
+      "Access-Control-Allow-Origin",
     ],
   }),
 );
