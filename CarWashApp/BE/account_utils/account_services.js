@@ -5,49 +5,50 @@ import {
   edit_user,
   get_user_by_id,
 } from "./acount_queries.js";
-import {
-  initializeVerificationTable,
-  sendVerificationCode,
-  verifyEmailCode,
-} from "./verification_service.js";
+
+// import {
+//   initializeVerificationTable,
+//   sendVerificationCode,
+//   verifyEmailCode,
+// } from "./verification_service.js";
 
 export const router = express.Router();
 
-router.post("/verify-email", async (req, res) => {
-  const { email, code } = req.body;
-  if (typeof email !== "string" || !/^\d{6}$/.test(String(code))) {
-    return res.status(400).json({ code: "INVALID_VERIFICATION_INPUT" });
-  }
+// router.post("/verify-email", async (req, res) => {
+//   const { email, code } = req.body;
+//   if (typeof email !== "string" || !/^\d{6}$/.test(String(code))) {
+//     return res.status(400).json({ code: "INVALID_VERIFICATION_INPUT" });
+//   }
 
-  try {
-    const result = await verifyEmailCode(
-      email.trim().toLowerCase(),
-      String(code),
-    );
-    if (!result.verified) return res.status(400).json(result);
-    return res.json({ verified: true, message: "Email verified successfully" });
-  } catch (error) {
-    console.error("Error verifying email:", error);
-    return res.status(500).json({ code: "VERIFICATION_FAILED" });
-  }
-});
+//   try {
+//     const result = await verifyEmailCode(
+//       email.trim().toLowerCase(),
+//       String(code),
+//     );
+//     if (!result.verified) return res.status(400).json(result);
+//     return res.json({ verified: true, message: "Email verified successfully" });
+//   } catch (error) {
+//     console.error("Error verifying email:", error);
+//     return res.status(500).json({ code: "VERIFICATION_FAILED" });
+//   }
+// });
 
-router.post("/resend-verification", async (req, res) => {
-  const email =
-    typeof req.body.email === "string"
-      ? req.body.email.trim().toLowerCase()
-      : "";
-  if (!email) return res.status(400).json({ code: "INVALID_EMAIL" });
+// router.post("/resend-verification", async (req, res) => {
+//   const email =
+//     typeof req.body.email === "string"
+//       ? req.body.email.trim().toLowerCase()
+//       : "";
+//   if (!email) return res.status(400).json({ code: "INVALID_EMAIL" });
 
-  try {
-    const result = await sendVerificationCode(email);
-    if (!result.sent) return res.status(429).json(result);
-    return res.json({ sent: true });
-  } catch (error) {
-    console.error("Error sending verification email:", error);
-    return res.status(500).json({ code: "VERIFICATION_EMAIL_FAILED" });
-  }
-});
+//   try {
+//     // const result = await sendVerificationCode(email);
+//     // if (!result.sent) return res.status(429).json(result);
+//     return res.json({ sent: true });
+//   } catch (error) {
+//     console.error("Error sending verification email:", error);
+//     return res.status(500).json({ code: "VERIFICATION_EMAIL_FAILED" });
+//   }
+// });
 /** 
 @route POST /register
 @desc Register a new user with email, username, phone, password, and confirmPassword.
@@ -75,7 +76,7 @@ router.post("/register", async (req, res) => {
       .json({ status: "Something went wrong", registered: result });
   else {
     try {
-      await sendVerificationCode(email.trim().toLowerCase());
+      // await sendVerificationCode(email.trim().toLowerCase());
     } catch (error) {
       console.error("Error sending registration verification email:", error);
       return res.status(500).json({ code: "VERIFICATION_EMAIL_FAILED" });
