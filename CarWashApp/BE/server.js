@@ -66,6 +66,7 @@ if (process.env.NODE_ENV === "production" && !process.env.SESSION_SECRET) {
 const sessionStore = new MariaSessionStore({
   initialize: process.env.SKIP_DATABASE_INITIALIZATION !== "true",
 });
+
 await sessionStore.onReady();
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
@@ -87,6 +88,7 @@ app.use(
       "Authorization",
       "X-Requested-With",
       "x-request-id",
+      "Access-Control-Allow-Origin",
     ],
   }),
 );
