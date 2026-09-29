@@ -64,6 +64,7 @@ const sessionStore = new MariaSessionStore({
 });
 
 await sessionStore.onReady();
+
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
 }
@@ -143,7 +144,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       secure: process.env.NODE_ENV === "production",
       maxAge: sessionMaxAge,
     },
