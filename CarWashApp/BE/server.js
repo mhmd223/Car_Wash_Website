@@ -202,4 +202,4 @@ const shutdown = async (signal) => {
 process.once("SIGTERM", () => shutdown("SIGTERM"));
 process.once("SIGINT", () => shutdown("SIGINT"));
 
-export const io = initializeSocket(server);
+export const io = initializeSocket(server, process.env.CLIENT_ORIGIN);

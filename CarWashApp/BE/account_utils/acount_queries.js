@@ -12,11 +12,11 @@ export async function validate_login(email, password) {
   const conn = await dbConnection.getConnection();
   try {
     let res = await conn.query("SELECT * FROM users WHERE email=?", [email]);
-
     if (res[0].length) {
       const user = res[0][0];
       const hashed_password = user.password;
       const is_valid = await compare_hash(hashed_password, password);
+            console.log("Password validation result for user:", is_valid);
 
       return is_valid ? user : null;
     }

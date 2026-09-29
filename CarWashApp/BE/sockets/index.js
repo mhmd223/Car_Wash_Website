@@ -1,11 +1,13 @@
 // Socket.IO bootstrap and room assignment for customers, washers, and admins.
 import { Server } from "socket.io";
 
-export function initializeSocket(server) {
+
+
+export function initializeSocket(server, origin) {
   const io = new Server(server, {
     cors: {
       autoConnect: false,
-      origin: "http://localhost:3000",
+      origin: origin,
       credentials: true,
     },
   });
