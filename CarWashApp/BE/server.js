@@ -148,7 +148,6 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      domain: process.env.CLIENT_ORIGIN || undefined,
       httpOnly: true,
       sameSite: "none",
       secure: process.env.NODE_ENV === "production",
