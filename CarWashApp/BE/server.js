@@ -148,6 +148,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
+      domain: process.env.VITE_API_URL,
       httpOnly: true,
       sameSite: "none",
       secure: process.env.NODE_ENV === "production",
