@@ -27,6 +27,7 @@ dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
 if (process.env.SKIP_STARTUP_JOBS !== "true") {
   await initializeJobs();
 }
+
 // if (process.env.SKIP_DATABASE_INITIALIZATION !== "true") {
 //   await initializeVerificationTable();
 // }
@@ -115,6 +116,7 @@ app.use((req, res, next) => {
 app.get("/health/live", (req, res) => {
   return res.status(200).json({ status: "ok" });
 });
+
 app.get("/health/ready", async (req, res) => {
   try {
     await dbConnection.query("SELECT 1");
@@ -123,8 +125,10 @@ app.get("/health/ready", async (req, res) => {
     return res.status(503).json({ status: "unavailable" });
   }
 });
+
 app.use(globalLimiter);
 app.use("/account/login", loginLimiter);
+
 app.use((req, res, next) => {
   if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
     const requestOrigin = req.get("origin");
@@ -134,6 +138,7 @@ app.use((req, res, next) => {
   }
   next();
 });
+
 app.use(express.json({ limit: "100kb" }));
 app.use(
   session({
@@ -143,6 +148,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
+      domain: process.env.CLIENT_ORIGIN || undefined,
       httpOnly: true,
       sameSite: "none",
       secure: process.env.NODE_ENV === "production",
