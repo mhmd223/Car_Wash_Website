@@ -7,6 +7,7 @@ export async function authenticateToken(req, res, next) {
   const secret = process.env.JWT_SECRET || process.env.SESSION_SECRET;
 
   if (!token || !secret) {
+    console.log("Missing token or secret.");
     return res.status(401).json({ status: "Unauthorized" });
   }
 
@@ -14,13 +15,13 @@ export async function authenticateToken(req, res, next) {
   try {
     payload = tokenUtils.verifyToken(token, secret);
   } catch (error) {
-    console.error("Token verification failed:", error);
+    console.log("Token verification failed:", error);
     return res.status(401).json({ status: "Unauthorized" });
   }
 
   const userId = Number(payload.sub);
   if (!Number.isSafeInteger(userId) || userId <= 0) {
-    console.error("Invalid user ID extracted from token:", userId);
+    console.log("Invalid user ID extracted from token:", userId);
     return res.status(401).json({ status: "Unauthorized" });
   }
 
