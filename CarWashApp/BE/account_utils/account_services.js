@@ -51,6 +51,7 @@ router.post("/login", async (req, res) => {
   const result = await validate_login(email, password);
 
   if (!result) {
+    console.log("Invalid login attempt for email:", email);
     return res
       .status(401)
       .json({ status: "Invalid email or password", loggedIn: false });
