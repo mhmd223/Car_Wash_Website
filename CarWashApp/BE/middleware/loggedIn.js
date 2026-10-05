@@ -13,25 +13,32 @@ export async function authenticateToken(req, res, next) {
   let payload;
   try {
     payload = tokenUtils.verifyToken(token, secret);
-  } catch {
+  } catch (error) {
+    console.error("Token verification failed:", error);
     return res.status(401).json({ status: "Unauthorized" });
   }
 
   const userId = Number(payload.sub);
   if (!Number.isSafeInteger(userId) || userId <= 0) {
+    console.error("Invalid user ID extracted from token:", userId);
     return res.status(401).json({ status: "Unauthorized" });
   }
 
   try {
     const user = await get_user_by_id(userId);
-    if (!user || Number(user.verified) !== 1) {
+    if (!user) {
+      console.log("User not found for ID:", userId);
+      return res.status(401).json({ status: "Unauthorized" });
+    }
+    if (Number(user.verified) !== 1) {
+      console.log("User not verified for ID:", userId);
       return res.status(401).json({ status: "Unauthorized" });
     }
 
     req.user = user;
     return next();
   } catch (error) {
-    console.error("Could not load authenticated user:", error);
+    console.log("Could not load authenticated user:", error);
     return res.status(500).json({ status: "Authentication failed" });
   }
 }
