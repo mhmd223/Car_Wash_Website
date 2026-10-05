@@ -30,7 +30,6 @@ export default function BookForm({
     const formData = new FormData(e.target);
     const data = {
       Car_Plate: selectedCar,
-      Cust_ID: user.id,
       Wash_Date: getFullDate(formData.get("Time")),
       Category_ID: selectedCategory,
     };

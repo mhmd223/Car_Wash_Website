@@ -1,11 +1,8 @@
 import express from "express";
-import {
-  registerAcc,
-  validate_login,
-  edit_user,
-  get_user_by_id,
-} from "./acount_queries.js";
+import { registerAcc, validate_login, edit_user } from "./acount_queries.js";
 
+import * as tokenUtils from "../token_utils/token.js";
+import { authenticateToken } from "../middleware/loggedIn.js";
 export const router = express.Router();
 
 /** 
@@ -59,35 +56,23 @@ router.post("/login", async (req, res) => {
       .json({ status: "Invalid email or password", loggedIn: false });
   }
 
-  return req.session.regenerate((regenerateError) => {
-    if (regenerateError) {
-      console.error("Error regenerating session after login:", regenerateError);
-      return res.status(500).json({ code: "SESSION_CREATE_FAILED" });
-    }
+  const token = tokenUtils.generateToken(
+    { sub: String(result.id) },
+    process.env.JWT_SECRET || process.env.SESSION_SECRET,
+    { expiresIn: "24h" },
+  );
 
-    req.session.user = {
-      id: result.id,
-      username: result.username,
-      email: result.email,
-      phone: result.phone,
-      role: result.role,
-      verified: result.verified,
-      user_agent: req.headers["user-agent"] || "unknown",
-    };
+  tokenUtils.setTokenCookie(res, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
 
-    return req.session.save((saveError) => {
-      if (saveError) {
-        console.error("Error saving login session:", saveError);
-        return res.status(500).json({ code: "SESSION_SAVE_FAILED" });
-      }
-
-      console.log(`User ${req.session.user.username} logged in successfully.`);
-      return res.status(200).json({
-        message: `Welcome, ${result.username}!`,
-        loggedIn: true,
-        user: req.session.user,
-      });
-    });
+  return res.status(200).json({
+    message: `Welcome, ${result.username}!`,
+    loggedIn: true,
   });
 });
 
@@ -107,40 +92,24 @@ router.post("/login", async (req, res) => {
  */
 
 router.get("/logout", (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ status: "Not logged in" });
-  }
-  req.session.destroy((err) => {
-    if (err) {
-      res.status(500).json({ status: "Error occurred while logging out" });
-    } else {
-      res
-        .status(200)
-        .json({ message: "Successfully logged out!", loggedOut: true });
-    }
+  res.clearCookie("token", {
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
+  return res
+    .status(200)
+    .json({ message: "Successfully logged out!", loggedOut: true });
 });
 
-router.get("/me", async (req, res) => {
-  const result = req.session.user;
-  if (!result) res.status(404).json(undefined);
-  else res.status(200).json(result);
+router.get("/me", authenticateToken, (req, res) => {
+  return res.status(200).json({ ...req.user, loggedIn: true });
 });
 
-router.post("/edit", async (req, res) => {
-  console.log("editing user");
-
-  if (!req.session.user) {
-    return res.status(401).json({ status: "Not logged in" });
-  }
+router.post("/edit", authenticateToken, async (req, res) => {
   const { username, email, phone, password } = req.body;
-  const result = await edit_user(
-    req.session.user.id,
-    username,
-    email,
-    phone,
-    password,
-  );
+  const result = await edit_user(req.user.id, username, email, phone, password);
+
   if (result?.status === "User not found") {
     res.status(404).json({ status: "User not found", edited: result });
   } else if (result?.status === "Invalid password") {

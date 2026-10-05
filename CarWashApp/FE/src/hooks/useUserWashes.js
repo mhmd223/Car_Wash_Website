@@ -4,7 +4,7 @@ import { getUserWashes, getUserStats } from "../services/wash_services";
 export function useUserWashes(userId, { retry }) {
   return useQuery({
     queryKey: ["userWashes", userId],
-    queryFn: () => getUserWashes(userId),
+    queryFn: getUserWashes,
     enabled: Boolean(userId),
     staleTime: 5 * 60 * 1000,
     retry: retry ?? true,
@@ -14,7 +14,7 @@ export function useUserWashes(userId, { retry }) {
 export function useUserStats(userId) {
   return useQuery({
     queryKey: ["userStats", userId],
-    queryFn: () => getUserStats(userId),
+    queryFn: getUserStats,
     staleTime: 5 * 60 * 1000,
   });
 }

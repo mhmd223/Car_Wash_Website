@@ -25,8 +25,8 @@ export const useAccountStats = (userId, options = {}) => {
     queryKey: ["accountStats", userId],
     queryFn: async () => {
       const [userInfo, washStats] = await Promise.all([
-        getAccountInfo(userId),
-        getUserStats(userId),
+        getAccountInfo(),
+        getUserStats(),
       ]);
       return { ...userInfo, ...washStats };
     },
@@ -39,7 +39,7 @@ export const useEditAccount = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ id, username, email, phone, password }) =>
-      editAccount(id, username, email, phone, password),
+      editAccount(username, email, phone, password),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ["accountStats", id] });
       queryClient.invalidateQueries({ queryKey: ["userInfo", id] });

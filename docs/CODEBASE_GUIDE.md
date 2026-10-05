@@ -31,13 +31,13 @@ The browser is responsible for interaction and presentation. The backend is resp
 
 ## Backend
 
-The backend is an Express application using ES modules, MySQL, MariaDB-backed sessions, Socket.IO, and scheduled jobs.
+The backend is an Express application using ES modules, MySQL, JWT-cookie authentication, Socket.IO, and scheduled jobs.
 
 ### Bootstrap and infrastructure
 
-- `BE/server.js`: application entry point. Loads environment variables, initializes jobs and verification storage, configures CORS, Helmet, rate limiting, origin checks, sessions, JSON parsing, routes, health checks, and graceful shutdown. Add global middleware here; add business logic elsewhere.
+- `BE/server.js`: application entry point. Loads environment variables, initializes jobs and verification storage, configures CORS, Helmet, rate limiting, origin checks, cookie parsing, JWT authentication, JSON parsing, routes, health checks, and graceful shutdown. Add global middleware here; add business logic elsewhere.
 - `BE/sql_utils/DBconnection.js`: creates the MySQL pool from environment variables. Query modules borrow a connection and must release it in `finally`.
-- `BE/middleware/loggedIn.js`: authentication boundary. Public account verification routes pass through; all other routes require a session and an explicitly verified user.
+- `BE/middleware/loggedIn.js`: authentication boundary. Verifies the JWT cookie, reloads the current user and role from the database, and rejects missing or unverified users.
 - `BE/data/roles.js`: canonical role strings. Import these constants instead of spelling roles differently.
 - `BE/jobs/index.js`: startup entry point for background jobs.
 - `BE/jobs/washJobs.js`: rejects overdue pending washes and schedules the 24-hour repeat job.
@@ -55,7 +55,7 @@ Verification flow:
 2. The frontend shows `VerificationPage`.
 3. The code endpoint locks the code row, checks expiry and attempts, marks the user verified, and deletes the code.
 4. Login rejects unverified accounts.
-5. `loggedIn` rejects unverified sessions on every protected request.
+5. Protected requests require a valid JWT and a currently verified database account.
 
 ### Admin services
 
@@ -72,13 +72,13 @@ Verification flow:
 
 ### Customer services
 
-- `BE/customer_services/car_services/car_routes.js`: authenticated car endpoints. It checks that the requested user ID matches the session user.
+- `BE/customer_services/car_services/car_routes.js`: authenticated car endpoints. Ownership is derived from the authenticated JWT user; customer IDs are not accepted from the request.
 - `BE/customer_services/car_services/car_queries.js`: car database operations.
 - `BE/customer_services/car_services/car_validator.js`: license-plate validation and external vehicle lookup.
 - `BE/customer_services/category_services/category_routes.js`: customer category reads.
 - `BE/customer_services/category_services/category_queries.js`: customer category SQL.
 - `BE/customer_services/schedule_routes.js`: customer schedule read endpoint. Schedule writes remain admin-only.
-- `BE/customer_services/wash_services/carwash_routes.js`: customer wash reads, booking, and staff status updates. It validates session ownership and maps domain errors to HTTP codes.
+- `BE/customer_services/wash_services/carwash_routes.js`: customer wash reads, booking, and staff status updates. It derives the customer ID from the authenticated user and maps domain errors to HTTP codes.
 - `BE/customer_services/wash_services/carwash_queries.js`: wash SQL. Booking verifies car ownership and category existence, obtains a MySQL advisory lock for the time slot, checks availability, inserts inside a transaction, and releases the lock.
 
 Booking error codes to preserve in clients:
@@ -102,7 +102,7 @@ The frontend is React with Vite, TanStack React Query, Axios, Socket.IO client, 
 ### App shell and routing
 
 - `FE/src/main.jsx`: creates the React root and `QueryClientProvider`.
-- `FE/src/app/App.jsx`: route tree, session-derived user state, socket connection, and global toast container.
+- `FE/src/app/App.jsx`: route tree, `/account/me`-derived user state, socket connection, and global toast container.
 - `FE/src/app/app.css`: app-level CSS entry point.
 - `FE/src/index.css`: global variables, typography, reset, colors, and accessibility focus styles.
 - `FE/src/components/Layouts/General/GeneralLayout.jsx`: authenticated layout, login redirect, user context provider, header/footer selection.

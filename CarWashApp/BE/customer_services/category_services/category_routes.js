@@ -3,13 +3,12 @@ import * as category_queries from "./category_queries.js";
 
 export const router = express.Router();
 
-// middleware that checks for an authenticated session on every route
+// middleware that checks for an authenticated user on every route
 router.use("/", (req, res, next) => {
-  if (!req.session.user) {
-    res.status(401).json({ status: "Unauthorized" });
-    return;
+  if (!req.user) {
+    return res.status(401).json({ status: "Unauthorized" });
   }
-  next();
+  return next();
 });
 
 router.get("/get_categories", async (req, res) => {

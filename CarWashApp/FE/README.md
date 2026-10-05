@@ -32,8 +32,8 @@ For a booking:
 1. A page opens `BookForm`.
 2. The form calls `useBookWash`.
 3. The hook calls `services/wash_services.js`.
-4. Axios sends the request with the session cookie.
-5. The backend validates ownership and availability.
+4. Axios sends the request with the HTTP-only JWT cookie.
+5. The backend derives the customer ID from the verified JWT and validates ownership and availability.
 6. React Query invalidates the user's washes and stats.
 7. Socket.IO notifies staff about the new wash.
 

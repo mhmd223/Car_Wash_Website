@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/sales_report", async (req, res) => {
   try {
-    const role = req.session.user?.role?.toLowerCase();
+    const role = req.user?.role?.toLowerCase();
     if (role !== roles.ADMIN.toLowerCase()) {
       return res.status(403).json({ status: "Forbidden" });
     }
@@ -27,7 +27,7 @@ router.get("/sales_report", async (req, res) => {
 
 router.get("/business_report", async (req, res) => {
   try {
-    const role = req.session.user?.role?.toLowerCase();
+    const role = req.user?.role?.toLowerCase();
     if (role !== roles.ADMIN.toLowerCase()) {
       return res.status(403).json({ status: "Forbidden" });
     }

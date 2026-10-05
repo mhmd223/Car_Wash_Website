@@ -12,7 +12,7 @@ Create:
 - A static hosting service or web server for `FE/dist`
 - An HTTPS certificate for the frontend and API domains
 
-Redis is not required. Sessions are stored in the MariaDB `sessions` table.
+Redis and a server-side session table are not required. Authentication uses signed JWTs in HTTP-only cookies.
 
 ## 2. Prepare MariaDB
 
@@ -31,8 +31,7 @@ Set these in the hosting platform, not in Git:
 NODE_ENV=production
 PORT=5173
 CLIENT_ORIGIN=https://frontend.example.com
-SESSION_SECRET=<new random secret>
-SESH_EXPIRE_MS=86400000
+JWT_SECRET=<new random secret>
 DB_HOST=<private MariaDB host>
 DB_PORT=3306
 DB_USER=carwash_app
@@ -82,7 +81,7 @@ $env:BACKUP_FILE="C:\backups\carwash\carwash_database-YYYYMMDD-HHMMSS.sql"
 .\scripts\restore-mariadb.ps1
 ```
 
-Verify users, schedules, categories, cars, washes, and the `sessions` table after restore. Record the restore duration and result.
+Verify users, schedules, categories, cars, and washes after restore. Record the restore duration and result.
 
 ## 6. Monitoring
 
@@ -128,8 +127,8 @@ Then manually verify:
 - New registration sends an email.
 - An unverified account cannot log in.
 - Correct code enables login.
-- Session survives a backend restart.
-- Logout invalidates the session.
+- JWT authentication remains valid across a backend restart until token expiry.
+- Logout clears the JWT cookie.
 - A customer cannot edit another account.
 - Duplicate booking returns the expected conflict.
 - Admin and washer permissions are enforced.

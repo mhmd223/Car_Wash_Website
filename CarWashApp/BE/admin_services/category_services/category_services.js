@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.post("/add_category", async (req, res) => {
   try {
-    const user = req.session.user;
+    const user = req.user;
     if (!user || user.role !== roles.ADMIN) {
       res.status(403).json({ status: "Unauthorized" });
       return;

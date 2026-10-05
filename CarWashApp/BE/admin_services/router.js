@@ -8,11 +8,11 @@ import { roles } from "../data/roles.js";
 const router = express.Router();
 
 router.use((req, res, next) => {
-  if (!req.session.user || req.session.user.role !== roles.ADMIN) {
+  if (!req.user || req.user.role !== roles.ADMIN) {
     res.status(403).json({ status: "Unauthorized" });
     return;
   }
-  console.log("Unauthorized access attempt by user:", req.session.user?.email);
+  console.log("Unauthorized access attempt by user:", req.user?.email);
 
   next();
 });
