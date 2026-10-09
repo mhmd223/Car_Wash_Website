@@ -1,7 +1,6 @@
 import classes from "./carslist.module.css";
 import Car from "../../Car/Car";
 export default function CarsList({
-  user,
   cars,
   removeCar,
   setIsBookFormOpen,
@@ -14,7 +13,6 @@ export default function CarsList({
           <Car
             key={car.ID}
             car={car}
-            user={user}
             removeCar={removeCar}
             setIsBookFormOpen={setIsBookFormOpen}
             setSelectedCar={setSelectedCar}

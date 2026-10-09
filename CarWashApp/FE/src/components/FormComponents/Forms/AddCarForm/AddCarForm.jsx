@@ -2,14 +2,13 @@ import classes from "./AddCarForm.module.css";
 import InputField from "../../inputField/InputField.jsx";
 import { toast } from "react-toastify";
 
-export default function AddCarForm({ setIsAddCarFormOpen, mutation, userId }) {
+export default function AddCarForm({ setIsAddCarFormOpen, mutation }) {
   async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     console.log("Form Data:", Object.fromEntries(formData.entries()));
     const data = {
       License_Plate: formData.get("License_Plate"),
-      User_Id: userId,
     };
     try {
       await mutation.mutateAsync(data);

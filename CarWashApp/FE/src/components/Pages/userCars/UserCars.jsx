@@ -78,17 +78,17 @@ export default function UserCars() {
     },
   });
 
-  async function mutateAddCar({ License_Plate, User_Id }) {
+  async function mutateAddCar({ License_Plate }) {
     try {
-      return await addUserCar(User_Id, License_Plate);
+      return await addUserCar(License_Plate);
     } catch (error) {
       console.error("Error adding car:", error);
       throw error;
     }
   }
-  async function mutateRemoveCar({ User_Id, License_Plate }) {
+  async function mutateRemoveCar({ License_Plate }) {
     try {
-      return await removeUserCar(User_Id, License_Plate);
+      return await removeUserCar(License_Plate);
     } catch (error) {
       console.error("Error removing car:", error);
       throw error;
@@ -117,7 +117,6 @@ export default function UserCars() {
             setSelectedCar={setSelectedCar}
             setIsBookFormOpen={setIsBookFormOpen}
             cars={carsData}
-            user={user}
             removeCar={RemoveMutation.mutateAsync}
           />
         )}
@@ -141,7 +140,6 @@ export default function UserCars() {
         <AddCarForm
           setIsAddCarFormOpen={setIsCarFormOpen}
           mutation={Addmutation}
-          userId={user.id}
         />
       )}
       {isBookFormOpen && (
