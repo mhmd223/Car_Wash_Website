@@ -174,9 +174,9 @@ app.use((error, req, res, next) => {
   return res.status(500).json({ status: "Internal Server Error" });
 });
 
-// server.listen(port, () => {
-//   console.log(`listening on port ${port}!`);
-// });
+ server.listen(port, () => {
+   console.log(`listening on port ${port}!`);
+ });
 
 const shutdown = async (signal) => {
   console.log(`${signal} received, shutting down.`);
