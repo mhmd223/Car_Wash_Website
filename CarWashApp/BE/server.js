@@ -69,9 +69,11 @@ app.use(
   cors({
     origin(origin, callback) {
       if (!origin || isAllowedOrigin(origin)) {
+        console.log(`Allowed origin: ${origin}`);
         callback(null, origin || true);
         return;
       }
+      console.log(`Blocked origin: ${origin}`);
       callback(null, false);
     },
     credentials: true,
