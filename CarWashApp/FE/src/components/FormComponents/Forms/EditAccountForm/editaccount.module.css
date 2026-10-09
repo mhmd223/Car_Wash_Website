@@ -13,12 +13,14 @@
   padding-bottom: 40px;
 }
 .editAccFormContainer {
-  position: absolute;
+  position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 100vh;
   width: 100vw;
+  top: 0;
+  left: 0;
   background-color: var(--clr-black-25e);
 }
 
