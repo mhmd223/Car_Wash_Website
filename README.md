@@ -9,7 +9,7 @@ For the infrastructure handoff procedure, read [docs/STAGING_RUNBOOK.md](docs/ST
 
 ```text
 CarWashApp/
-  BE/       Express, MySQL, sessions, sockets, jobs
+   BE/       Express, MySQL, JWT auth, sockets, jobs
   FE/       React, Vite, React Query
 shared/     Socket event names shared by both sides
 test/       Backend unit and integration tests
@@ -59,12 +59,12 @@ The frontend runs at `http://localhost:3000`; the backend runs at `http://localh
 `.env.example` is the source of truth for configuration names. The important groups are:
 
 - Runtime: `NODE_ENV`, `PORT`, `CLIENT_ORIGIN`
-- Sessions: `SESSION_SECRET`, `SESH_EXPIRE_MS`, MariaDB `sessions` table
+- Authentication: `JWT_SECRET` (legacy `SESSION_SECRET` fallback)
 - Database: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
 - Car lookup: `CAR_DATA_API_URL`, `CAR_DATA_API_RESOURCE`
 - Verification email: `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`
 
-Production requires a session secret, database password, MariaDB access, and complete SMTP configuration. Secrets belong in the deployment platform, not Git.
+Production requires a JWT signing secret, database password, MariaDB access, and complete SMTP configuration. Secrets belong in the deployment platform, not Git.
 
 ## How It Works
 
@@ -74,7 +74,7 @@ Registration creates a six-digit email code. The backend stores only its hash, e
 
 ### Booking
 
-The backend validates session ownership, car ownership, category existence, and future booking time. A MySQL advisory lock plus a transaction prevents two simultaneous requests from booking the same time.
+The backend derives the customer ID from the verified JWT cookie, then validates car ownership, category existence, and future booking time. A MySQL advisory lock plus a transaction prevents two simultaneous requests from booking the same time.
 
 ### Roles
 
@@ -94,7 +94,7 @@ Socket.IO broadcasts new bookings and wash status changes. Event names live in `
 
 ## Where to Work
 
-- `BE/server.js`: middleware, sessions, health checks, routes, shutdown
+- `BE/server.js`: middleware, JWT auth, health checks, routes, shutdown
 - `BE/account_utils/`: accounts, passwords, email verification
 - `BE/customer_services/`: customer cars, categories, washes, schedules
 - `BE/admin_services/`: admin-only operations
@@ -140,7 +140,7 @@ Use `/health/ready` as the deployment readiness probe.
 
 - Keep `.env` ignored and untracked.
 - Rotate secrets that have been exposed.
-- Use the MariaDB-backed session store in production.
+- Use HTTP-only, secure JWT cookies in production.
 - Use HTTPS in production.
 - Keep SQL values parameterized.
 - Do not trust IDs, roles, or ownership values from the browser.
@@ -149,9 +149,8 @@ Use `/health/ready` as the deployment readiness probe.
 
 ## Deployment Checklist
 
-- [ ] Rotate `SESSION_SECRET` and configure production secrets.
+- [ ] Configure and rotate `JWT_SECRET`.
 - [ ] Configure managed MySQL backups and test a restore.
-- [ ] Confirm the MariaDB-backed `sessions` table is included in backups.
 - [ ] Configure SMTP and test a real verification email in staging.
 - [ ] Run all files in `database/migrations/` against the production MariaDB database.
 - [ ] Set `NODE_ENV=production` and the correct `CLIENT_ORIGIN`.
@@ -164,9 +163,9 @@ Use `/health/ready` as the deployment readiness probe.
 ## Troubleshooting
 
 - `EADDRINUSE`: another process owns the port; stop it or choose another port.
-- `401 Unauthorized`: the session cookie is missing or expired; log in again.
+- `401 Unauthorized`: the JWT cookie is missing, expired, or invalid; log in again.
 - `403 EMAIL_NOT_VERIFIED`: complete email verification, then log in again.
-- Production startup failure: check session, database, and SMTP variables.
+- Production startup failure: check JWT, database, and SMTP variables.
 - Real database/SMTP checks: set production-like environment variables locally, then run integration tests with `RUN_LIVE_INTEGRATION=true`.
 
 To run the live checks against a staging backend, provide a verified test account and SMTP-enabled backend:
@@ -179,6 +178,6 @@ $env:LIVE_TEST_PASSWORD="test-account-password"
 npm test
 ```
 
-The live tests log in, read the session-backed `/account/me` endpoint, log out, verify the cookie is invalidated, and request a real verification email.
+The live tests log in, read the JWT-authenticated `/account/me` endpoint, log out, verify the cookie is cleared, and request a real verification email.
 
 - Schedule upload rejection: use `.xlsx` or `.csv` with `Day`, `OpenTime`, `CloseTime`, and optional `Notes` columns.

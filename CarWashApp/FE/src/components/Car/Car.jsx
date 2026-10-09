@@ -3,7 +3,6 @@ import { CiCircleRemove } from "react-icons/ci";
 import { useState } from "react";
 export default function Car({
   car,
-  user,
   removeCar,
   setIsBookFormOpen,
   setSelectedCar,
@@ -29,7 +28,6 @@ export default function Car({
             className={classes.removeIcon}
             onClick={async () =>
               await removeCar({
-                User_Id: user.id,
                 License_Plate: car.License_Plate,
               })
             }

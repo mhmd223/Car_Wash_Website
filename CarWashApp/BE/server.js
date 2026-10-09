@@ -3,7 +3,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
-import session from "express-session";
+import cookieParser from "cookie-parser";
 import { createServer } from "http";
 import { randomUUID } from "crypto";
 import { fileURLToPath } from "url";
@@ -20,7 +20,6 @@ import * as wash_services from "./customer_services/wash_services/carwash_routes
 import * as car_services from "./customer_services/car_services/car_routes.js";
 import customer_schedule_router from "./customer_services/schedule_routes.js";
 import { dbConnection } from "./sql_utils/DBconnection.js";
-import MariaSessionStore from "./sql_utils/MariaSessionStore.js";
 
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
@@ -34,7 +33,6 @@ if (process.env.SKIP_STARTUP_JOBS !== "true") {
 
 const app = express();
 const server = createServer(app);
-const sessionMaxAge = Number(process.env.SESH_EXPIRE_MS) || 1000 * 60 * 60;
 const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "") || "";
 const allowedOrigins = new Set(
   [
@@ -56,15 +54,12 @@ const isAllowedOrigin = (origin) => {
 };
 const port = Number(process.env.PORT) || 5173;
 
-if (process.env.NODE_ENV === "production" && !process.env.SESSION_SECRET) {
-  throw new Error("SESSION_SECRET must be configured in production");
+if (
+  process.env.NODE_ENV === "production" &&
+  !(process.env.JWT_SECRET || process.env.SESSION_SECRET)
+) {
+  throw new Error("JWT_SECRET must be configured in production");
 }
-
-const sessionStore = new MariaSessionStore({
-  initialize: process.env.SKIP_DATABASE_INITIALIZATION !== "true",
-});
-
-await sessionStore.onReady();
 
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", 1);
@@ -111,8 +106,7 @@ app.use((req, res, next) => {
   next();
 });
 // Health checks stay public so the platform can assess the process before
-// authentication. Protected application routes are mounted below the session
-// and verified-user middleware.
+// authentication. Protected application routes are mounted below JWT auth.
 app.get("/health/live", (req, res) => {
   return res.status(200).json({ status: "ok" });
 });
@@ -140,22 +134,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json({ limit: "100kb" }));
-app.use(
-  session({
-    name: "_sid",
-    secret: process.env.SESSION_SECRET,
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      domain: process.env.VITE_API_URL,
-      httpOnly: true,
-      sameSite: "none",
-      secure: process.env.NODE_ENV === "production",
-      maxAge: sessionMaxAge,
-    },
-  }),
-);
+app.use(cookieParser());
 
 app.use("/account", account_services.router);
 
@@ -164,7 +143,7 @@ app.use(loggedIn);
 
 //if the user is an admin, they can access the admin category services, otherwise they can only access the user category services
 app.use("/category", (req, res, next) => {
-  if (req.session.user.role === "admin") {
+  if (req.user.role === "admin") {
     category_services.router(req, res, next);
   } else {
     user_category_services.router(req, res, next);
@@ -200,7 +179,6 @@ server.listen(port, () => {
 const shutdown = async (signal) => {
   console.log(`${signal} received, shutting down.`);
   server.close(async () => {
-    await sessionStore.close();
     await dbConnection.end();
     process.exit(0);
   });

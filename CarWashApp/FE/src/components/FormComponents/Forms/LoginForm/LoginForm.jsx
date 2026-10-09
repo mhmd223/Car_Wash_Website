@@ -141,8 +141,9 @@ export default function LoginForm({
           );
 
           if (response.loggedIn) {
+            const [user] = await accountOperations.getAccountInfo();
+            setUser(user);
             setIsLoggedIn(true);
-            setUser(response.user);
             localStorage.setItem("isLoggedIn", "true");
             queryClient.invalidateQueries({ queryKey: ["userInfo"] });
           }

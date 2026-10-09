@@ -43,11 +43,11 @@ export const getAccountInfo = async () => {
   return [response.data, Boolean(response.data)];
 };
 
-export const editAccount = async (id, username, email, phone, password) => {
+export const editAccount = async (username, email, phone, password) => {
   try {
     const response = await axios.post(
       `${API_URL}edit`,
-      { id, username, email, phone, password },
+      { username, email, phone, password },
       { withCredentials: true },
     );
 

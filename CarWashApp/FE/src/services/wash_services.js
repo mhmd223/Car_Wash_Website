@@ -3,8 +3,8 @@ import { statusConfig } from "../data/washStatus";
 
 const API_URL = `${import.meta.env.API_URL || "http://localhost:5173"}/wash`;
 
-export const getUserWashes = async (userId) => {
-  const response = await axios.get(`${API_URL}/user_washes/${userId}`, {
+export const getUserWashes = async () => {
+  const response = await axios.get(`${API_URL}/user_washes`, {
     withCredentials: true,
   });
   return response.data;
@@ -18,8 +18,8 @@ export const bookWash = async (bookingData) => {
   return response.data;
 };
 
-export const getUserStats = async (washId) => {
-  const response = await axios.get(`${API_URL}/user_washes/${washId}`, {
+export const getUserStats = async () => {
+  const response = await axios.get(`${API_URL}/user_washes`, {
     withCredentials: true,
   });
   return {

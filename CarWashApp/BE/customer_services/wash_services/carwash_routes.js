@@ -4,28 +4,21 @@ import { io } from "../../server.js";
 import * as washEvents from "../../sockets/washEvents.js";
 export const router = express.Router();
 
-// middleware that checks for an authenticated session on every route
+// middleware that checks for an authenticated user on every route
 router.use("/", (req, res, next) => {
-  if (req.session.user === undefined) {
-    res.status(401).json({ status: "Unauthorized" });
-    return;
+  if (!req.user) {
+    return res.status(401).json({ status: "Unauthorized" });
   }
-  next();
+  return next();
 });
 
-router.get("/user_washes/:id", async (req, res) => {
-  const { id } = req.params;
-  if (Number(id) !== Number(req.session.user.id)) {
-    return res
-      .status(403)
-      .json({ code: "FORBIDDEN_RESOURCE", status: "Forbidden" });
-  }
-  const userWashes = await wash_operations.get_user_washes(id);
+router.get("/user_washes", async (req, res) => {
+  const userWashes = await wash_operations.get_user_washes(req.user.id);
   return res.json(userWashes);
 });
 
 router.get("/all_washes", async (req, res) => {
-  const role = req.session.user?.role?.toLowerCase();
+  const role = req.user?.role?.toLowerCase();
   if (role !== "washer" && role !== "admin") {
     console.log("Forbidden access attempt by user with role:", role);
     return res.status(403).json({ status: "Forbidden" });
@@ -35,7 +28,7 @@ router.get("/all_washes", async (req, res) => {
 });
 
 router.put("/update_status/:id", async (req, res) => {
-  const role = req.session.user?.role?.toLowerCase();
+  const role = req.user?.role?.toLowerCase();
   if (role !== "washer" && role !== "admin") {
     return res.status(403).json({ status: "Forbidden" });
   }
@@ -49,20 +42,12 @@ router.put("/update_status/:id", async (req, res) => {
 });
 
 router.post("/book_wash", async (req, res) => {
-  const { Car_Plate, Cust_ID, Wash_Date, Category_ID } = req.body;
-
-  if (Number(Cust_ID) !== Number(req.session.user.id)) {
-    return res
-      .status(403)
-      .json({ code: "FORBIDDEN_RESOURCE", status: "Forbidden" });
-  }
+  const { Car_Plate, Wash_Date, Category_ID } = req.body;
   if (!Car_Plate || !Wash_Date || !Category_ID) {
-    return res
-      .status(400)
-      .json({
-        code: "INVALID_BOOKING",
-        status: "Car, time, and category are required",
-      });
+    return res.status(400).json({
+      code: "INVALID_BOOKING",
+      status: "Car, time, and category are required",
+    });
   }
 
   const washDate = new Date(Wash_Date);
@@ -75,42 +60,34 @@ router.post("/book_wash", async (req, res) => {
   try {
     const result = await wash_operations.book_wash(
       Car_Plate,
-      Cust_ID,
+      req.user.id,
       Wash_Date,
       Category_ID,
     );
 
     if (result.errorCode === "ALREADY_BOOKED") {
-      return res
-        .status(409)
-        .json({
-          code: result.errorCode,
-          status: "That time is already booked",
-        });
+      return res.status(409).json({
+        code: result.errorCode,
+        status: "That time is already booked",
+      });
     }
     if (result.errorCode === "BOOKING_BUSY") {
-      return res
-        .status(503)
-        .json({
-          code: result.errorCode,
-          status: "That time is being booked. Try again",
-        });
+      return res.status(503).json({
+        code: result.errorCode,
+        status: "That time is being booked. Try again",
+      });
     }
     if (result.errorCode === "CAR_NOT_OWNED") {
-      return res
-        .status(400)
-        .json({
-          code: result.errorCode,
-          status: "That car is not on your account",
-        });
+      return res.status(400).json({
+        code: result.errorCode,
+        status: "That car is not on your account",
+      });
     }
     if (result.errorCode === "CATEGORY_NOT_FOUND") {
-      return res
-        .status(400)
-        .json({
-          code: result.errorCode,
-          status: "That wash category is unavailable",
-        });
+      return res.status(400).json({
+        code: result.errorCode,
+        status: "That wash category is unavailable",
+      });
     }
 
     if (result.userWashes) {
