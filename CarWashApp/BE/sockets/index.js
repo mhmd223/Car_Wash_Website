@@ -1,15 +1,19 @@
 // Socket.IO bootstrap and room assignment for customers, washers, and admins.
 import { Server } from "socket.io";
 
+let io;
 
+export const getIO = () => {
+  if (!io) throw new Error("Socket.io not initialized");
+  return io;
+};
 
 export function initializeSocket(server, origin) {
-  const io = new Server(server, {
+  io = new Server(server, {
     cors: {
       autoConnect: false,
       origin: origin,
       credentials: true,
-      
     },
   });
 

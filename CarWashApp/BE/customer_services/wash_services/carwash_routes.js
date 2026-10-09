@@ -1,6 +1,6 @@
 import express from "express";
 import * as wash_operations from "./carwash_queries.js";
-import { io } from "../../server.js";
+import { getIO } from "../../sockets/index.js";
 import * as washEvents from "../../sockets/washEvents.js";
 export const router = express.Router();
 
@@ -36,7 +36,7 @@ router.put("/update_status/:id", async (req, res) => {
   const { status, custId } = req.body;
   const result = await wash_operations.update_wash_status(id, status);
   if (result) {
-    washEvents.washStatusUpdatedEvent(io, custId, Number(id), status);
+    washEvents.washStatusUpdatedEvent(getIO(), custId, Number(id), status);
     res.status(200).json({ message: "Status updated" });
   } else res.status(404).json({ status: "Wash not found" });
 });
@@ -91,7 +91,7 @@ router.post("/book_wash", async (req, res) => {
     }
 
     if (result.userWashes) {
-      washEvents.newWashEvent(io, result.userWashes);
+      washEvents.newWashEvent(getIO(), result.userWashes);
       return res.status(200).json({
         message: "Wash successfully booked",
         wash: result.userWashes,
