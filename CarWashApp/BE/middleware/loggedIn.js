@@ -3,7 +3,7 @@ import * as tokenUtils from "../token_utils/token.js";
 import { get_user_by_id } from "../account_utils/acount_queries.js";
 
 export async function authenticateToken(req, res, next) {
-  const token = req.cookies?.token;
+  const token = req.cookies.token;
   const secret = process.env.JWT_SECRET || process.env.SESSION_SECRET;
 
   if (!token || !secret) {
