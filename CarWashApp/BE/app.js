@@ -21,7 +21,7 @@ import { dbConnection } from "./sql_utils/DBconnection.js";
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
 
-export const app = express();
+const app = express();
 const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "") || "";
 const allowedOrigins = new Set(
   [
@@ -171,3 +171,5 @@ const shutdown = async (signal) => {
 };
 process.once("SIGTERM", () => shutdown("SIGTERM"));
 process.once("SIGINT", () => shutdown("SIGINT"));
+
+export default app;
