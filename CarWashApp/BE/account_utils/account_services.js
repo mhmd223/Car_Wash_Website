@@ -57,6 +57,8 @@ router.post("/login", async (req, res) => {
       .json({ status: "Invalid email or password", loggedIn: false });
   }
 
+  console.log("Successful login for email:", email);
+
   const token = tokenUtils.generateToken(
     { sub: String(result.id) },
     process.env.JWT_SECRET || process.env.SESSION_SECRET,
