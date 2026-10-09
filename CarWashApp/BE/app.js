@@ -23,7 +23,7 @@ const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
 
 const app = express();
-export const server = createServer(app);
+const server = createServer(app);
 const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "") || "";
 const allowedOrigins = new Set(
   [
@@ -171,6 +171,6 @@ const shutdown = async (signal) => {
     process.exit(0);
   });
 };
-
+export { server };
 process.once("SIGTERM", () => shutdown("SIGTERM"));
 process.once("SIGINT", () => shutdown("SIGINT"));
