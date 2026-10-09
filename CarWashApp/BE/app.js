@@ -22,7 +22,9 @@ const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
 
 const app = express();
+
 const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "") || "";
+
 const allowedOrigins = new Set(
   [
     process.env.CLIENT_ORIGIN,
@@ -161,15 +163,5 @@ app.use((error, req, res, next) => {
   if (res.headersSent) return next(error);
   return res.status(500).json({ status: "Internal Server Error" });
 });
-
-const shutdown = async (signal) => {
-  console.log(`${signal} received, shutting down.`);
-  server.close(async () => {
-    await dbConnection.end();
-    process.exit(0);
-  });
-};
-process.once("SIGTERM", () => shutdown("SIGTERM"));
-process.once("SIGINT", () => shutdown("SIGINT"));
 
 export default app;
