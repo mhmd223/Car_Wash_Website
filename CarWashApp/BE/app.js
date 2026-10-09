@@ -169,6 +169,5 @@ const shutdown = async (signal) => {
     process.exit(0);
   });
 };
-export { server };
 process.once("SIGTERM", () => shutdown("SIGTERM"));
 process.once("SIGINT", () => shutdown("SIGINT"));
