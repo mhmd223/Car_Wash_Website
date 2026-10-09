@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://car-wash-website-server-chi.vercel.app/:path*"
+    },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
