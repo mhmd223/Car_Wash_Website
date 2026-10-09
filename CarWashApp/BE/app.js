@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import { createServer } from "http";
 import { randomUUID } from "crypto";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -22,8 +21,7 @@ import { dbConnection } from "./sql_utils/DBconnection.js";
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
 
-const app = express();
-const server = createServer(app);
+export const app = express();
 const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "") || "";
 const allowedOrigins = new Set(
   [
