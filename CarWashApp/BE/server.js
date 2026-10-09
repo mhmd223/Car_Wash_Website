@@ -1,4 +1,4 @@
-import { server } from "./app";
+import { server } from "./app.js";
 import { initializeSocket } from "./sockets/index.js";
 import { initializeJobs } from "./jobs/index.js";
 
