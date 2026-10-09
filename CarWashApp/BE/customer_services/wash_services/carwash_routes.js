@@ -1,6 +1,6 @@
 import express from "express";
 import * as wash_operations from "./carwash_queries.js";
-import { io } from "../../app.js";
+import { io } from "../../server.js";
 import * as washEvents from "../../sockets/washEvents.js";
 export const router = express.Router();
 
