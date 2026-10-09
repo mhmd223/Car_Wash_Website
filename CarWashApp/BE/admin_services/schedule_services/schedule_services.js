@@ -6,7 +6,7 @@ import {
   clearSchedule,
 } from "./schedule_queries.js";
 import { scheduleSchema } from "./schedule_validation.js";
-import { io } from "../../server.js";
+import { io } from "../../app.js";
 import { WASH_EVENTS } from "../../../shared/events.js";
 
 const router = express.Router();
