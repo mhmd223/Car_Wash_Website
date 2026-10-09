@@ -13,3 +13,5 @@ server.listen(port, () => {
 
 await initializeJobs();
 export const io = initializeSocket(server, process.env.CLIENT_ORIGIN);
+
+export default server;
