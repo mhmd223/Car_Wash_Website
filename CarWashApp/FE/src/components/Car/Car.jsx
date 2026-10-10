@@ -7,6 +7,7 @@ export default function Car({
   setIsBookFormOpen,
   setSelectedCar,
 }) {
+  console.log("Rendering car component for:", car);
   const text = `${car.Brand} ${car.Model}`;
   const [isHovered, setIsHovered] = useState(false);
   return (
