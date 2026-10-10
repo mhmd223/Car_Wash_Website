@@ -17,7 +17,8 @@ export default function Account({ queryClient }) {
   const { mutateAsync: editAccount } = useEditAccount();
 
   const handleEditSubmit = async (id, username, email, phone, password) => {
-    await editAccount({ id, username, email, phone, password });
+    const result = await editAccount({ id, username, email, phone, password });
+    setUser(result.edited);
   };
 
   const [editMode, setEditMode] = useState(false);
