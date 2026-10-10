@@ -11,7 +11,7 @@ export default function CarsList({
       {Array.isArray(cars) &&
         cars.map((car) => (
           <Car
-            key={car.ID}
+            key={car.License_Plate}
             car={car}
             removeCar={removeCar}
             setIsBookFormOpen={setIsBookFormOpen}
