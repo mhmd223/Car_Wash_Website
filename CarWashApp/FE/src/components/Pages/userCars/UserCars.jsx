@@ -39,7 +39,7 @@ export default function UserCars() {
     data: carsData,
     refetch: refetchCars,
   } = useUserCars(user.id);
-  console.log("Fetched user cars:", carsData);
+  console.log("Fetched user cars:", data);
   const handleRetryCars = async () => {
     const result = await refetchCars();
     if (result.isError) {
