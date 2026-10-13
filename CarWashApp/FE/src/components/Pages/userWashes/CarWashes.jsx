@@ -24,6 +24,7 @@ export default function CarWashes() {
     refetch: refetchWashes,
   } = useUserWashes(userId, { enabled: Boolean(userId), retry: false });
 
+  console.log("Fetched user washes:", washesData);
   const { data: categoryData, isError: categoriesError } = useCategories();
 
   const { data: carsData } = useUserCars(userId, {
