@@ -7,6 +7,12 @@ export const router = express.Router();
 
 // middleware that checks for an authenticated user on every route
 router.use("/", (req, res, next) => {
+  console.log(
+    "Checking authentication for user:",
+    req.user,
+    "on route:",
+    req.originalUrl,
+  );
   if (!req.user) {
     return res.status(401).json({ status: "Unauthorized" });
   }
@@ -18,7 +24,6 @@ router.get("/", async (req, res) => {
   try {
     const result = await car_queries.get_user_cars(req.user.id);
 
-    console.log("Retrieved user cars:", result);
     return res.status(200).json(result === "No cars found" ? [] : result);
   } catch (err) {
     // catch any database or logic errors
