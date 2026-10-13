@@ -134,3 +134,14 @@
     flex-direction: column;
   }
 }
+
+/* A long email can't shrink inside the flex column and spills out of the card. */
+@media (max-width: 768px) {
+  .userInfoContainer {
+    min-width: 0;
+  }
+
+  .divider p {
+    overflow-wrap: anywhere;
+  }
+}

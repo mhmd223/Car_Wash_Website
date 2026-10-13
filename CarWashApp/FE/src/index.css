@@ -154,3 +154,9 @@ img {
 }
 
 /* #endregion global */
+
+/* 100vh includes the collapsible mobile address bar and pushes the footer nav off-screen. */
+html,
+body {
+  height: 100dvh;
+}

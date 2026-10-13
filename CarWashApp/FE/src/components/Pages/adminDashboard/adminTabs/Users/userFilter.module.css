@@ -38,3 +38,11 @@
     flex-basis: 100%;
   }
 }
+
+/* Inputs under 16px make iOS zoom the page on focus. */
+@media (max-width: 768px) {
+  .phoneInput,
+  .select {
+    font-size: 1.6rem;
+  }
+}

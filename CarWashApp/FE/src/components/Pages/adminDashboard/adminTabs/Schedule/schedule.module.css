@@ -156,3 +156,11 @@
 .saveSchedule:hover {
   background-color: #d76b0a;
 }
+
+/* The dashboard scrolls as a whole on small screens, so the pane must not scroll on its own. */
+@media (max-width: 768px), (max-height: 540px) {
+  .container {
+    height: auto;
+    overflow-y: visible;
+  }
+}

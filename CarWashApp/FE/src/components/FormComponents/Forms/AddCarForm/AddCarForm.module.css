@@ -139,3 +139,27 @@
     opacity: 1;
   }
 }
+
+/* The 45% width crushed the form and its buttons spilled out; size it to the viewport. */
+@media (max-width: 768px), (max-height: 540px) {
+  .Modal {
+    height: 100dvh;
+    padding: 1.2rem;
+  }
+
+  .FormContainer {
+    width: min(100%, 40rem);
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 2.4rem 1.6rem;
+    gap: 2rem;
+  }
+
+  .FormTitle {
+    font-size: 2.2rem;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+}

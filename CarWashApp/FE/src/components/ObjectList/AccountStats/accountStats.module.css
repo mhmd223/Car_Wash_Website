@@ -6,3 +6,11 @@
   width: 100%;
   height: 80%;
 }
+
+/* Two fit-content stat cards overflow a narrow panel; let them wrap. */
+@media (max-width: 768px) {
+  .accountStats {
+    flex-wrap: wrap;
+    gap: 1.2rem;
+  }
+}

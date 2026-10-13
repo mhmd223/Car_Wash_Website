@@ -127,3 +127,14 @@
     padding: 1.2rem;
   }
 }
+
+/* Fixed-width cards left a dead strip on one side of the list; inputs under 16px zoom iOS on focus. */
+@media (max-width: 600px) {
+  .hourCards {
+    justify-content: center;
+  }
+
+  .plateInput {
+    font-size: 1.6rem;
+  }
+}

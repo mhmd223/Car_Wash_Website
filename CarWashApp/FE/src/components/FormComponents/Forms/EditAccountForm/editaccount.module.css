@@ -79,3 +79,35 @@
   background-color: var(--clr-darkpaige-);
   color: black;
 }
+
+/* The fixed 700x300 form overflowed phone screens; size it to the viewport and scroll if needed. */
+@media (max-width: 768px), (max-height: 540px) {
+  .editAccFormContainer {
+    height: 100dvh;
+    padding: 1.2rem;
+  }
+
+  .editAccForm {
+    position: static;
+    width: 100%;
+    max-width: 70rem;
+    height: auto;
+    max-height: 100%;
+    overflow-y: auto;
+    padding: 2.4rem 1.6rem;
+  }
+
+  .editAccForm label {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .editAccForm input {
+    font-size: 1.6rem;
+  }
+
+  .editAccFormButton {
+    width: 100%;
+    min-height: 4.4rem;
+  }
+}

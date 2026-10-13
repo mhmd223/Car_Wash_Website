@@ -27,3 +27,14 @@
   border-color: var(--clr-darkpaige-);
   color: var(--clr-white);
 }
+
+/* Four tabs overflowed the viewport and the last ones were unreachable; wrap them. */
+@media (max-width: 768px) {
+  .nav {
+    flex-wrap: wrap;
+  }
+
+  .navButton {
+    flex: 1 1 auto;
+  }
+}

@@ -117,3 +117,14 @@
     flex: 1;
   }
 }
+
+/* Scroll the whole dashboard instead of squeezing the tab pane into a sliver under the header and nav. */
+@media (max-width: 768px), (max-height: 540px) {
+  .dashboardContainer {
+    overflow-y: auto;
+  }
+
+  .dashboardContainer > * {
+    flex-shrink: 0;
+  }
+}

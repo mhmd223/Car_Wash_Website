@@ -43,5 +43,30 @@
     text-align: center;
   }
 
+/* The fixed-height centered form was cropped (and unreachable) on short or keyboard-covered screens. */
+@media (max-width: 768px), (max-height: 540px) {
+  .Container {
+    height: 100dvh;
+    justify-content: flex-start;
+    overflow-y: auto;
+  }
+
+  .Container > :first-child {
+    margin-top: auto;
+  }
+
+  .Container > :last-child {
+    margin-bottom: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .Container > form {
+    width: 90%;
+    max-width: 40rem;
+    margin-top: 2rem;
+  }
+}
+
 
 

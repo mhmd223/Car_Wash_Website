@@ -161,3 +161,19 @@
     border-radius: 0.9rem;
   }
 }
+
+.Modal {
+  height: 100dvh;
+}
+
+.FormContainer {
+  max-height: min(66rem, 92dvh);
+}
+
+/* Inputs under 16px make iOS zoom the page on focus. */
+@media (max-width: 768px), (max-height: 540px) {
+  .form input,
+  .form select {
+    font-size: 1.6rem;
+  }
+}

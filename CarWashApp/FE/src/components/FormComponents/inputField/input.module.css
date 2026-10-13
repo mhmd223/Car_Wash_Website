@@ -28,3 +28,14 @@
   margin-top: 5px;
   font-family: "Roboto", sans-serif;
 }
+
+/* Half-width fields are cramped on phones, and inputs under 16px make iOS zoom on focus. */
+@media (max-width: 768px), (max-height: 540px) {
+  .inputField {
+    width: 100%;
+  }
+
+  .inputField input {
+    font-size: 1.6rem;
+  }
+}

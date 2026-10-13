@@ -226,3 +226,28 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* The nested <main> inherits overflow:hidden, which clipped the panels; scroll the page instead. */
+@media (max-width: 768px), (max-height: 540px) {
+  .accountContainer {
+    overflow-y: auto;
+  }
+
+  .accountContent {
+    flex: none;
+    min-height: auto;
+    overflow: visible;
+  }
+}
+
+/* A plain 1fr track grows to the long nowrap email and overflows the panel. */
+@media (max-width: 760px) {
+  .accountContent {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .detailItem strong {
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}

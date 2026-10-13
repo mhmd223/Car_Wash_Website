@@ -105,3 +105,28 @@
   width: 30%;
   height: 30%;
 }
+
+/* Scroll instead of clipping centered content, and keep the add button below the list rather than over it. */
+@media (max-width: 768px), (max-height: 540px) {
+  .Container {
+    justify-content: flex-start;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 1.6rem 0;
+  }
+
+  .Container > :first-child {
+    margin-top: auto;
+  }
+
+  .Container > :last-child {
+    margin-bottom: auto;
+  }
+
+  .BookWashButton {
+    position: static;
+    flex-shrink: 0;
+    align-self: flex-end;
+    margin: 0.4rem 1.2rem 1.2rem;
+  }
+}
