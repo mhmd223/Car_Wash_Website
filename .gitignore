@@ -6,3 +6,4 @@ Car_Wash_Website\CarWashApp\BE\account_utils\verification_service.js
 coverage/
 logs/
 *.log
+tmp-*

@@ -9,25 +9,25 @@
   justify-content: center;
   padding: 10px;
   font-size: 2rem;
-  }
-  .Container > form {
-    width: 80%;
-  }
-  .Container > span {
-    font-family: "Roboto", sans-serif;
-    color: black;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  .Container  > span {
-    font-family: "Roboto", sans-serif;
-    color: black;
-    margin-bottom: 20px;
-    text-align: center;
-  }
+}
+.Container > form {
+  width: 80%;
+}
+.Container > span {
+  font-family: "Roboto", sans-serif;
+  color: black;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.Container > span {
+  font-family: "Roboto", sans-serif;
+  color: black;
+  margin-bottom: 20px;
+  text-align: center;
+}
 
-  .Button {
-      background-color: #fa8112;
+.Button {
+  background-color: #fa8112;
   color: #222222;
   border: none;
   padding: 10px 20px;
@@ -35,13 +35,13 @@
   font-family: "Roboto", sans-serif;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  }
-  .Container h2 {
-    font-family: "Roboto", sans-serif;
-    color: black;
-    margin-bottom: 20px;
-    text-align: center;
-  }
+}
+.Container h2 {
+  font-family: "Roboto", sans-serif;
+  color: black;
+  margin-bottom: 20px;
+  text-align: center;
+}
 
 /* The fixed-height centered form was cropped (and unreachable) on short or keyboard-covered screens. */
 @media (max-width: 768px), (max-height: 540px) {
@@ -67,6 +67,3 @@
     margin-top: 2rem;
   }
 }
-
-
-

@@ -11,6 +11,7 @@ export default function GeneralLayout({
   user,
   setUser,
   isLoggedIn,
+  isSessionLoading,
   setIsLoggedIn,
   axios,
   fetchUserCars,
@@ -20,6 +21,8 @@ export default function GeneralLayout({
   const hideHeader = location.pathname === "/account";
   const isLoginPage = location.pathname === "/login";
   const shouldRenderOutlet = isLoggedIn || isLoginPage;
+  // Redirecting before the session check resolves bounced refreshes on /cars to /home.
+  const redirectToLogin = !isLoggedIn && !isLoginPage && !isSessionLoading;
   return (
     <>
       {isLoggedIn && !hideHeader && <Header username={user?.username} />}
@@ -36,9 +39,9 @@ export default function GeneralLayout({
             socket,
           }}
         >
-          {!isLoggedIn && !isLoginPage && <Navigate to="/login" replace />}
+          {redirectToLogin && <Navigate to="/login" replace />}
 
-          {!isLoggedIn && !isLoginPage && (
+          {redirectToLogin && (
             <video className={classes.video} src={""} autoPlay loop muted />
           )}
           {shouldRenderOutlet && (

@@ -4,7 +4,7 @@
   align-items: center;
   gap: 12px;
   position: absolute;
-    
+
   background-color: var(--clr-org-);
   width: 700px;
   height: 300px;
@@ -52,13 +52,12 @@
 }
 
 .editAccForm:focus-within input:not(:focus) {
- 
   padding: 0;
   overflow: hidden;
 }
 
-.editAccFormButton:focus{
-  input{
+.editAccFormButton:focus {
+  input {
     padding: 5px;
   }
 }

@@ -24,7 +24,8 @@ import Account from "../components/Pages/account/Account";
 import EmployeeDashboard from "../components/Pages/employee/EmployeeDashboard";
 
 export default function App() {
-  const { data: [userInfo, isLoggedIn] = [] } = useUserInfo();
+  const { data: [userInfo, isLoggedIn] = [], isPending: isSessionLoading } =
+    useUserInfo();
 
   const queryClient = useQueryClient();
 
@@ -53,6 +54,7 @@ export default function App() {
           element={
             <GeneralLayout
               isLoggedIn={isLoggedIn}
+              isSessionLoading={isSessionLoading}
               setIsLoggedIn={setIsLoggedIn}
               user={userInfo}
               setUser={setUser}
