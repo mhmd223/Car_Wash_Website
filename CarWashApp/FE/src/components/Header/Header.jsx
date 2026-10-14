@@ -1,7 +1,9 @@
+import styles from "./header.module.css";
+
 export default function Header({ username }) {
   return (
-    <header>
-      <h1>Welcome {username}!</h1>
+    <header className={styles.header}>
+      <h1 className={styles.h1}>Welcome {username}!</h1>
     </header>
   );
 }
