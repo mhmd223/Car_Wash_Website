@@ -113,6 +113,7 @@ app.get("/health/ready", async (req, res) => {
 });
 
 app.use(globalLimiter);
+
 app.use("/account/login", loginLimiter);
 
 app.use((req, res, next) => {

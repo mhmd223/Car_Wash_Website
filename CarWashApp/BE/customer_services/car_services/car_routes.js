@@ -20,7 +20,7 @@ router.use("/", (req, res, next) => {
 });
 
 // GET / - retrieve cars tied to the authenticated user
-router.get("/", async (req, res) => {
+router.get("/user_cars", async (req, res) => {
   try {
     const result = await car_queries.get_user_cars(req.user.id);
 
