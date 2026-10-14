@@ -1,5 +1,4 @@
 import { dbConnection } from "../../sql_utils/DBconnection.js";
-
 export async function get_all_users() {
   const conn = await dbConnection.getConnection();
   try {

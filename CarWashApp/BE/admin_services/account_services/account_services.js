@@ -1,7 +1,10 @@
 import express from "express";
 import * as accountQueries from "./account_queries.js";
 
+
 const router = express.Router();
+
+
 
 router.get("/all", async (req, res) => {
   try {

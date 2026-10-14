@@ -39,6 +39,7 @@ const allowedOrigins = new Set(
     )
     .map((value) => value.toLowerCase()),
 );
+
 const isAllowedOrigin = (origin) => {
   if (!origin) return true;
   return allowedOrigins.has(origin.toLowerCase().replace(/\/$/, ""));
@@ -97,6 +98,7 @@ app.use((req, res, next) => {
   });
   next();
 });
+
 // Health checks stay public so the platform can assess the process before
 // authentication. Protected application routes are mounted below JWT auth.
 app.get("/health/live", (req, res) => {
@@ -114,8 +116,6 @@ app.get("/health/ready", async (req, res) => {
 
 app.use(globalLimiter);
 
-app.use("/account/login", loginLimiter);
-
 app.use((req, res, next) => {
   if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method)) {
     const requestOrigin = req.get("origin");
@@ -129,6 +129,7 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: "100kb" }));
 app.use(cookieParser());
 
+app.use("/account/login", loginLimiter);
 app.use("/account", account_services.router);
 
 // JSON is parsed before route handlers; loggedIn protects all app routes.
