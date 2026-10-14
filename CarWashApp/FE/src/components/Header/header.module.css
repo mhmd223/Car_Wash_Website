@@ -6,7 +6,8 @@
   display: flex;
   align-items: center;
   border-bottom: 1px solid rgba(117, 95, 70, 0.14);
-  background: rgba(247, 241, 231, 0.82);
+  background: transparent;
+  
   box-shadow: 0 0.8rem 2.4rem rgba(67, 48, 32, 0.05);
   backdrop-filter: blur(1.2rem);
 }
