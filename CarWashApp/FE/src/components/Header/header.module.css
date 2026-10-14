@@ -2,7 +2,7 @@
 
 header {
   width: 100%;
-  min-height: 7.6rem;
+  min-height: fit-content;
   display: flex;
   align-items: center;
   padding: 1.8rem 3.2rem;
