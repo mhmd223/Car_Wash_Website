@@ -23,8 +23,9 @@ router.put("/update_category", async (req, res) => {
   try {
     const { id, name, price } = req.body;
     await category_queries.update_category_query(id, name, price);
+    res.status(200).json({ message: "Category updated successfully" });
   } catch (err) {
-    return false;
+    res.status(500).json({ status: "Something went wrong" });
   }
 });
 
@@ -32,9 +33,9 @@ router.delete("/remove_category", async (req, res) => {
   try {
     const { id } = req.body;
     await category_queries.remove_category_query(id);
-    res.send("deleted");
+    res.status(200).json({ message: "Category deleted successfully" });
   } catch (err) {
-    return false;
+    res.status(500).json({ status: "Something went wrong" });
   }
 });
 

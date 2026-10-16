@@ -24,6 +24,7 @@ import {
   useAllWashes,
   useUpdateWashStatus,
 } from "../../../hooks/useEmployeeWashes.js";
+import Categories from "./adminTabs/Categories/Categories.jsx";
 export default function AdminDashboard() {
   const { user, socket, setUser } = useContext(UserContext);
   const queryClient = useQueryClient();
@@ -89,6 +90,9 @@ export default function AdminDashboard() {
       component: Schedule,
       props: {},
     },
+    ...(user?.role?.toLowerCase() === "admin"
+      ? [{ tab: "Categories", component: Categories, props: {} }]
+      : []),
   ];
   const { Nav, ActiveComponent } = useNav({
     tabs,
