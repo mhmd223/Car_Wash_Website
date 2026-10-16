@@ -28,6 +28,7 @@ router.post("/upload", async (req, res) => {
     getIO().emit(WASH_EVENTS.SCHEDULE_UPDATED);
     return res.json(result);
   } catch (error) {
+    console.error("Failed to upload schedule:", error);
     return res.status(500).json({ error: "Failed to upload schedule" });
   }
 });
@@ -39,6 +40,7 @@ router.delete("/clear", async (req, res) => {
     getIO().emit(WASH_EVENTS.SCHEDULE_UPDATED);
     return res.json(result);
   } catch (error) {
+    console.error("Failed to clear schedule:", error);
     return res.status(500).json({ error: "Failed to clear schedule" });
   }
 });
