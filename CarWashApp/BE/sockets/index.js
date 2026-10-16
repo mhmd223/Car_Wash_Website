@@ -17,6 +17,8 @@ export function initializeSocket(server, origin) {
     },
   });
 
+  console.log("Initializing Socket.IO with origin:", io, origin);
+
   io.on("connection", (socket) => {
     console.log("A user connected:", socket.id);
     console.log("User role:", socket.handshake.auth.role);
