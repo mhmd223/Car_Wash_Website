@@ -1,9 +1,9 @@
 import express from "express";
 import accountRouter from "./account_services/account_services.js";
-import categoryRouter from "./category_services/category_services.js";
 import scheduleRouter from "./schedule_services/schedule_services.js";
 import washRouter from "./wash_services/wash_services.js";
 import { roles } from "../data/roles.js";
+import categoryRouter from "./category_services/category_services.js";
 
 const router = express.Router();
 
