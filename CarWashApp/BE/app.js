@@ -11,7 +11,7 @@ import loggedIn from "./middleware/loggedIn.js";
 import { globalLimiter, loginLimiter } from "./middleware/rateLimiters.js";
 import admin_services_router from "./admin_services/router.js";
 import * as account_services from "./account_utils/account_services.js";
-import * as category_services from "./admin_services/category_services/category_services.js";
+import category_services_router from "./admin_services/category_services/category_services.js";
 import * as user_category_services from "./customer_services/category_services/category_routes.js";
 import * as wash_services from "./customer_services/wash_services/carwash_routes.js";
 import * as car_services from "./customer_services/car_services/car_routes.js";
@@ -138,7 +138,7 @@ app.use(loggedIn);
 //if the user is an admin, they can access the admin category services, otherwise they can only access the user category services
 app.use("/category", (req, res, next) => {
   if (req.user.role === "admin") {
-    category_services.router(req, res, next);
+    category_services_router(req, res, next);
   } else {
     user_category_services.router(req, res, next);
   }
