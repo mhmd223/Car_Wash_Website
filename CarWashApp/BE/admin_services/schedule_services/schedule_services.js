@@ -12,6 +12,7 @@ import { WASH_EVENTS } from "../../../shared/events.js";
 const router = express.Router();
 
 router.post("/upload", async (req, res) => {
+  console.log("Upload schedule request body:", req.body);
   const { schedule } = req.body;
   const parsedSchedule = scheduleSchema.safeParse(schedule);
   if (!parsedSchedule.success) {
@@ -32,6 +33,7 @@ router.post("/upload", async (req, res) => {
 });
 
 router.delete("/clear", async (req, res) => {
+  console.log("Clear schedule request received");
   try {
     const result = await clearSchedule();
     getIO().emit(WASH_EVENTS.SCHEDULE_UPDATED);
