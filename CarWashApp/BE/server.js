@@ -21,6 +21,6 @@ const shutdown = async (signal) => {
 process.once("SIGTERM", () => shutdown("SIGTERM"));
 process.once("SIGINT", () => shutdown("SIGINT"));
 
-await initializeJobs();
+// await initializeJobs();
 
 export default server;
