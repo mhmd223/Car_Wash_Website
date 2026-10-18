@@ -11,7 +11,7 @@ app.use(expressApp);
 
 const server = createServer(app);
 
-const io = initializeSocket(server, process.env.CLIENT_ORIGIN);
+// const io = initializeSocket(server, process.env.CLIENT_ORIGIN);
 
 const shutdown = async (signal) => {
   console.log(`${signal} received, shutting down.`);
@@ -29,4 +29,5 @@ await initializeJobs();
 server.listen(process.env.PORT || 5173, () => {
   console.log(`Server is running on port ${port}`);
 });
+
 export default server;
