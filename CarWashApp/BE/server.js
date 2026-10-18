@@ -8,10 +8,6 @@ const port = Number(process.env.PORT) || 5173;
 
 const server = createServer(app);
 
-server.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
 const io = initializeSocket(server, process.env.CLIENT_ORIGIN);
 
 const shutdown = async (signal) => {
