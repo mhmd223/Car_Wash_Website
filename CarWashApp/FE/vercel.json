@@ -4,6 +4,7 @@
       "source": "/api/:path*",
       "destination": "https://car-wash-website-server-chi.vercel.app/:path*"
     },
+    { "source": "/api/socket-io/:path*", "destination": "/api/socket-io" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
