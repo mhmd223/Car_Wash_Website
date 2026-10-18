@@ -7,8 +7,8 @@ const socket = io("https://car-wash-website-server-chi.vercel.app", {
   path: "/api/socket-io/socket.io",
   transports: ["websocket"],
 });
-t.on("connect", () => console.log("test connected"));
-t.on("hello", (m) => console.log(m));
-t.on("connect_error", (e) => console.log("test error:", e.message));
+socket.on("connect", () => console.log("test connected"));
+socket.on("hello", (m) => console.log(m));
+socket.on("connect_error", (e) => console.log("test error:", e.message));
 
 export default socket;
