@@ -11,7 +11,7 @@ export const getIO = () => {
 export function initializeSocket(server, origin) {
   io = new Server(server, {
     cors: {
-      path: "/api/socket-io/socket.io",
+      path: "/api/socket-io",
       autoConnect: false,
       origin: origin,
       credentials: true,

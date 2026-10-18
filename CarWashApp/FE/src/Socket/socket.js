@@ -1,10 +1,10 @@
 import { io } from "socket.io-client";
 
 const URL = import.meta.env.VITE_API_URL;
-const socket = io("https://car-wash-website-server-chi.vercel.app", {
+const socket = io(URL, {
   autoConnect: false,
   withCredentials: true,
-  path: "/api/socket-io/socket.io",
+  path: "/api/socket-io",
   transports: ["websocket", "polling"],
 });
 socket.on("connect", () => console.log("test connected"));
