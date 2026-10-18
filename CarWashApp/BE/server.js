@@ -22,3 +22,5 @@ process.once("SIGTERM", () => shutdown("SIGTERM"));
 process.once("SIGINT", () => shutdown("SIGINT"));
 
 await initializeJobs();
+
+export default server;
