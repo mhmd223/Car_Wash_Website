@@ -14,7 +14,6 @@ export function initializeSocket(server, origin) {
   console.log("Initializing Socket.IO with path:", "/api/socket-io/socket.io");
   io = new Server(server, {
     cors: {
-      path: "/api/socket-io/socket.io",
       autoConnect: false,
       origin: origin,
       credentials: true,

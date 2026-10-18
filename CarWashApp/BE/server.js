@@ -2,7 +2,7 @@ import { createServer } from "http";
 import { initializeSocket } from "./sockets/index.js";
 import { initializeJobs } from "./jobs/index.js";
 import { dbConnection } from "./sql_utils/DBconnection.js";
-import app from "./app.js";
+import app from "./expressApp.js";
 
 const port = Number(process.env.PORT) || 5173;
 
@@ -23,4 +23,7 @@ process.once("SIGINT", () => shutdown("SIGINT"));
 
 await initializeJobs();
 
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 export default server;
