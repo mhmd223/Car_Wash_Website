@@ -1,10 +1,13 @@
+import express from "express";
 import { createServer } from "http";
 import { initializeSocket } from "./sockets/index.js";
 import { initializeJobs } from "./jobs/index.js";
 import { dbConnection } from "./sql_utils/DBconnection.js";
-import app from "./expressApp.js";
+import expressApp from "./expressApp.js";
 
 const port = Number(process.env.PORT) || 5173;
+const app = express();
+app.use(expressApp);
 
 const server = createServer(app);
 
