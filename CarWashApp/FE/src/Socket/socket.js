@@ -5,7 +5,7 @@ const socket = io(URL, {
   autoConnect: false,
   withCredentials: true,
   path: "/api/socket-io/socket.io",
-  transports: ["websocket", "polling"],
+  transports: ["websocket"],
 });
 socket.on("connect", () => console.log("test connected"));
 socket.on("hello", (m) => console.log(m));
