@@ -26,7 +26,7 @@ process.once("SIGINT", () => shutdown("SIGINT"));
 
 await initializeJobs();
 
-server.listen(port, () => {
+server.listen(process.env.PORT || 5173, () => {
   console.log(`Server is running on port ${port}`);
 });
 export default server;
