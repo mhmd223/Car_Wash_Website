@@ -15,6 +15,7 @@ export function initializeSocket(server, origin) {
       transports: ["websocket"],
       origin: origin,
       credentials: true,
+      
     },
   });
 

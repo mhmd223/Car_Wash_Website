@@ -27,7 +27,7 @@ export async function authenticateToken(req, res, next) {
 
   try {
     //ignore socket.io paths for now
-    if (req.path.startsWith("/socket.io")) {
+    if (req.path.startsWith("socket.io/?EIO=4&transport=polling")) {
       console.log("Skipping authentication for socket.io path:", req.path);
       return next();
     }
