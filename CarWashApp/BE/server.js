@@ -29,5 +29,4 @@ await initializeJobs();
 server.listen(process.env.PORT || 5173, () => {
   console.log(`Server is running on port ${port}`);
 });
-
 export default server;
