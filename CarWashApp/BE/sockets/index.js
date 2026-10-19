@@ -9,12 +9,8 @@ export const getIO = () => {
 };
 
 export function initializeSocket(server, origin) {
-  console.log("Initializing Socket.IO with origin:", io, origin);
-  console.log("Server object:", server);
-  console.log("Initializing Socket.IO with path:", "/api/socket-io/socket.io");
   io = new Server(server, {
     cors: {
-      autoConnect: false,
       origin: origin,
       credentials: true,
       transports: ["websocket"],

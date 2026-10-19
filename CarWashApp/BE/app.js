@@ -17,11 +17,13 @@ import * as wash_services from "./customer_services/wash_services/carwash_routes
 import * as car_services from "./customer_services/car_services/car_routes.js";
 import customer_schedule_router from "./customer_services/schedule_routes.js";
 import { dbConnection } from "./sql_utils/DBconnection.js";
-
+import { createServerInstance } from "./server.js";
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
 
 const app = express();
+
+const port = Number(process.env.PORT) || 5173;
 
 const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "") || "";
 
@@ -164,6 +166,11 @@ app.use((error, req, res, next) => {
   );
   if (res.headersSent) return next(error);
   return res.status(500).json({ status: "Internal Server Error" });
+});
+const { server, io } = createServerInstance(app);
+
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
 export default app;

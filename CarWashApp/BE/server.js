@@ -2,13 +2,18 @@ import { createServer } from "http";
 import { initializeSocket } from "./sockets/index.js";
 import { initializeJobs } from "./jobs/index.js";
 import { dbConnection } from "./sql_utils/DBconnection.js";
-import app from "./app.js";
+
+let server;
+let io;
+
+export function createServerInstance(appInstance) {
+  server = createServer(appInstance);
+  io = initializeSocket(server, process.env.CLIENT_ORIGIN);
+
+  return { server, io };
+}
 
 const port = Number(process.env.PORT) || 5173;
-
-const server = createServer(app);
-
-const io = initializeSocket(server, process.env.CLIENT_ORIGIN);
 
 const shutdown = async (signal) => {
   console.log(`${signal} received, shutting down.`);
@@ -23,7 +28,4 @@ process.once("SIGINT", () => shutdown("SIGINT"));
 
 await initializeJobs();
 
-server.listen(process.env.PORT || 5173, () => {
-  console.log(`Server is running on port ${port}`);
-});
-export default server;
+export default createServerInstance(app);
