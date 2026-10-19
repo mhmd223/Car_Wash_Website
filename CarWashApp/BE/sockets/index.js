@@ -9,11 +9,12 @@ export const getIO = () => {
 };
 
 export function initializeSocket(server, origin) {
+  console.log("Initializing Socket.IO with origin:", origin);
   io = new Server(server, {
     cors: {
+      transports: ["websocket"],
       origin: origin,
       credentials: true,
-      transports: ["websocket"],
     },
   });
 

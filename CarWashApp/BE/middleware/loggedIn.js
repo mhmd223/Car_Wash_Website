@@ -26,6 +26,11 @@ export async function authenticateToken(req, res, next) {
   }
 
   try {
+    //ignore socket.io paths for now
+    if (req.path.startsWith("/socket.io")) {
+      console.log("Skipping authentication for socket.io path:", req.path);
+      return next();
+    }
     const user = await get_user_by_id(userId);
     if (!user) {
       console.log("User not found for ID:", userId);
