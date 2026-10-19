@@ -7,11 +7,11 @@ import expressApp from "./expressApp.js";
 
 const port = Number(process.env.PORT) || 5173;
 const app = express();
-app.use(expressApp);
+app.use("/", expressApp);
 
 const server = createServer(app);
 
-// const io = initializeSocket(server, process.env.CLIENT_ORIGIN);
+const io = initializeSocket(server, process.env.CLIENT_ORIGIN);
 
 const shutdown = async (signal) => {
   console.log(`${signal} received, shutting down.`);
