@@ -44,6 +44,7 @@ router.get("/get_categories", async (req, res) => {
     const categories = await category_queries.get_categories_query();
     res.status(200).json(categories);
   } catch (err) {
+    console.error("Error fetching categories:", err);
     res.status(500).json({ status: "Something went wrong" });
   }
 });

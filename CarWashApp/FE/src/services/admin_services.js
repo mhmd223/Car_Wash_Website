@@ -15,6 +15,18 @@ export const getAllUsers = async () => {
   }
 };
 
+export const getCategories = async () => {
+  try {
+    const response = await axios.get(`${API_URL}category/get_categories`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (err) {
+    console.error("Error fetching categories:", err);
+    throw err;
+  }
+};
+
 export const verifyUser = async (email) => {
   try {
     const response = await axios.post(
