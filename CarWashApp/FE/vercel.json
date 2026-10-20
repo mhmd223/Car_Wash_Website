@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://car-wash-website-server-chi.vercel.app/:path*"
+      "destination": "https://car-wash-website-jz1c.onrender.com/:path*"
     },
     { "source": "/api/socket-io/:path*", "destination": "/api/socket-io" },
     { "source": "/(.*)", "destination": "/index.html" }
