@@ -7,7 +7,7 @@ export async function authenticateToken(req, res, next) {
   const secret = process.env.JWT_SECRET || process.env.SESSION_SECRET;
 
   //ignore socket.io paths for now
-  if (req.path.startsWith("socket.io/?EIO=4&transport=polling")) {
+  if (req.path.startsWith("/socket.io")) {
     console.log("Skipping authentication for socket.io path:", req.path);
     return next();
   }
