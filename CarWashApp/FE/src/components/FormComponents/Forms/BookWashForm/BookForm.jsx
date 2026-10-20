@@ -126,6 +126,7 @@ export default function BookForm({
             label={"Time"}
             name={"Time"}
             schedule={schedule.filter((time) => {
+              console.log("Time:", time);
               const now = new Date();
               const [hours, minutes] = time.split(":").map(Number);
               const timeDate = new Date();
