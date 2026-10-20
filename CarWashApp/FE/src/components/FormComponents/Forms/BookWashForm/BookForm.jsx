@@ -125,7 +125,13 @@ export default function BookForm({
             key={"time"}
             label={"Time"}
             name={"Time"}
-            schedule={schedule}
+            schedule={schedule.filter((time) => {
+              const now = new Date();
+              const [hours, minutes] = time.split(":").map(Number);
+              const timeDate = new Date();
+              timeDate.setHours(hours, minutes, 0, 0);
+              return timeDate > now;
+            })}
             placeHolder={"Select a time"}
             textFormat={/^\d{2}:\d{2}$/}
             errorMessage={"Time should be in HH:MM format."}
