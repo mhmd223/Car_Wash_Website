@@ -39,4 +39,13 @@ router.delete("/remove_category", async (req, res) => {
   }
 });
 
+router.get("/get_categories", async (req, res) => {
+  try {
+    const categories = await category_queries.get_categories_query();
+    res.status(200).json(categories);
+  } catch (err) {
+    res.status(500).json({ status: "Something went wrong" });
+  }
+});
+
 export default router;

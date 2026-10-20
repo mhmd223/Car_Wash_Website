@@ -1,7 +1,6 @@
 import { io } from "socket.io-client";
 
 const URL = import.meta.env.VITE_SOCKET_API;
-console.log("Connecting to socket URL:", URL);
 const socket = io(URL, {
   withCredentials: true,
   transports: ["websocket"],
