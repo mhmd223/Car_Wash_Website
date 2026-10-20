@@ -17,6 +17,18 @@ function getHourlyTimeSlots(schedule) {
     for (let minutes = openMinutes; minutes < closeMinutes; minutes += 60) {
       const hour = String(Math.floor(minutes / 60)).padStart(2, "0");
       const minute = String(minutes % 60).padStart(2, "0");
+      //if the time is within the CURRENT time, skip it
+      const now = new Date();
+      const currentHour = String(now.getHours()).padStart(2, "0");
+      const currentMinute = String(now.getMinutes()).padStart(2, "0");
+
+      if (
+        hour < currentHour ||
+        (hour === currentHour && minute <= currentMinute)
+      ) {
+        continue;
+      }
+
       timeSlots.add(`${hour}:${minute}`);
     }
   });
