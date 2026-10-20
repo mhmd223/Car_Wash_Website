@@ -1,5 +1,4 @@
 import { createServer } from "http";
-import { initializeSocket } from "./sockets/index.js";
 import { initializeJobs } from "./jobs/index.js";
 import { dbConnection } from "./sql_utils/DBconnection.js";
 
@@ -8,7 +7,7 @@ let io;
 
 export function createServerInstance(appInstance) {
   server = createServer(appInstance);
-  io = initializeSocket(server, process.env.CLIENT_ORIGIN);
+  // io = initializeSocket(server, process.env.CLIENT_ORIGIN);
 
   return { server, io };
 }

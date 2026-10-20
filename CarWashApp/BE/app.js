@@ -18,6 +18,8 @@ import * as car_services from "./customer_services/car_services/car_routes.js";
 import customer_schedule_router from "./customer_services/schedule_routes.js";
 import { dbConnection } from "./sql_utils/DBconnection.js";
 import { createServerInstance } from "./server.js";
+import { initializeSocket } from "./sockets/index.js";
+
 const currentDirectory = path.dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
 
@@ -168,6 +170,7 @@ app.use((error, req, res, next) => {
   return res.status(500).json({ status: "Internal Server Error" });
 });
 const { server, io } = createServerInstance(app);
+initializeSocket(server, process.env.CLIENT_ORIGIN);
 
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
