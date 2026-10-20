@@ -43,3 +43,14 @@ export async function update_category_query(categoryID, name, price) {
     conn.release();
   }
 }
+export async function get_categories_query() {
+  const conn = await dbConnection.getConnection();
+  try {
+    const [rows] = await conn.query("SELECT * FROM wash_category");
+    return rows;
+  } catch (err) {
+    throw err;
+  } finally {
+    conn.release();
+  }
+}
