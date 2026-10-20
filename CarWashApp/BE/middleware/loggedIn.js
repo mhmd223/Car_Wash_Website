@@ -6,6 +6,12 @@ export async function authenticateToken(req, res, next) {
   const token = req.cookies.token;
   const secret = process.env.JWT_SECRET || process.env.SESSION_SECRET;
 
+  //ignore socket.io paths for now
+  if (req.path.startsWith("socket.io/?EIO=4&transport=polling")) {
+    console.log("Skipping authentication for socket.io path:", req.path);
+    return next();
+  }
+
   if (!token || !secret) {
     console.log("Missing token or secret.");
     return res.status(401).json({ status: "Unauthorized" });
@@ -26,11 +32,6 @@ export async function authenticateToken(req, res, next) {
   }
 
   try {
-    //ignore socket.io paths for now
-    if (req.path.startsWith("socket.io/?EIO=4&transport=polling")) {
-      console.log("Skipping authentication for socket.io path:", req.path);
-      return next();
-    }
     const user = await get_user_by_id(userId);
     if (!user) {
       console.log("User not found for ID:", userId);
