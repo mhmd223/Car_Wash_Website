@@ -2,6 +2,8 @@ import express from "express";
 import * as wash_operations from "./carwash_queries.js";
 import { getIO } from "../../sockets/index.js";
 import * as washEvents from "../../sockets/washEvents.js";
+import * as wash_validation from "./carwash_validator.js";
+
 export const router = express.Router();
 
 // middleware that checks for an authenticated user on every route
@@ -43,18 +45,16 @@ router.put("/update_status/:id", async (req, res) => {
 
 router.post("/book_wash", async (req, res) => {
   const { Car_Plate, Wash_Date, Category_ID } = req.body;
-  if (!Car_Plate || !Wash_Date || !Category_ID) {
-    return res.status(400).json({
-      code: "INVALID_BOOKING",
-      status: "Car, time, and category are required",
-    });
-  }
 
-  const washDate = new Date(Wash_Date);
-  if (Number.isNaN(washDate.getTime()) || washDate <= new Date()) {
-    return res
-      .status(400)
-      .json({ code: "INVALID_WASH_DATE", status: "Choose a future wash time" });
+  const washValidation =
+    wash_validation.validateWashDate(Wash_Date) &&
+    wash_validation.validateWashBooking(Car_Plate, Wash_Date, Category_ID);
+
+  if (!washValidation.isValid) {
+    return res.status(400).json({
+      code: washValidation.code,
+      status: washValidation.message,
+    });
   }
 
   try {

@@ -14,9 +14,6 @@ export default function BookForm({
   let selectedCar = car ? car.License_Plate : null;
   let selectedCategory = null;
 
-  console.log(schedule);
-
-  console.log("User cars:", cars);
   function getFullDate(time) {
     const date = new Date();
     const [hours, minutes] = time.split(":").map(Number);
@@ -27,6 +24,9 @@ export default function BookForm({
       ` ${pad(date.getHours())}:${pad(date.getMinutes())}:00`
     );
   }
+
+  
+
   async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
