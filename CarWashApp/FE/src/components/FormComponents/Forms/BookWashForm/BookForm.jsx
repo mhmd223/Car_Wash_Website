@@ -14,6 +14,8 @@ export default function BookForm({
   let selectedCar = car ? car.License_Plate : null;
   let selectedCategory = null;
 
+  console.log(schedule);
+
   console.log("User cars:", cars);
   function getFullDate(time) {
     const date = new Date();
@@ -125,14 +127,7 @@ export default function BookForm({
             key={"time"}
             label={"Time"}
             name={"Time"}
-            schedule={schedule.filter((time) => {
-              console.log("Time:", time);
-              const now = new Date();
-              const [hours, minutes] = time.split(":").map(Number);
-              const timeDate = new Date();
-              timeDate.setHours(hours, minutes, 0, 0);
-              return timeDate > now;
-            })}
+            schedule={schedule}
             placeHolder={"Select a time"}
             textFormat={/^\d{2}:\d{2}$/}
             errorMessage={"Time should be in HH:MM format."}
