@@ -7,6 +7,7 @@ let io;
 
 export function createServerInstance(appInstance) {
   server = createServer(appInstance);
+  
   // io = initializeSocket(server, process.env.CLIENT_ORIGIN);
 
   return { server, io };

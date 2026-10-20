@@ -11,7 +11,7 @@ export const getIO = () => {
 export function initializeSocket(server, origin) {
   console.log("Initializing Socket.IO with origin:", origin);
   io = new Server(server, {
-    transports: ["websocket"],
+    transports: ["websocket", "polling"],
     cors: {
       origin: origin,
       credentials: true,

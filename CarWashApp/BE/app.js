@@ -25,6 +25,7 @@ dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
 
 const app = express();
 
+
 const port = Number(process.env.PORT) || 5173;
 
 const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "") || "";
@@ -169,7 +170,9 @@ app.use((error, req, res, next) => {
   if (res.headersSent) return next(error);
   return res.status(500).json({ status: "Internal Server Error" });
 });
+
 const { server, io } = createServerInstance(app);
+
 initializeSocket(server, process.env.CLIENT_ORIGIN);
 
 server.listen(port, () => {
