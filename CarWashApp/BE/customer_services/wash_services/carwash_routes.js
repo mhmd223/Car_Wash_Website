@@ -66,24 +66,37 @@ router.post("/book_wash", async (req, res) => {
     );
 
     if (result.errorCode === "ALREADY_BOOKED") {
+      console.log("Attempted to book an already booked time:", Wash_Date);
       return res.status(409).json({
         code: result.errorCode,
         status: "That time is already booked",
       });
     }
     if (result.errorCode === "BOOKING_BUSY") {
+      console.log(
+        "Attempted to book a time that is currently being booked:",
+        Wash_Date,
+      );
       return res.status(503).json({
         code: result.errorCode,
         status: "That time is being booked. Try again",
       });
     }
     if (result.errorCode === "CAR_NOT_OWNED") {
+      console.log(
+        "Attempted to book a wash for a car not owned by the user:",
+        Car_Plate,
+      );
       return res.status(400).json({
         code: result.errorCode,
         status: "That car is not on your account",
       });
     }
     if (result.errorCode === "CATEGORY_NOT_FOUND") {
+      console.log(
+        "Attempted to book a wash with a non-existent category:",
+        Category_ID,
+      );
       return res.status(400).json({
         code: result.errorCode,
         status: "That wash category is unavailable",
@@ -97,6 +110,7 @@ router.post("/book_wash", async (req, res) => {
         wash: result.userWashes,
       });
     }
+    console.log("Failed to book wash:", result);
 
     return res
       .status(500)
