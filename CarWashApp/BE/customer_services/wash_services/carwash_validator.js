@@ -1,6 +1,4 @@
 export function validateWashBooking(Car_Plate, Wash_Date, Category_ID) {
-
-  
   if (!Car_Plate || !Wash_Date || !Category_ID) {
     return {
       isValid: false,
@@ -8,6 +6,8 @@ export function validateWashBooking(Car_Plate, Wash_Date, Category_ID) {
       message: "Car, time, and category are required",
     };
   }
+
+  return { isValid: true };
 }
 
 export function validateWashDate(Wash_Date) {
