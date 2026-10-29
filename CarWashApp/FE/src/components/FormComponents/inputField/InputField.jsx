@@ -56,25 +56,34 @@ export default function InputField({
   return (
     <div className={classes.inputField}>
       <label htmlFor={id}>{label}</label>
-      {isTimeInput && timeSlots.length > 0 && (
-        <select id="schedule">
+      {isTimeInput ? (
+        <select
+          onBlur={setText ? handleTextChange : undefined}
+          id={id}
+          name={name}
+          key={key}
+          defaultValue=""
+          disabled={timeSlots.length === 0}
+        >
+          <option value="" disabled>
+            {timeSlots.length > 0 ? placeHolder : "No available times"}
+          </option>
           {timeSlots.map((time) => (
-            <option key={time} value={time} />
+            <option key={time} value={time}>
+              {time}
+            </option>
           ))}
         </select>
+      ) : (
+        <input
+          onBlur={setText ? handleTextChange : undefined}
+          id={id}
+          name={name}
+          type={type}
+          key={key}
+          placeholder={placeHolder}
+        />
       )}
-      <input
-        onBlur={setText ? handleTextChange : undefined}
-        data-schedule={timeSlots.join(",")}
-        id={id}
-        name={name}
-        type={type}
-        key={key}
-        placeholder={placeHolder}
-        list={isTimeInput && timeSlots.length > 0 ? "schedule" : undefined}
-        step={isTimeInput ? 3600 : undefined}
-        disabled={isTimeInput && timeSlots.length === 0}
-      />
 
       {isError && <span className={classes.error}>{errorMessage}</span>}
     </div>
