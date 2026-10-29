@@ -25,10 +25,7 @@ dotenv.config({ path: path.resolve(currentDirectory, "../../.env") });
 
 const app = express();
 
-
 const port = Number(process.env.PORT) || 5173;
-
-const normalizeOrigin = (value) => value?.trim().replace(/\/$/, "") || "";
 
 const allowedOrigins = new Set(
   [
@@ -38,11 +35,7 @@ const allowedOrigins = new Set(
     "http://localhost:5173",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:5173",
-  ]
-    .flatMap((value) =>
-      (value || "").split(",").map(normalizeOrigin).filter(Boolean),
-    )
-    .map((value) => value.toLowerCase()),
+  ].map((value) => value.toLowerCase()),
 );
 
 const isAllowedOrigin = (origin) => {
@@ -85,6 +78,7 @@ app.use(
 );
 app.use(helmet());
 
+// Middleware to log requests with a unique request ID and duration.
 app.use((req, res, next) => {
   const requestId = req.get("x-request-id") || randomUUID();
   const startedAt = Date.now();

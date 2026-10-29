@@ -57,11 +57,11 @@ export default function InputField({
     <div className={classes.inputField}>
       <label htmlFor={id}>{label}</label>
       {isTimeInput && timeSlots.length > 0 && (
-        <datalist id="schedule">
+        <select id="schedule">
           {timeSlots.map((time) => (
             <option key={time} value={time} />
           ))}
-        </datalist>
+        </select>
       )}
       <input
         onBlur={setText ? handleTextChange : undefined}
