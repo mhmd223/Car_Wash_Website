@@ -27,16 +27,14 @@ const app = express();
 
 const port = Number(process.env.PORT) || 5173;
 
-const allowedOrigins = new Set(
-  [
-    process.env.CLIENT_ORIGIN,
-    process.env.PROD_ORIGIN,
-    "http://localhost:3000",
-    "http://localhost:5173",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:5173",
-  ].map((value) => value.toLowerCase()),
-);
+const allowedOrigins = new Set([
+  process.env.CLIENT_ORIGIN,
+  process.env.PROD_ORIGIN,
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:5173",
+]);
 
 const isAllowedOrigin = (origin) => {
   if (!origin) return true;
