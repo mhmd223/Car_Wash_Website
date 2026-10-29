@@ -53,6 +53,16 @@ router.post("/book_wash", async (req, res) => {
     Category_ID,
   );
 
+  console.log("Booking request received:", {
+    Car_Plate,
+    Wash_Date,
+    Category_ID,
+    userId: req.user.id,
+  });
+
+  console.log("Date validation result:", dateValidation);
+  console.log("Booking validation result:", bookingValidation);
+
   if (!dateValidation.isValid) {
     return res.status(400).json({
       code: dateValidation.code,
