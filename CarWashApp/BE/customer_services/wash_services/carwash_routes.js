@@ -46,14 +46,24 @@ router.put("/update_status/:id", async (req, res) => {
 router.post("/book_wash", async (req, res) => {
   const { Car_Plate, Wash_Date, Category_ID } = req.body;
 
-  const washValidation =
-    wash_validation.validateWashDate(Wash_Date) &&
-    wash_validation.validateWashBooking(Car_Plate, Wash_Date, Category_ID);
+  const dateValidation = wash_validation.validateWashDate(Wash_Date);
+  const bookingValidation = wash_validation.validateWashBooking(
+    Car_Plate,
+    Wash_Date,
+    Category_ID,
+  );
 
-  if (!washValidation.isValid) {
+  if (!dateValidation.isValid) {
     return res.status(400).json({
-      code: washValidation.code,
-      status: washValidation.message,
+      code: dateValidation.code,
+      status: dateValidation.message,
+    });
+  }
+
+  if (!bookingValidation.isValid) {
+    return res.status(400).json({
+      code: bookingValidation.code,
+      status: bookingValidation.message,
     });
   }
 
