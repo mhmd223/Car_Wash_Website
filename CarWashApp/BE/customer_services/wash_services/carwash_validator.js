@@ -1,4 +1,6 @@
 export function validateWashBooking(Car_Plate, Wash_Date, Category_ID) {
+
+  
   if (!Car_Plate || !Wash_Date || !Category_ID) {
     return {
       isValid: false,

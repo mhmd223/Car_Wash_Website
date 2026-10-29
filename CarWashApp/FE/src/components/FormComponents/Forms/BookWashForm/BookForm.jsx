@@ -25,8 +25,6 @@ export default function BookForm({
     );
   }
 
-  
-
   async function handleSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -35,6 +33,8 @@ export default function BookForm({
       Wash_Date: getFullDate(formData.get("Time")),
       Category_ID: selectedCategory,
     };
+
+    console.log("Submitting booking data:", data);
     try {
       await mutation.mutateAsync(data);
       setIsBookFormOpen(false);
