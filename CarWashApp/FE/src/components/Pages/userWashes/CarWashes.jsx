@@ -24,7 +24,6 @@ export default function CarWashes() {
     refetch: refetchWashes,
   } = useUserWashes(userId, { enabled: Boolean(userId), retry: false });
 
-  console.log("Fetched user washes:", washesData);
   const { data: categoryData, isError: categoriesError } = useCategories();
 
   const { data: carsData } = useUserCars(userId, {
@@ -44,17 +43,24 @@ export default function CarWashes() {
     if (!userId) return;
 
     queryClient.setQueryData(["userWashes", userId], (oldData) => {
-      console.log("Received WASH_STATUS_UPDATED event:", {
-        washId,
-        status,
-        user,
-      });
       if (!oldData) {
         console.warn("No old data found for user washes.");
         return [];
       }
       return oldData.map((wash) =>
         wash.ID === washId ? { ...wash, Wash_Status: status } : wash,
+      );
+    });
+  });
+
+  useSocket(socket, WASH_EVENTS.CATEGORY_UPDATED, ({ id, name, price }) => {
+    queryClient.setQueryData(["categories"], (oldData) => {
+      const updatedCategory = { ID: id, Name: name, Price: price };
+      const categoryExists = oldData.some((category) => category.ID === id);
+      if (!oldData) return [];
+      if (!categoryExists) return [...oldData, updatedCategory];
+      return oldData.map((category) =>
+        category.ID === id ? { ...category, ...updatedCategory } : category,
       );
     });
   });

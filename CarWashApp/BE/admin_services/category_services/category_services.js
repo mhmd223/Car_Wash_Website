@@ -1,5 +1,7 @@
 import express from "express";
 import * as category_queries from "./category_queries.js";
+import { WASH_EVENTS } from "../../../shared/events.js";
+import { getIO } from "../../sockets/index.js";
 import { roles } from "../../data/roles.js";
 const router = express.Router();
 
@@ -23,6 +25,7 @@ router.put("/update_category", async (req, res) => {
   try {
     const { id, name, price } = req.body;
     await category_queries.update_category_query(id, name, price);
+    getIO().emit(WASH_EVENTS.CATEGORY_UPDATED, { id, name, price });
     res.status(200).json({ message: "Category updated successfully" });
   } catch (err) {
     res.status(500).json({ status: "Something went wrong" });
@@ -33,6 +36,7 @@ router.delete("/remove_category", async (req, res) => {
   try {
     const { id } = req.body;
     await category_queries.remove_category_query(id);
+    getIO().emit(WASH_EVENTS.CATEGORY_UPDATED, { id });
     res.status(200).json({ message: "Category deleted successfully" });
   } catch (err) {
     res.status(500).json({ status: "Something went wrong" });
