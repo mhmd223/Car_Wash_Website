@@ -228,6 +228,23 @@ export default function Categories() {
         </div>
       )}
 
+      <section
+        className={classes.modelPrices}
+        aria-labelledby="model-prices-title"
+      >
+        <div className={classes.modelPricesHeader}>
+          <div>
+            <p className={classes.eyebrow}>Vehicle pricing</p>
+            <h3 id="model-prices-title">Car model type prices</h3>
+          </div>
+        </div>
+        <ul className={classes.modelPriceList}>
+          <li className={classes.modelPriceEmpty}>
+            No car model type prices configured.
+          </li>
+        </ul>
+      </section>
+
       {(isCreating || editingCategory) && (
         <CategoryForm
           category={editingCategory}
