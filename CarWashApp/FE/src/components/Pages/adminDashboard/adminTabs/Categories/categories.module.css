@@ -82,7 +82,25 @@
 
 .modelPriceInfo {
   display: flex;
-  gap: 1.6rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.8rem 1.6rem;
+  min-width: 0;
+}
+
+.modelPriceInfo > span:first-child {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #222222;
+  overflow-wrap: anywhere;
+}
+
+.modelPriceInfo > span:last-child {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #755f46;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .modelPriceItem {
@@ -92,7 +110,11 @@
   gap: 1.6rem;
   padding: 1.2rem 1.4rem;
   border-bottom: 1px solid #22222212;
-  font-size: 1.4rem;
+  line-height: 1.5;
+}
+
+.modelPriceItem:last-child {
+  border-bottom: none;
 }
 
 .modelPriceEmpty {
