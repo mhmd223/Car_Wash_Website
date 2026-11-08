@@ -43,7 +43,6 @@ router.put("/update_vehicle_type", async (req, res) => {
   try {
     const { id, name, price } = req.body;
     await category_queries.update_vehicle_type_query(id, name, price);
-    getIO().emit(WASH_EVENTS.VEHICLE_TYPE_UPDATED, { id, name, price });
     res.status(200).json({ message: "Vehicle type updated successfully" });
   } catch (err) {
     res.status(500).json({ status: "Something went wrong" });
@@ -54,7 +53,6 @@ router.delete("/remove_vehicle_type", async (req, res) => {
   try {
     const { id } = req.body;
     await category_queries.remove_vehicle_type_query(id);
-    getIO().emit(WASH_EVENTS.VEHICLE_TYPE_UPDATED, { id });
     res.status(200).json({ message: "Vehicle type deleted successfully" });
   } catch (err) {
     res.status(500).json({ status: "Something went wrong" });

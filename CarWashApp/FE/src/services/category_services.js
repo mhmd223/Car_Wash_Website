@@ -26,7 +26,11 @@ export const getVehicleTypes = async () => {
     const response = await axios.get(`${API_URL}/get_vehicle_types`, {
       withCredentials: true,
     });
-    return response.data;
+    return response.data.map((row) => ({
+      ID: row.ID,
+      Name: row.type,
+      Price: row.price,
+    }));
   } catch (error) {
     throw getCategoryError(error);
   }
