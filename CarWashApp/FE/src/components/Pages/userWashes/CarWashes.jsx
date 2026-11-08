@@ -5,6 +5,7 @@ import { UserContext } from "../../ContextComponents/UserContext/UserContext";
 import useSocket from "../../../Socket/useSocket";
 import { WASH_EVENTS } from "../../../../../shared/events";
 import { useCategories } from "../../../hooks/useCategories";
+import { useVehicleTypes } from "../../../hooks/useVehicleTypes";
 import { useUserWashes } from "../../../hooks/useUserWashes";
 import { useUserCars } from "../../../hooks/useUserCars";
 import classes from "./carwashes.module.css";
@@ -25,6 +26,7 @@ export default function CarWashes() {
   } = useUserWashes(userId, { enabled: Boolean(userId), retry: false });
 
   const { data: categoryData, isError: categoriesError } = useCategories();
+  const { data: vehicleTypesData } = useVehicleTypes();
 
   const { data: carsData } = useUserCars(userId, {
     enabled: Boolean(userId),
@@ -108,6 +110,7 @@ export default function CarWashes() {
           user={user}
           setIsBookFormOpen={setIsBookFormOpen}
           categories={categoryData}
+          vehicleTypes={vehicleTypesData}
           cars={carsData}
           schedule={scheduleQuery.data}
         />

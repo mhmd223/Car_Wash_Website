@@ -9,6 +9,7 @@ import { FaCar } from "react-icons/fa6";
 import { useUserCars } from "../../../hooks/useUserCars.js";
 import { removeUserCar } from "../../../services/car_services";
 import { useCategories } from "../../../hooks/useCategories";
+import { useVehicleTypes } from "../../../hooks/useVehicleTypes";
 import { useBookWash } from "../../../hooks/useBookWash";
 import { useSchedule } from "../../../hooks/useSchedule";
 import { toast } from "react-toastify";
@@ -26,6 +27,7 @@ export default function UserCars() {
   const [selectedCar, setSelectedCar] = useState(null);
 
   const { data: categoryData, isError: categoriesError } = useCategories();
+  const { data: vehicleTypesData } = useVehicleTypes();
 
   useEffect(() => {
     if (categoriesError) toast.error("Could not load wash categories.");
@@ -150,6 +152,7 @@ export default function UserCars() {
           mutation={bookWashMutation}
           user={user}
           categories={categoryData}
+          vehicleTypes={vehicleTypesData}
           car={selectedCar}
           schedule={scheduleQuery.data}
         />

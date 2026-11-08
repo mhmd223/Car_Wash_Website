@@ -2,18 +2,17 @@ import { useState } from "react";
 import classes from "./BookForm.module.css";
 import InputField from "../../inputField/InputField.jsx";
 import { useBookWash } from "../../../../hooks/useBookWash.js";
-import { useVehicleTypes } from "../../../../hooks/useVehicleTypes.js";
 import { toast } from "react-toastify";
 export default function BookForm({
   user,
   setIsBookFormOpen,
   categories,
+  vehicleTypes = [],
   cars,
   car,
   schedule,
 }) {
   const mutation = useBookWash(user.id);
-  const { data: vehicleTypes = [] } = useVehicleTypes();
   const [selectedCar, setSelectedCar] = useState(
     car ? car.License_Plate : null,
   );
