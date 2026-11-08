@@ -11,3 +11,16 @@ export async function get_categories_query() {
     conn.release();
   }
 }
+
+export async function get_vehicle_types_query() {
+  const conn = await dbConnection.getConnection();
+
+  try {
+    const [rows] = await conn.query("SELECT * FROM vehicle_type");
+    return rows;
+  } catch (err) {
+    throw err;
+  } finally {
+    conn.release();
+  }
+}

@@ -19,3 +19,13 @@ router.get("/get_categories", async (req, res) => {
     res.status(500).json({ status: "Something went wrong" });
   }
 });
+
+router.get("/get_vehicle_types", async (req, res) => {
+  try {
+    const vehicleTypes = await category_queries.get_vehicle_types_query();
+    res.status(200).json(vehicleTypes);
+  } catch (err) {
+    console.error("Error fetching vehicle types:", err);
+    res.status(500).json({ status: "Something went wrong" });
+  }
+});
