@@ -19,7 +19,7 @@ export default function BookForm({
   );
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  console.log(vehicleTypes);
+  console.log("vehicle types:", vehicleTypes);
 
   const selectedCarDetails = car
     ? car
