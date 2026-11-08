@@ -72,6 +72,15 @@
   list-style: none;
 }
 
+.modelPriceItem {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.6rem;
+  padding: 1.2rem 1.4rem;
+  border-bottom: 1px solid #22222212;
+  font-size: 1.4rem;
+}
+
 .modelPriceEmpty {
   padding: 1.2rem 1.4rem;
   border: 1px dashed #755f4666;

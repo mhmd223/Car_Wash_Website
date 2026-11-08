@@ -21,6 +21,55 @@ export const getCategories = async () => {
   }
 };
 
+export const getVehicleTypes = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/get_vehicle_types`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw getCategoryError(error);
+  }
+};
+
+export const createVehicleType = async ({ id, name, price }) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/add_vehicle_type`,
+      { id, name, price },
+      { withCredentials: true },
+    );
+    return response.data;
+  } catch (error) {
+    throw getCategoryError(error);
+  }
+};
+
+export const updateVehicleType = async ({ id, name, price }) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/update_vehicle_type`,
+      { id, name, price },
+      { withCredentials: true },
+    );
+    return response.data;
+  } catch (error) {
+    throw getCategoryError(error);
+  }
+};
+
+export const deleteVehicleType = async (id) => {
+  try {
+    const response = await axios.delete(`${API_URL}/remove_vehicle_type`, {
+      data: { id },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    throw getCategoryError(error);
+  }
+};
+
 export const createCategory = async ({ id, name, price }) => {
   try {
     const response = await axios.post(

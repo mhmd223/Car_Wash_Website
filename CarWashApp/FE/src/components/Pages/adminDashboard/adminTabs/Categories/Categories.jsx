@@ -5,6 +5,7 @@ import { UserContext } from "../../../../ContextComponents/UserContext/UserConte
 import {
   useCategories,
 } from "../../../../../hooks/useCategories";
+import { useVehicleTypes } from "../../../../../hooks/useVehicleTypes";
 import {
   useCreateCategory,
   useDeleteCategory,
@@ -156,6 +157,12 @@ function CategoryForm({ category, onClose }) {
 export default function Categories() {
   const { user } = useContext(UserContext);
   const { data: categories = [], isLoading, isError, error } = useCategories();
+  const {
+    data: vehicleTypes = [],
+    isLoading: isVehicleTypesLoading,
+    isError: isVehicleTypesError,
+    error: vehicleTypesError,
+  } = useVehicleTypes();
   const deleteMutation = useDeleteCategory();
   const [editingCategory, setEditingCategory] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -238,11 +245,23 @@ export default function Categories() {
             <h3 id="model-prices-title">Car model type prices</h3>
           </div>
         </div>
-        <ul className={classes.modelPriceList}>
-          <li className={classes.modelPriceEmpty}>
-            No car model type prices configured.
-          </li>
-        </ul>
+        {isVehicleTypesLoading && <p role="status">Loading car model type prices...</p>}
+        {isVehicleTypesError && <p role="alert">{vehicleTypesError.message}</p>}
+        {!isVehicleTypesLoading && !isVehicleTypesError && (
+          <ul className={classes.modelPriceList}>
+            {vehicleTypes.length === 0 && (
+              <li className={classes.modelPriceEmpty}>
+                No car model type prices configured.
+              </li>
+            )}
+            {vehicleTypes.map((vehicleType) => (
+              <li key={vehicleType.ID} className={classes.modelPriceItem}>
+                <span>{vehicleType.Name}</span>
+                <span>{vehicleType.Price}</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       {(isCreating || editingCategory) && (

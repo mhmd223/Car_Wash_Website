@@ -11,16 +11,19 @@ export async function add_car(Car_Plate) {
     // validate that the plate string matches expected pattern
     if (car_validator.validatePlateFormat(Car_Plate)) {
       // fetch additional car details from external source or API
-      const { shnat_yitzur, tozeret_nm, kinuy_mishari } =
+      const { shnat_yitzur, tozeret_nm, kinuy_mishari, sug_degem } =
         await car_validator.getCarData(Car_Plate);
-      console.log(
-        `Adding car: ${kinuy_mishari} ${tozeret_nm} ${shnat_yitzur} with plate ${Car_Plate}`,
-      ); // debug log, can be removed later
+
       // insert the car record into the database
       let added = await conn
         .query(
-          "INSERT INTO cars (Brand,Model,License_Plate) VALUES(?,?,?) on duplicate key update deleted_at=NULL",
-          [kinuy_mishari, `${tozeret_nm} ${shnat_yitzur}`, Car_Plate],
+          "INSERT INTO cars (Brand,Model,License_Plate, model_type) VALUES(?,?,?,?) on duplicate key update deleted_at=NULL",
+          [
+            kinuy_mishari,
+            `${tozeret_nm} ${shnat_yitzur}`,
+            Car_Plate,
+            sug_degem,
+          ],
         )
         .then((res) => {
           let gotAdded = Boolean(res[0].affectedRows);
