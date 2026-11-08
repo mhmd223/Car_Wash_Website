@@ -19,6 +19,8 @@ export default function BookForm({
   );
   const [selectedCategory, setSelectedCategory] = useState(null);
 
+  console.log(vehicleTypes);
+
   const selectedCarDetails = car
     ? car
     : Array.isArray(cars)
@@ -39,13 +41,13 @@ export default function BookForm({
   const totalPrice =
     categoryPrice === null ? null : categoryPrice + (vehicleTypePrice ?? 0);
 
-  console.log(vehicleTypeDetails);  
+  console.log(vehicleTypeDetails);
   console.log("Selected car details:", selectedCarDetails);
   console.log("Selected category details:", selectedCategoryDetails);
   console.log("Total price:", totalPrice);
   console.log("Category price:", categoryPrice);
   console.log("Vehicle type price:", vehicleTypePrice);
-  
+
   function getFullDate(time) {
     const date = new Date();
     const [hours, minutes] = time.split(":").map(Number);
