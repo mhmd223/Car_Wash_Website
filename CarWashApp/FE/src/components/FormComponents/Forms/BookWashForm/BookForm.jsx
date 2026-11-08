@@ -1,6 +1,8 @@
+import { useState } from "react";
 import classes from "./BookForm.module.css";
 import InputField from "../../inputField/InputField.jsx";
 import { useBookWash } from "../../../../hooks/useBookWash.js";
+import { useVehicleTypes } from "../../../../hooks/useVehicleTypes.js";
 import { toast } from "react-toastify";
 export default function BookForm({
   user,
@@ -11,8 +13,31 @@ export default function BookForm({
   schedule,
 }) {
   const mutation = useBookWash(user.id);
-  let selectedCar = car ? car.License_Plate : null;
-  let selectedCategory = null;
+  const { data: vehicleTypes = [] } = useVehicleTypes();
+  const [selectedCar, setSelectedCar] = useState(
+    car ? car.License_Plate : null,
+  );
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const selectedCarDetails = car
+    ? car
+    : Array.isArray(cars)
+      ? cars.find((c) => c.License_Plate === selectedCar)
+      : undefined;
+  const selectedCategoryDetails = Array.isArray(categories)
+    ? categories.find((c) => String(c.ID) === String(selectedCategory))
+    : undefined;
+  const categoryPrice = selectedCategoryDetails
+    ? Number(selectedCategoryDetails.Price)
+    : null;
+  const vehicleTypeDetails = selectedCarDetails?.model_type
+    ? vehicleTypes.find((v) => v.Name === selectedCarDetails.model_type)
+    : undefined;
+  const vehicleTypePrice = vehicleTypeDetails
+    ? Number(vehicleTypeDetails.Price)
+    : null;
+  const totalPrice =
+    categoryPrice === null ? null : categoryPrice + (vehicleTypePrice ?? 0);
 
   function getFullDate(time) {
     const date = new Date();
@@ -74,7 +99,7 @@ export default function BookForm({
           ) : (
             <select
               onChange={(e) => {
-                selectedCar = e.target.value;
+                setSelectedCar(e.target.value);
               }}
               key="car"
               name="car"
@@ -99,7 +124,7 @@ export default function BookForm({
 
           <select
             onChange={(e) => {
-              selectedCategory = e.target.value;
+              setSelectedCategory(e.target.value);
             }}
             key="category"
             name="category"
@@ -120,6 +145,27 @@ export default function BookForm({
               <option value="">No categories available.</option>
             )}
           </select>
+
+          {totalPrice !== null && (
+            <div className={classes.priceSummary} aria-live="polite">
+              <p>
+                <span>Category</span>
+                <span>{categoryPrice}</span>
+              </p>
+              <p>
+                <span>
+                  Vehicle type{vehicleTypeDetails ? ` (${vehicleTypeDetails.Name})` : ""}
+                </span>
+                <span>
+                  {vehicleTypePrice === null ? "Not set" : vehicleTypePrice}
+                </span>
+              </p>
+              <p className={classes.priceTotal}>
+                <span>Total</span>
+                <span>{totalPrice}</span>
+              </p>
+            </div>
+          )}
 
           <InputField
             id={"time"}

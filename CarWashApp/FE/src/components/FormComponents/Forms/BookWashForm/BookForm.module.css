@@ -120,6 +120,30 @@
   font-weight: bold;
 }
 
+.priceSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid #22222212;
+  border-radius: 0.6rem;
+  background: #fffaf4;
+  font-size: 1.4rem;
+}
+
+.priceSummary p {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+}
+
+.priceTotal {
+  padding-top: 0.4rem;
+  border-top: 1px solid #22222212;
+  font-weight: 700;
+}
+
 @keyframes openForm {
   0% {
     opacity: 0;

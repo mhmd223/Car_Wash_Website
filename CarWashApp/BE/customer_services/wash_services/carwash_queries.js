@@ -16,7 +16,7 @@ export async function get_user_washes(customerID) {
   const conn = await dbConnection.getConnection();
   try {
     const res = await conn.query(
-      "SELECT car_wash.ID, car_wash.Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, wash_category.Price, Category_ID, wash_category.Name, cars.Brand AS Car_Brand, cars.Model AS Car_Model FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID LEFT JOIN cars ON car_wash.Car_Plate = cars.License_Plate WHERE Cust_ID=?",
+      "SELECT car_wash.ID, car_wash.Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, COALESCE(car_wash.Wash_Price, wash_category.Price) AS Price, Category_ID, wash_category.Name, cars.Brand AS Car_Brand, cars.Model AS Car_Model FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID LEFT JOIN cars ON car_wash.Car_Plate = cars.License_Plate WHERE Cust_ID=?",
       [customerID],
     );
 
@@ -39,13 +39,21 @@ export async function book_wash(Car_Plate, Cust_ID, Wash_Date, Category_ID) {
       return { errorCode: "CAR_NOT_OWNED" };
     }
 
-    const [category] = await conn.query(
-      "SELECT 1 FROM wash_category WHERE ID=? LIMIT 1",
-      [Category_ID],
+    const [priceRows] = await conn.query(
+      `SELECT wash_category.Price AS categoryPrice, vehicle_type.price AS vehicleTypePrice
+       FROM wash_category
+       LEFT JOIN cars ON cars.License_Plate = ?
+       LEFT JOIN vehicle_type ON vehicle_type.type = cars.model_type
+       WHERE wash_category.ID = ? LIMIT 1`,
+      [Car_Plate, Category_ID],
     );
-    if (!category.length) {
+    if (!priceRows.length) {
       return { errorCode: "CATEGORY_NOT_FOUND" };
     }
+    // Price is computed on the server from the database, never taken from the client.
+    const washPrice =
+      Number(priceRows[0].categoryPrice) +
+      Number(priceRows[0].vehicleTypePrice ?? 0);
 
     // Serialize requests for the same time slot before checking availability.
     lockName = `carwash:booking:${String(Wash_Date).slice(0, 16)}`;
@@ -69,8 +77,8 @@ export async function book_wash(Car_Plate, Cust_ID, Wash_Date, Category_ID) {
     const phone = user[0][0].phone;
 
     const result = await conn.query(
-      "INSERT INTO car_wash (Car_Plate, Cust_ID, Cust_Phone, Wash_Date, Wash_Status,Category_id) VALUES(?,?,?,?,?,?)",
-      [Car_Plate, Cust_ID, phone, Wash_Date, 0, Category_ID],
+      "INSERT INTO car_wash (Car_Plate, Cust_ID, Cust_Phone, Wash_Date, Wash_Status, Category_id, Wash_Price) VALUES(?,?,?,?,?,?,?)",
+      [Car_Plate, Cust_ID, phone, Wash_Date, 0, Category_ID, washPrice],
     );
 
     const newUserWash = await get_specific_wash(conn, result[0].insertId);
@@ -107,7 +115,7 @@ async function isAlreadyBooked(conn, Wash_Date) {
 
 async function get_specific_wash(conn, washID) {
   const res = await conn.query(
-    "SELECT car_wash.ID, car_wash.Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, wash_category.Price, Category_ID, wash_category.Name, cars.Brand AS Car_Brand, cars.Model AS Car_Model FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID LEFT JOIN cars ON car_wash.Car_Plate = cars.License_Plate WHERE car_wash.ID=?",
+    "SELECT car_wash.ID, car_wash.Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, COALESCE(car_wash.Wash_Price, wash_category.Price) AS Price, Category_ID, wash_category.Name, cars.Brand AS Car_Brand, cars.Model AS Car_Model FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID LEFT JOIN cars ON car_wash.Car_Plate = cars.License_Plate WHERE car_wash.ID=?",
     [washID],
   );
   return res[0][0];
@@ -117,7 +125,7 @@ export async function get_all_washes() {
   const conn = await dbConnection.getConnection();
   try {
     const res = await conn.query(
-      "SELECT car_wash.ID, car_wash.Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, wash_category.Price, Category_ID, wash_category.Name, cars.Brand AS Car_Brand, cars.Model AS Car_Model FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID LEFT JOIN cars ON car_wash.Car_Plate = cars.License_Plate ORDER BY Wash_Date ASC ",
+      "SELECT car_wash.ID, car_wash.Car_Plate, Cust_ID, Cust_Phone, DATE_FORMAT(Wash_Date, '%Y-%m-%d %H:%i:%s') AS Wash_Date, Wash_Status, COALESCE(car_wash.Wash_Price, wash_category.Price) AS Price, Category_ID, wash_category.Name, cars.Brand AS Car_Brand, cars.Model AS Car_Model FROM car_wash JOIN wash_category ON car_wash.Category_ID = wash_category.ID LEFT JOIN cars ON car_wash.Car_Plate = cars.License_Plate ORDER BY Wash_Date ASC ",
     );
     return res[0];
   } finally {
