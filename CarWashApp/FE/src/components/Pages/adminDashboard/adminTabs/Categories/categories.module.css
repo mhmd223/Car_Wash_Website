@@ -32,6 +32,7 @@
 }
 
 .header button,
+.modelPricesHeader button,
 .actions button,
 .modalActions button {
   padding: 0.9rem 1.5rem;
@@ -59,6 +60,13 @@
   background: #fffaf4;
 }
 
+.modelPricesHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.6rem;
+}
+
 .modelPricesHeader h3 {
   margin: 0.4rem 0 0;
   font-size: 2rem;
@@ -72,8 +80,14 @@
   list-style: none;
 }
 
+.modelPriceInfo {
+  display: flex;
+  gap: 1.6rem;
+}
+
 .modelPriceItem {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 1.6rem;
   padding: 1.2rem 1.4rem;
@@ -196,7 +210,8 @@ button:disabled {
     padding: 2rem 1.6rem;
   }
 
-  .header {
+  .header,
+  .modelPricesHeader {
     align-items: stretch;
     flex-direction: column;
   }

@@ -8,8 +8,11 @@ import {
 import { useVehicleTypes } from "../../../../../hooks/useVehicleTypes";
 import {
   useCreateCategory,
+  useCreateVehicleType,
   useDeleteCategory,
+  useDeleteVehicleType,
   useUpdateCategory,
+  useUpdateVehicleType,
 } from "../../../../../hooks/useCategoryMutations";
 import { roles } from "../../../../../../../BE/data/roles";
 import classes from "./categories.module.css";
@@ -35,18 +38,24 @@ function validateCategory(form, isEditing) {
   return errors;
 }
 
-function CategoryForm({ category, onClose }) {
-  const isEditing = Boolean(category);
+const kindLabels = { category: "category", vehicleType: "vehicle type" };
+
+function CategoryForm({ kind, item, onClose }) {
+  const isEditing = Boolean(item);
+  const isVehicleType = kind === "vehicleType";
+  const label = kindLabels[kind];
   const [form, setForm] = useState(
-    category
-      ? { id: category.ID, name: category.Name, price: category.Price }
-      : emptyForm,
+    item ? { id: item.ID, name: item.Name, price: item.Price } : emptyForm,
   );
   const [errors, setErrors] = useState({});
   const firstInputRef = useRef(null);
-  const createMutation = useCreateCategory();
-  const updateMutation = useUpdateCategory();
-  const mutation = isEditing ? updateMutation : createMutation;
+  const createCategoryMutation = useCreateCategory();
+  const updateCategoryMutation = useUpdateCategory();
+  const createVehicleTypeMutation = useCreateVehicleType();
+  const updateVehicleTypeMutation = useUpdateVehicleType();
+  const mutation = isEditing
+    ? (isVehicleType ? updateVehicleTypeMutation : updateCategoryMutation)
+    : (isVehicleType ? createVehicleTypeMutation : createCategoryMutation);
 
   useEffect(() => {
     firstInputRef.current?.focus();
@@ -70,7 +79,7 @@ function CategoryForm({ category, onClose }) {
         name: form.name.trim(),
         price: Number(form.price),
       });
-      toast.success(isEditing ? "Category updated." : "Category created.");
+      toast.success(`${isEditing ? "Updated" : "Created"} ${label}.`);
       onClose();
     } catch (error) {
       toast.error(error.message);
@@ -91,7 +100,7 @@ function CategoryForm({ category, onClose }) {
         aria-labelledby="category-form-title"
       >
         <h3 id="category-form-title">
-          {isEditing ? "Edit category" : "Create category"}
+          {isEditing ? `Edit ${label}` : `Create ${label}`}
         </h3>
         {!isEditing && (
           <label>
@@ -146,7 +155,7 @@ function CategoryForm({ category, onClose }) {
               ? "Saving..."
               : isEditing
                 ? "Save changes"
-                : "Create category"}
+                : `Create ${label}`}
           </button>
         </div>
       </form>
@@ -164,8 +173,8 @@ export default function Categories() {
     error: vehicleTypesError,
   } = useVehicleTypes();
   const deleteMutation = useDeleteCategory();
-  const [editingCategory, setEditingCategory] = useState(null);
-  const [isCreating, setIsCreating] = useState(false);
+  const deleteVehicleTypeMutation = useDeleteVehicleType();
+  const [formState, setFormState] = useState(null);
 
   if (user?.role?.toLowerCase() !== roles.ADMIN.toLowerCase()) return null;
 
@@ -180,6 +189,17 @@ export default function Categories() {
     }
   };
 
+  const handleDeleteVehicleType = async (vehicleType) => {
+    if (!window.confirm(`Delete the "${vehicleType.Name}" vehicle type?`)) return;
+
+    try {
+      await deleteVehicleTypeMutation.mutateAsync(vehicleType.ID);
+      toast.success("Vehicle type deleted.");
+    } catch (deleteError) {
+      toast.error(deleteError.message);
+    }
+  };
+
   return (
     <section className={classes.container} aria-labelledby="categories-title">
       <div className={classes.header}>
@@ -188,7 +208,10 @@ export default function Categories() {
           <h2 id="categories-title">Wash categories</h2>
           <p>Manage the services and prices customers can book.</p>
         </div>
-        <button type="button" onClick={() => setIsCreating(true)}>
+        <button
+          type="button"
+          onClick={() => setFormState({ kind: "category", item: null })}
+        >
           Add category
         </button>
       </div>
@@ -217,7 +240,12 @@ export default function Categories() {
                   <td>{category.Name}</td>
                   <td>{category.Price}</td>
                   <td className={classes.actions}>
-                    <button type="button" onClick={() => setEditingCategory(category)}>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFormState({ kind: "category", item: category })
+                      }
+                    >
                       Edit
                     </button>
                     <button
@@ -244,6 +272,12 @@ export default function Categories() {
             <p className={classes.eyebrow}>Vehicle pricing</p>
             <h3 id="model-prices-title">Car model type prices</h3>
           </div>
+          <button
+            type="button"
+            onClick={() => setFormState({ kind: "vehicleType", item: null })}
+          >
+            Add vehicle type
+          </button>
         </div>
         {isVehicleTypesLoading && <p role="status">Loading car model type prices...</p>}
         {isVehicleTypesError && <p role="alert">{vehicleTypesError.message}</p>}
@@ -256,21 +290,38 @@ export default function Categories() {
             )}
             {vehicleTypes.map((vehicleType) => (
               <li key={vehicleType.ID} className={classes.modelPriceItem}>
-                <span>{vehicleType.Name}</span>
-                <span>{vehicleType.Price}</span>
+                <div className={classes.modelPriceInfo}>
+                  <span>{vehicleType.Name}</span>
+                  <span>{vehicleType.Price}</span>
+                </div>
+                <div className={classes.actions}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFormState({ kind: "vehicleType", item: vehicleType })
+                    }
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteVehicleType(vehicleType)}
+                    disabled={deleteVehicleTypeMutation.isPending}
+                  >
+                    {deleteVehicleTypeMutation.isPending ? "Deleting..." : "Delete"}
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
         )}
       </section>
 
-      {(isCreating || editingCategory) && (
+      {formState && (
         <CategoryForm
-          category={editingCategory}
-          onClose={() => {
-            setIsCreating(false);
-            setEditingCategory(null);
-          }}
+          kind={formState.kind}
+          item={formState.item}
+          onClose={() => setFormState(null)}
         />
       )}
     </section>
