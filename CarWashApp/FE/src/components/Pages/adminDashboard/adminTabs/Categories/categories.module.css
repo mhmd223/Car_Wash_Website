@@ -78,6 +78,8 @@
   margin: 0;
   padding: 0;
   list-style: none;
+  max-height: 40rem;
+  overflow-y: auto;
 }
 
 .modelPriceInfo {
@@ -166,6 +168,7 @@ button:disabled {
   display: grid;
   place-items: center;
   padding: 2rem;
+  overflow-y: auto;
   background: rgba(43, 41, 38, 0.45);
 }
 
@@ -173,6 +176,8 @@ button:disabled {
   display: flex;
   flex-direction: column;
   width: min(100%, 42rem);
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
   gap: 1.4rem;
   padding: 2.4rem;
   border-radius: 1rem;
