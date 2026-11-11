@@ -91,6 +91,7 @@ export async function book_wash(Car_Plate, Cust_ID, Wash_Date, Category_ID) {
       await conn.rollback();
       transactionStarted = false;
     }
+    console.error(err);
     throw err;
   } finally {
     if (transactionStarted) {
